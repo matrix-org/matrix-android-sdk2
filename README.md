@@ -14,7 +14,9 @@ Please open any issue in the Element Android project [Create an issue](https://g
 
 To integrate the SDK to your application, add the following gradle dependency to the build.gradle of your application module:
 
-> implementation 'com.github.matrix-org:matrix-android-sdk2:v0.0.1'
+```gradle
+implementation 'com.github.matrix-org:matrix-android-sdk2:v0.0.1'
+```
 
 You need to add Jitpack as a repository in your main build.gradle file. Please follow instructions here: https://jitpack.io/
 
