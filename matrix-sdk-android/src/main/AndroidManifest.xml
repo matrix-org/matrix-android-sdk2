@@ -1,0 +1,26 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.matrix.android.sdk">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application android:networkSecurityConfig="@xml/network_security_config">
+
+        <!--
+         The SDK offers a secured File provider to access downloaded files.
+         Access to these file will be given via the FileService, with a temporary
+         read access permission
+        -->
+        <provider
+            android:name=".api.session.file.MatrixSDKFileProvider"
+            android:authorities="${applicationId}.mx-sdk.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/sdk_provider_paths" />
+        </provider>
+    </application>
+
+</manifest>
