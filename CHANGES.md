@@ -1,4 +1,10 @@
-Please refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/master/CHANGES.md
+Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/master/CHANGES.md
+
+Changes in Matrix-SDK 1.0.5 (2020-08-21)
+===================================================
+
+SDK API changes ⚠️:
+- PermalinkFactory is now internal, you should use session.permalinkService() to create permalinks
 
 Changes in Matrix-SDK 0.0.1 (2020-08-14)
 ===================================================
