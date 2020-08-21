@@ -18,7 +18,7 @@ To integrate the SDK to your application, add the following gradle dependency to
 implementation 'com.github.matrix-org:matrix-android-sdk2:v0.0.1'
 ```
 
-You need to add Jitpack as a repository in your main build.gradle file. Please follow instructions here: https://jitpack.io/
+You need to add Jitpack as a repository in your main build.gradle file. Please follow instructions here: https://jitpack.io/#matrix-org/matrix-android-sdk2
 
 ## Migrate from legacy SDK
 
