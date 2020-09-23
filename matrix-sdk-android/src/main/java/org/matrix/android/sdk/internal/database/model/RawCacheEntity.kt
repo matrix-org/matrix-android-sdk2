@@ -15,26 +15,17 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.internal.di
+package org.matrix.android.sdk.internal.database.model
 
-import javax.inject.Qualifier
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
 
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-internal annotation class AuthDatabase
+internal open class RawCacheEntity(
+        @PrimaryKey
+        var url: String = "",
+        var data: String = "",
+        var lastUpdatedTimestamp: Long = 0L
+) : RealmObject() {
 
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-internal annotation class GlobalDatabase
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-internal annotation class SessionDatabase
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-internal annotation class CryptoDatabase
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-internal annotation class IdentityDatabase
+    companion object
+}
