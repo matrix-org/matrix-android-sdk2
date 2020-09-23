@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 New Vector Ltd
+ * Copyright 2020 New Vector Ltd
  * Copyright 2020 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,28 +13,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
 
-package org.matrix.android.sdk.internal.di
+package org.matrix.android.sdk.internal.raw
 
-import javax.inject.Qualifier
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.http.GET
+import retrofit2.http.Url
 
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-internal annotation class AuthDatabase
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-internal annotation class GlobalDatabase
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-internal annotation class SessionDatabase
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-internal annotation class CryptoDatabase
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-internal annotation class IdentityDatabase
+internal interface RawAPI {
+    @GET
+    fun getUrl(@Url url: String): Call<ResponseBody>
+}

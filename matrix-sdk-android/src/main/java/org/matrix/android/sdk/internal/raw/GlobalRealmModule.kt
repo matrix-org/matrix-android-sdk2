@@ -6,7 +6,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,26 +15,16 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.internal.di
+package org.matrix.android.sdk.internal.raw
 
-import javax.inject.Qualifier
+import io.realm.annotations.RealmModule
+import org.matrix.android.sdk.internal.database.model.RawCacheEntity
 
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-internal annotation class AuthDatabase
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-internal annotation class GlobalDatabase
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-internal annotation class SessionDatabase
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-internal annotation class CryptoDatabase
-
-@Qualifier
-@Retention(AnnotationRetention.RUNTIME)
-internal annotation class IdentityDatabase
+/**
+ * Realm module for global classes
+ */
+@RealmModule(library = true,
+        classes = [
+            RawCacheEntity::class
+        ])
+internal class GlobalRealmModule
