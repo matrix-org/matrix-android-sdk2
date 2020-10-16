@@ -1,5 +1,4 @@
 /*
- * Copyright (c) 2020 New Vector Ltd
  * Copyright 2020 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -202,6 +201,6 @@ internal class WidgetManager @Inject constructor(private val integrationManager:
                 stateKey = QueryStringValue.NoCondition
         )
         val powerLevelsContent = powerLevelsEvent?.content?.toModel<PowerLevelsContent>() ?: return false
-        return PowerLevelsHelper(powerLevelsContent).isUserAllowedToSend(userId, true, null)
+        return PowerLevelsHelper(powerLevelsContent).isUserAllowedToSend(userId, true, EventType.STATE_ROOM_WIDGET_LEGACY)
     }
 }

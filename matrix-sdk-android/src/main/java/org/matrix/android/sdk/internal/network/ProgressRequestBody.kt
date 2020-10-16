@@ -1,5 +1,4 @@
 /*
- * Copyright 2019 New Vector Ltd
  * Copyright 2020 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,7 +23,7 @@ import okio.BufferedSink
 import okio.ForwardingSink
 import okio.Sink
 import okio.buffer
-import org.matrix.android.sdk.api.extensions.tryThis
+import org.matrix.android.sdk.api.extensions.tryOrNull
 import java.io.IOException
 
 internal class ProgressRequestBody(private val delegate: RequestBody,
@@ -40,7 +39,7 @@ internal class ProgressRequestBody(private val delegate: RequestBody,
 
     override fun isDuplex() = delegate.isDuplex()
 
-    val length = tryThis { delegate.contentLength() } ?: -1
+    val length = tryOrNull { delegate.contentLength() } ?: -1
 
     override fun contentLength() = length
 
