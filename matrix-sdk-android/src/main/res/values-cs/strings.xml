@@ -211,7 +211,7 @@
         <item quantity="other">Odstranili jste %2$s jako adresy pro tuto místnost.</item>
     </plurals>
 
-    <string name="notice_room_aliases_added_and_removed">%1$s přidali %2$ a odstranili %3$s jako adresy pro tuto místnost.</string>
+    <string name="notice_room_aliases_added_and_removed">%1$s přidali %2$s a odstranili %3$s jako adresy pro tuto místnost.</string>
     <string name="notice_room_aliases_added_and_removed_by_you">Přidali jste %1$s a odstranili %2$s jako adresy pro tuto místnost.</string>
 
     <string name="notice_room_canonical_alias_set">%1$s nastavili hlavní adresu této místnosti na %2$s.</string>
@@ -227,7 +227,7 @@
     <string name="notice_end_to_end_ok">%1$s zapnuli end-to-end šifrování.</string>
     <string name="notice_end_to_end_ok_by_you">Zapnuli jste end-to-end šifrování.</string>
     <string name="notice_end_to_end_unknown_algorithm">%1$s zapnuli end-to-end šifrování (neznámý algoritmus %2$s).</string>
-    <string name="notice_end_to_end_unknown_algorithm_by_you">Zapnuli jste end-to-end šifrování (neznámý algoritmus %2$s).</string>
+    <string name="notice_end_to_end_unknown_algorithm_by_you">Zapnuli jste end-to-end šifrování (neznámý algoritmus %1$s).</string>
 
     <string name="key_verification_request_fallback_message">%s žádá ověření Vašeho klíče, ale Váš klient nepodporuje ověření klíče v chatu. Budete muset k ověření klíčů použít zastaralý způsob ověření.</string>
 
