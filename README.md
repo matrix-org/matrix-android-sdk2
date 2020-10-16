@@ -10,9 +10,11 @@ The SDK is still in beta, and replaces the [legacy Matrix Android SDK](https://g
 
 This repository contains the matrix-android-sdk extracted from the project [Element Android](https://github.com/vector-im/element-android)
 
-Please open any issue in the Element Android project [Create an issue](https://github.com/vector-im/element-android/issues/new/choose)
+Please open any issue in the Element Android project: [Create an issue](https://github.com/vector-im/element-android/issues/new/choose)
 
 ## How to integrate the SDK in your application
+
+### Quick start
 
 To integrate the SDK to your application, add the following gradle dependency to the build.gradle of your application module:
 
@@ -20,10 +22,22 @@ To integrate the SDK to your application, add the following gradle dependency to
 implementation 'com.github.matrix-org:matrix-android-sdk2:v0.0.1'
 ```
 
+Latest version: [![Latest version](https://img.shields.io/jitpack/v/github/matrix-org/matrix-android-sdk2)](https://jitpack.io/#matrix-org/matrix-android-sdk2)
+
 You need to add Jitpack as a repository in your main build.gradle file. Please follow instructions here: https://jitpack.io/#matrix-org/matrix-android-sdk2
+
+### Sample application
+
+You can have a look on the sample app we have written to help starting with the new SDK: https://github.com/matrix-org/matrix-android-sdk2-sample.
+
+This sample app is able to let the user connects to an existing account on any homeserver with password login, display the room list, display a room timeline and send message to a room.
+
+### Element Android
+
+Element Android is the main application developed and maintained by the core team, which uses this SDK. You can find it here: https://github.com/vector-im/element-android
 
 ## Migrate from legacy SDK
 
 Sadly there is no official documentation on how to migrate from the old SDK to the new one. Because the new SDK API is totally new, we guess that there is no easy way to handle a migration.
 
-We advice that new applications uses this new SDK.
+We strongly recommend that any new applications uses this new SDK.
