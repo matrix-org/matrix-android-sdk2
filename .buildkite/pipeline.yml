@@ -1,0 +1,34 @@
+# Use Docker file from https://hub.docker.com/r/runmymind/docker-android-sdk
+
+# Build debug version of the SDK, from the develop branch and the features and release branches
+
+steps:
+  - label: "Assemble Debug version"
+    agents:
+      # We use a medium sized instance instead of the normal small ones because
+      # gradle build is long
+      queue: "medium"
+    command: "./gradlew clean lintRelease test assembleDebug assembleAndroidTest --stacktrace"
+    artifact_paths:
+      - "matrix-sdk-android/build/outputs/aar/*.aar"
+      - "matrix-sdk-android/build/reports/*.*"
+    branches: "develop feature/* release/*"
+    plugins:
+      - docker#v3.1.0:
+          image: "runmymind/docker-android-sdk"
+
+  # Build release version of the SDK, from the master branch
+
+  - label: "Assemble Release version"
+    command: "./gradlew clean assembleRelease"
+    artifact_paths:
+      - "matrix-sdk-android/build/outputs/aar/*.aar"
+    branches: "master"
+    plugins:
+      - docker#v3.1.0:
+          image: "runmymind/docker-android-sdk"
+
+  # Code quality
+
+  # - label: "Code quality"
+  #   command: "./tools/check/check_code_quality.sh"

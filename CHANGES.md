@@ -1,5 +1,17 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/master/CHANGES.md
 
+Changes in Matrix-SDK 1.0.9 (2020-10-16)
+===================================================
+
+Imported from Element 1.0.9. (https://github.com/vector-im/element-android/releases/tag/v1.0.9)
+
+- Setup CI
+
+Changes in Matrix-SDK 1.0.8
+===================================================
+
+This release has not been done.
+
 Changes in Matrix-SDK 1.0.7 (2020-09-23)
 ===================================================
 

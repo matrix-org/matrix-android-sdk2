@@ -1,3 +1,6 @@
+[![Build status](https://badge.buildkite.com/1f5af13987f4e309ae7d6d09e818e19a5a709008c249238c1a.svg?branch=master)](https://buildkite.com/matrix-dot-org/matrix-android-sdk2)
+
+
 # matrix-android-sdk2
 
 Matrix SDK for Android, extracted from the Element Android application.
