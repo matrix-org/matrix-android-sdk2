@@ -1,5 +1,4 @@
 /*
- * Copyright 2019 New Vector Ltd
  * Copyright 2020 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -202,13 +201,13 @@ internal class DefaultRelationService @AssistedInject constructor(
 
     private fun createEncryptEventWork(event: Event, keepKeys: List<String>?): OneTimeWorkRequest {
         // Same parameter
-        val params = EncryptEventWorker.Params(sessionId, event, keepKeys)
+        val params = EncryptEventWorker.Params(sessionId, event.eventId!!, keepKeys)
         val sendWorkData = WorkerParamsFactory.toData(params)
         return timeLineSendEventWorkCommon.createWork<EncryptEventWorker>(sendWorkData, true)
     }
 
     private fun createSendEventWork(event: Event, startChain: Boolean): OneTimeWorkRequest {
-        val sendContentWorkerParams = SendEventWorker.Params(sessionId = sessionId, event = event)
+        val sendContentWorkerParams = SendEventWorker.Params(sessionId = sessionId, eventId = event.eventId!!)
         val sendWorkData = WorkerParamsFactory.toData(sendContentWorkerParams)
         return timeLineSendEventWorkCommon.createWork<SendEventWorker>(sendWorkData, startChain)
     }
