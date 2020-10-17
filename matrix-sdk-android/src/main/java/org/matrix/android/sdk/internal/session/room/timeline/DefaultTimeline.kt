@@ -1,5 +1,4 @@
 /*
- * Copyright 2019 New Vector Ltd
  * Copyright 2020 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -29,6 +28,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.matrix.android.sdk.api.MatrixCallback
 import org.matrix.android.sdk.api.extensions.orFalse
+import org.matrix.android.sdk.api.extensions.tryOrNull
 import org.matrix.android.sdk.api.session.events.model.EventType
 import org.matrix.android.sdk.api.session.events.model.RelationType
 import org.matrix.android.sdk.api.session.events.model.toModel
@@ -333,12 +333,22 @@ internal class DefaultTimeline(
 
 // Private methods *****************************************************************************
 
-    private fun rebuildEvent(eventId: String, builder: (TimelineEvent) -> TimelineEvent): Boolean {
-        return builtEventsIdMap[eventId]?.let { builtIndex ->
-            // Update the relation of existing event
-            builtEvents[builtIndex]?.let { te ->
-                builtEvents[builtIndex] = builder(te)
-                true
+    private fun rebuildEvent(eventId: String, builder: (TimelineEvent) -> TimelineEvent?): Boolean {
+        return tryOrNull {
+            builtEventsIdMap[eventId]?.let { builtIndex ->
+                // Update the relation of existing event
+                builtEvents[builtIndex]?.let { te ->
+                    val rebuiltEvent = builder(te)
+                    // If rebuilt event is filtered its returned as null and should be removed.
+                    if (rebuiltEvent == null) {
+                        builtEventsIdMap.remove(eventId)
+                        builtEventsIdMap.entries.filter { it.value > builtIndex }.forEach { it.setValue(it.value - 1) }
+                        builtEvents.removeAt(builtIndex)
+                    } else {
+                        builtEvents[builtIndex] = rebuiltEvent
+                    }
+                    true
+                }
             }
         } ?: false
     }
@@ -489,7 +499,8 @@ internal class DefaultTimeline(
             val eventEntity = results[index]
             eventEntity?.eventId?.let { eventId ->
                 postSnapshot = rebuildEvent(eventId) {
-                    buildTimelineEvent(eventEntity)
+                    val builtEvent = buildTimelineEvent(eventEntity)
+                    listOf(builtEvent).filterEventsWithSettings().firstOrNull()
                 } || postSnapshot
             }
         }
@@ -775,9 +786,8 @@ internal class DefaultTimeline(
             }
             if (!filterEdits) return@filter false
 
-            val filterRedacted = !settings.filters.filterRedacted || it.root.isRedacted()
-
-            filterRedacted
+            val filterRedacted = settings.filters.filterRedacted && it.root.isRedacted()
+            !filterRedacted
         }
     }
 

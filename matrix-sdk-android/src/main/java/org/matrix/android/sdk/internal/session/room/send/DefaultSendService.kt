@@ -1,5 +1,4 @@
 /*
- * Copyright 2019 New Vector Ltd
  * Copyright 2020 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -188,7 +187,7 @@ internal class DefaultSendService @AssistedInject constructor(
                     localEchoRepository.updateSendState(localEcho.eventId, SendState.UNSENT)
                     internalSendMedia(listOf(localEcho.root), attachmentData, true)
                 }
-                is MessageFileContent -> {
+                is MessageFileContent  -> {
                     val attachmentData = ContentAttachmentData(
                             size = messageContent.info!!.size,
                             mimeType = messageContent.info.mimeType!!,
@@ -336,7 +335,7 @@ internal class DefaultSendService @AssistedInject constructor(
 
     private fun createEncryptEventWork(event: Event, startChain: Boolean): OneTimeWorkRequest {
         // Same parameter
-        return EncryptEventWorker.Params(sessionId, event)
+        return EncryptEventWorker.Params(sessionId, event.eventId ?: "")
                 .let { WorkerParamsFactory.toData(it) }
                 .let {
                     workManagerProvider.matrixOneTimeWorkRequestBuilder<EncryptEventWorker>()
@@ -360,7 +359,10 @@ internal class DefaultSendService @AssistedInject constructor(
                                       attachment: ContentAttachmentData,
                                       isRoomEncrypted: Boolean,
                                       compressBeforeSending: Boolean): OneTimeWorkRequest {
-        val uploadMediaWorkerParams = UploadContentWorker.Params(sessionId, allLocalEchos, attachment, isRoomEncrypted, compressBeforeSending)
+        val localEchoIds = allLocalEchos.map {
+            LocalEchoIdentifiers(it.roomId!!, it.eventId!!)
+        }
+        val uploadMediaWorkerParams = UploadContentWorker.Params(sessionId, localEchoIds, attachment, isRoomEncrypted, compressBeforeSending)
         val uploadWorkData = WorkerParamsFactory.toData(uploadMediaWorkerParams)
 
         return workManagerProvider.matrixOneTimeWorkRequestBuilder<UploadContentWorker>()

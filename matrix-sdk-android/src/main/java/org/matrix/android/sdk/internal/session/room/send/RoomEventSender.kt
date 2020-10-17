@@ -1,5 +1,4 @@
 /*
- * Copyright (c) 2020 New Vector Ltd
  * Copyright 2020 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -56,7 +55,7 @@ internal class RoomEventSender @Inject constructor(
 
     private fun createEncryptEventWork(event: Event, startChain: Boolean): OneTimeWorkRequest {
         // Same parameter
-        val params = EncryptEventWorker.Params(sessionId, event)
+        val params = EncryptEventWorker.Params(sessionId, event.eventId!!)
         val sendWorkData = WorkerParamsFactory.toData(params)
 
         return workManagerProvider.matrixOneTimeWorkRequestBuilder<EncryptEventWorker>()
@@ -68,7 +67,7 @@ internal class RoomEventSender @Inject constructor(
     }
 
     private fun createSendEventWork(event: Event, startChain: Boolean): OneTimeWorkRequest {
-        val sendContentWorkerParams = SendEventWorker.Params(sessionId = sessionId, event = event)
+        val sendContentWorkerParams = SendEventWorker.Params(sessionId = sessionId, eventId = event.eventId!!)
         val sendWorkData = WorkerParamsFactory.toData(sendContentWorkerParams)
 
         return timelineSendEventWorkCommon.createWork<SendEventWorker>(sendWorkData, startChain)
