@@ -3,16 +3,37 @@
 # Build debug version of the SDK, from the develop branch and the features and release branches
 
 steps:
+  - label: "Lint"
+    agents:
+      # We use a medium sized instance instead of the normal small ones because
+      # gradle build is long
+      queue: "medium"
+    command: "./gradlew clean lintRelease --stacktrace"
+    artifact_paths:
+      - "matrix-sdk-android/build/reports/*.*"
+    plugins:
+      - docker#v3.1.0:
+          image: "runmymind/docker-android-sdk"
+
+  - label: "Tests"
+    agents:
+      # We use a medium sized instance instead of the normal small ones because
+      # gradle build is long
+      queue: "medium"
+    command: "./gradlew clean test assembleAndroidTest --stacktrace"
+    branches: "develop feature/* release/*"
+    plugins:
+      - docker#v3.1.0:
+          image: "runmymind/docker-android-sdk"
+
   - label: "Assemble Debug version"
     agents:
       # We use a medium sized instance instead of the normal small ones because
       # gradle build is long
       queue: "medium"
-    command: "./gradlew clean lintRelease test assembleDebug assembleAndroidTest --stacktrace"
+    command: "./gradlew clean assembleDebug --stacktrace"
     artifact_paths:
       - "matrix-sdk-android/build/outputs/aar/*.aar"
-      - "matrix-sdk-android/build/reports/*.*"
-    branches: "develop feature/* release/*"
     plugins:
       - docker#v3.1.0:
           image: "runmymind/docker-android-sdk"
@@ -20,10 +41,13 @@ steps:
   # Build release version of the SDK, from the master branch
 
   - label: "Assemble Release version"
-    command: "./gradlew clean assembleRelease"
+    agents:
+      # We use a medium sized instance instead of the normal small ones because
+      # gradle build is long
+      queue: "medium"
+    command: "./gradlew clean assembleRelease --stacktrace"
     artifact_paths:
       - "matrix-sdk-android/build/outputs/aar/*.aar"
-    branches: "master"
     plugins:
       - docker#v3.1.0:
           image: "runmymind/docker-android-sdk"
