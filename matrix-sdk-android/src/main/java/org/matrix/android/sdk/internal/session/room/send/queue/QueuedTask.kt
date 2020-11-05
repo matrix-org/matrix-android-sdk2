@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.matrix.android.sdk.internal.crypto.crosssigning
 
-data class SessionToCryptoRoomMembersUpdate(
-        val roomId: String,
-        val isDirect: Boolean,
-        val userIds: List<String>
-)
+package org.matrix.android.sdk.internal.session.room.send.queue
 
-data class CryptoToSessionUserTrustChange(
-        val userIds: List<String>
-)
+abstract class QueuedTask {
+    var retryCount = 0
+
+    abstract suspend fun execute()
+
+    abstract fun onTaskFailed()
+
+    abstract fun isCancelled() : Boolean
+
+    abstract fun cancel()
+}
