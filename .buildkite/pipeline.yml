@@ -7,7 +7,7 @@ steps:
     agents:
       # We use a medium sized instance instead of the normal small ones because
       # gradle build is long
-      queue: "medium"
+      queue: "xlarge"
     command: "./gradlew clean lintRelease --stacktrace"
     artifact_paths:
       - "matrix-sdk-android/build/reports/*.*"
