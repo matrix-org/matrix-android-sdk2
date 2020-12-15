@@ -1,5 +1,19 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/master/CHANGES.md
 
+Changes in Matrix-SDK 1.0.12 (2020-12-15)
+===================================================
+
+Imported from Element 1.0.12. (https://github.com/vector-im/element-android/releases/tag/v1.0.12)
+
+SDK API changes ⚠️:
+S- StateService now exposes suspendable function instead of using MatrixCallback.
+ - RawCacheStrategy has been moved and renamed to CacheStrategy
+ - FileService: remove useless FileService.DownloadMode
+
+Other important changes:
+ - Upgrade Realm dependency to 10.1.2
+ - Log HTTP requests and responses in production (level BASIC, i.e. without any private data)
+
 Changes in Matrix-SDK 1.0.11 (2020-11-30)
 ===================================================
 
