@@ -6,7 +6,7 @@ Changes in Matrix-SDK 1.0.12 (2020-12-15)
 Imported from Element 1.0.12. (https://github.com/vector-im/element-android/releases/tag/v1.0.12)
 
 SDK API changes ⚠️:
-S- StateService now exposes suspendable function instead of using MatrixCallback.
+ - StateService now exposes suspendable function instead of using MatrixCallback.
  - RawCacheStrategy has been moved and renamed to CacheStrategy
  - FileService: remove useless FileService.DownloadMode
 
