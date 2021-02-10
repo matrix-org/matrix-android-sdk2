@@ -19,6 +19,18 @@ package org.matrix.android.sdk.common
 import android.os.SystemClock
 import android.util.Log
 import androidx.lifecycle.Observer
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
+import org.matrix.android.sdk.api.auth.UIABaseAuth
+import org.matrix.android.sdk.api.auth.UserInteractiveAuthInterceptor
+import org.matrix.android.sdk.api.auth.UserPasswordAuth
+import org.matrix.android.sdk.api.auth.registration.RegistrationFlowResponse
 import org.matrix.android.sdk.api.session.Session
 import org.matrix.android.sdk.api.session.crypto.verification.IncomingSasVerificationTransaction
 import org.matrix.android.sdk.api.session.crypto.verification.OutgoingSasVerificationTransaction
@@ -36,17 +48,10 @@ import org.matrix.android.sdk.internal.crypto.MXCRYPTO_ALGORITHM_MEGOLM
 import org.matrix.android.sdk.internal.crypto.MXCRYPTO_ALGORITHM_MEGOLM_BACKUP
 import org.matrix.android.sdk.internal.crypto.keysbackup.model.MegolmBackupAuthData
 import org.matrix.android.sdk.internal.crypto.keysbackup.model.MegolmBackupCreationInfo
-import org.matrix.android.sdk.internal.crypto.model.rest.UserPasswordAuth
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Assert.assertNull
-import org.junit.Assert.assertTrue
 import java.util.UUID
 import java.util.concurrent.CountDownLatch
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.resume
 
 class CryptoTestHelper(private val mTestHelper: CommonTestHelper) {
 
@@ -73,7 +78,7 @@ class CryptoTestHelper(private val mTestHelper: CommonTestHelper) {
             }
         }
 
-        return CryptoTestData(aliceSession, roomId)
+        return CryptoTestData(roomId, listOf(aliceSession))
     }
 
     /**
@@ -139,7 +144,7 @@ class CryptoTestHelper(private val mTestHelper: CommonTestHelper) {
 //        assertNotNull(roomFromBobPOV.powerLevels)
 //        assertTrue(roomFromBobPOV.powerLevels.maySendMessage(bobSession.myUserId))
 
-        return CryptoTestData(aliceSession, aliceRoomId, bobSession)
+        return CryptoTestData(aliceRoomId, listOf(aliceSession, bobSession))
     }
 
     /**
@@ -157,7 +162,7 @@ class CryptoTestHelper(private val mTestHelper: CommonTestHelper) {
         // wait the initial sync
         SystemClock.sleep(1000)
 
-        return CryptoTestData(aliceSession, aliceRoomId, cryptoTestData.secondSession, samSession)
+        return CryptoTestData(aliceRoomId, listOf(aliceSession, cryptoTestData.secondSession!!, samSession))
     }
 
     /**
@@ -304,10 +309,18 @@ class CryptoTestHelper(private val mTestHelper: CommonTestHelper) {
     fun initializeCrossSigning(session: Session) {
         mTestHelper.doSync<Unit> {
             session.cryptoService().crossSigningService()
-                    .initializeCrossSigning(UserPasswordAuth(
-                            user = session.myUserId,
-                            password = TestConstants.PASSWORD
-                    ), it)
+                    .initializeCrossSigning(
+                            object : UserInteractiveAuthInterceptor {
+                                override fun performStage(flowResponse: RegistrationFlowResponse, errCode: String?, promise: Continuation<UIABaseAuth>) {
+                                    promise.resume(
+                                            UserPasswordAuth(
+                                                    user = session.myUserId,
+                                                    password = TestConstants.PASSWORD,
+                                                    session = flowResponse.session
+                                            )
+                                    )
+                                }
+                            }, it)
         }
     }
 
@@ -380,5 +393,31 @@ class CryptoTestHelper(private val mTestHelper: CommonTestHelper) {
                 alice.cryptoService().crossSigningService().isUserTrusted(bob.myUserId)
             }
         }
+    }
+
+    fun doE2ETestWithManyMembers(numberOfMembers: Int): CryptoTestData {
+        val aliceSession = mTestHelper.createAccount(TestConstants.USER_ALICE, defaultSessionParams)
+        aliceSession.cryptoService().setWarnOnUnknownDevices(false)
+
+        val roomId = mTestHelper.doSync<String> {
+            aliceSession.createRoom(CreateRoomParams().apply { name = "MyRoom" }, it)
+        }
+        val room = aliceSession.getRoom(roomId)!!
+
+        mTestHelper.runBlockingTest {
+            room.enableEncryption()
+        }
+
+        val sessions = mutableListOf(aliceSession)
+        for (index in 1 until numberOfMembers) {
+            val session = mTestHelper.createAccount("User_$index", defaultSessionParams)
+            mTestHelper.doSync<Unit>(timeout = 600_000) { room.invite(session.myUserId, null, it) }
+            println("TEST -> " + session.myUserId + " invited")
+            mTestHelper.doSync<Unit> { session.joinRoom(room.roomId, null, emptyList(), it) }
+            println("TEST -> " + session.myUserId + " joined")
+            sessions.add(session)
+        }
+
+        return CryptoTestData(roomId, sessions)
     }
 }

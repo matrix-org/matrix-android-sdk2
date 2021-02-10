@@ -16,37 +16,50 @@
 
 package org.matrix.android.sdk.internal.session.account
 
+import org.matrix.android.sdk.api.auth.UserInteractiveAuthInterceptor
+import org.matrix.android.sdk.internal.auth.registration.handleUIA
+import org.matrix.android.sdk.api.auth.UIABaseAuth
 import org.matrix.android.sdk.internal.di.UserId
+import org.matrix.android.sdk.internal.network.GlobalErrorReceiver
 import org.matrix.android.sdk.internal.network.executeRequest
 import org.matrix.android.sdk.internal.session.cleanup.CleanupSession
 import org.matrix.android.sdk.internal.session.identity.IdentityDisconnectTask
 import org.matrix.android.sdk.internal.task.Task
-import org.greenrobot.eventbus.EventBus
 import timber.log.Timber
 import javax.inject.Inject
 
 internal interface DeactivateAccountTask : Task<DeactivateAccountTask.Params, Unit> {
     data class Params(
-            val password: String,
-            val eraseAllData: Boolean
+            val userInteractiveAuthInterceptor: UserInteractiveAuthInterceptor,
+            val eraseAllData: Boolean,
+            val userAuthParam: UIABaseAuth? = null
     )
 }
 
 internal class DefaultDeactivateAccountTask @Inject constructor(
         private val accountAPI: AccountAPI,
-        private val eventBus: EventBus,
+        private val globalErrorReceiver: GlobalErrorReceiver,
         @UserId private val userId: String,
         private val identityDisconnectTask: IdentityDisconnectTask,
         private val cleanupSession: CleanupSession
 ) : DeactivateAccountTask {
 
     override suspend fun execute(params: DeactivateAccountTask.Params) {
-        val deactivateAccountParams = DeactivateAccountParams.create(userId, params.password, params.eraseAllData)
+        val deactivateAccountParams = DeactivateAccountParams.create(params.userAuthParam, params.eraseAllData)
 
-        executeRequest<Unit>(eventBus) {
-            apiCall = accountAPI.deactivate(deactivateAccountParams)
+        try {
+            executeRequest<Unit>(globalErrorReceiver) {
+                apiCall = accountAPI.deactivate(deactivateAccountParams)
+            }
+        } catch (throwable: Throwable) {
+            if (!handleUIA(throwable, params.userInteractiveAuthInterceptor) { auth ->
+                        execute(params.copy(userAuthParam = auth))
+                    }
+            ) {
+                Timber.d("## UIA: propagate failure")
+                throw  throwable
+            }
         }
-
         // Logout from identity server if any, ignoring errors
         runCatching { identityDisconnectTask.execute(Unit) }
                 .onFailure { Timber.w(it, "Unable to disconnect identity server") }
