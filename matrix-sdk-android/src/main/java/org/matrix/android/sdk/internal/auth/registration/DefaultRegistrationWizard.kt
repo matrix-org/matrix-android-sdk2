@@ -21,12 +21,10 @@ import kotlinx.coroutines.delay
 import okhttp3.OkHttpClient
 import org.matrix.android.sdk.api.MatrixCallback
 import org.matrix.android.sdk.api.auth.data.LoginFlowTypes
-import org.matrix.android.sdk.api.auth.registration.RegisterThreePid
-import org.matrix.android.sdk.api.auth.registration.RegistrationResult
-import org.matrix.android.sdk.api.auth.registration.RegistrationWizard
-import org.matrix.android.sdk.api.auth.registration.toFlowResult
+import org.matrix.android.sdk.api.auth.registration.*
 import org.matrix.android.sdk.api.failure.Failure
 import org.matrix.android.sdk.api.failure.Failure.RegistrationFlowError
+import org.matrix.android.sdk.api.failure.isRegistrationAvailabilityError
 import org.matrix.android.sdk.api.util.Cancelable
 import org.matrix.android.sdk.api.util.NoOpCancellable
 import org.matrix.android.sdk.internal.auth.AuthAPI
@@ -53,6 +51,7 @@ internal class DefaultRegistrationWizard(
 
     private val authAPI = buildAuthAPI()
     private val registerTask = DefaultRegisterTask(authAPI)
+    private val registerAvailableTask = RegisterAvailableTask(authAPI)
     private val registerAddThreePidTask = DefaultRegisterAddThreePidTask(authAPI)
     private val validateCodeTask = DefaultValidateCodeTask(authAPI)
 
@@ -238,6 +237,28 @@ internal class DefaultRegistrationWizard(
 
         val session = sessionCreator.createSession(credentials, pendingSessionData.homeServerConnectionConfig)
         return RegistrationResult.Success(session)
+    }
+
+    override fun registrationAvailable(userName: String, callback: MatrixCallback<RegistrationAvailability>): Cancelable {
+        return coroutineScope.launchToCallback(coroutineDispatchers.main, callback) {
+            checkRegistrationAvailable(userName)
+        }
+    }
+
+    private suspend fun checkRegistrationAvailable(userName: String,
+                                                   delayMillis: Long = 0): RegistrationAvailability {
+        delay(delayMillis)
+        val availability = try {
+            registerAvailableTask.execute(userName)
+        } catch (exception: Throwable) {
+            if(exception.isRegistrationAvailabilityError()) {
+                return RegistrationAvailability.NotAvailable(exception as Failure.ServerError)
+            } else {
+                throw exception
+            }
+        }
+
+        return RegistrationAvailability.Available(availability.available)
     }
 
     private fun buildAuthAPI(): AuthAPI {

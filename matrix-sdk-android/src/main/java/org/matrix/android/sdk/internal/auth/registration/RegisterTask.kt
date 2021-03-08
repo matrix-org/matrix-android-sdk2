@@ -16,6 +16,7 @@
 
 package org.matrix.android.sdk.internal.auth.registration
 
+import org.matrix.android.sdk.api.auth.data.Availability
 import org.matrix.android.sdk.api.auth.data.Credentials
 import org.matrix.android.sdk.api.failure.Failure
 import org.matrix.android.sdk.api.failure.toRegistrationFlowResponse
@@ -25,12 +26,12 @@ import org.matrix.android.sdk.internal.task.Task
 
 internal interface RegisterTask : Task<RegisterTask.Params, Credentials> {
     data class Params(
-            val registrationParams: RegistrationParams
+        val registrationParams: RegistrationParams
     )
 }
 
 internal class DefaultRegisterTask(
-        private val authAPI: AuthAPI
+    private val authAPI: AuthAPI
 ) : RegisterTask {
 
     override suspend fun execute(params: RegisterTask.Params): Credentials {
@@ -40,8 +41,20 @@ internal class DefaultRegisterTask(
             }
         } catch (throwable: Throwable) {
             throw throwable.toRegistrationFlowResponse()
-                    ?.let { Failure.RegistrationFlowError(it) }
-                    ?: throwable
+                ?.let { Failure.RegistrationFlowError(it) }
+                ?: throwable
+        }
+    }
+}
+
+internal class RegisterAvailableTask(private val authAPI: AuthAPI) : Task<String, Availability> {
+    override suspend fun execute(params: String): Availability {
+        try {
+            return executeRequest(null) {
+                apiCall = authAPI.registerAvailable(params)
+            }
+        } catch (throwable: Throwable) {
+            throw throwable
         }
     }
 }

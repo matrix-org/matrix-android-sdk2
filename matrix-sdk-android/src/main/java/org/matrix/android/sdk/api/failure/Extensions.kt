@@ -16,6 +16,7 @@
 
 package org.matrix.android.sdk.api.failure
 
+import org.matrix.android.sdk.api.auth.registration.RegistrationAvailability
 import org.matrix.android.sdk.api.auth.registration.RegistrationFlowResponse
 import org.matrix.android.sdk.api.extensions.tryOrNull
 import org.matrix.android.sdk.internal.di.MoshiProvider
@@ -72,4 +73,12 @@ fun Throwable.toRegistrationFlowResponse(): RegistrationFlowResponse? {
     } else {
         null
     }
+}
+
+fun Throwable.isRegistrationAvailabilityError(): Boolean {
+    return this is Failure.ServerError
+            && (this.error.code == MatrixError.M_USER_IN_USE
+                    || this.error.code == MatrixError.M_INVALID_USERNAME
+                    || this.error.code == MatrixError.M_EXCLUSIVE
+                    || this.httpCode == 429)
 }
