@@ -245,9 +245,7 @@ internal class DefaultRegistrationWizard(
         }
     }
 
-    private suspend fun checkRegistrationAvailable(userName: String,
-                                                   delayMillis: Long = 0): RegistrationAvailability {
-        delay(delayMillis)
+    private suspend fun checkRegistrationAvailable(userName: String): RegistrationAvailability {
         val availability = try {
             registerAvailableTask.execute(userName)
         } catch (exception: Throwable) {

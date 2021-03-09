@@ -14,13 +14,17 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.api.auth.data
+package org.matrix.android.sdk.internal.auth.registration
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import org.matrix.android.sdk.api.auth.data.Availability
+import org.matrix.android.sdk.internal.auth.AuthAPI
+import org.matrix.android.sdk.internal.network.executeRequest
+import org.matrix.android.sdk.internal.task.Task
 
-@JsonClass(generateAdapter = true)
-data class Availability(
-    @Json(name = "available")
-    val available: Boolean
-)
+internal class RegisterAvailableTask(private val authAPI: AuthAPI) : Task<String, Availability> {
+    override suspend fun execute(params: String): Availability {
+        return executeRequest(null) {
+            apiCall = authAPI.registerAvailable(params)
+        }
+    }
+}
