@@ -31,6 +31,12 @@ interface RegistrationWizard {
 
     fun dummy(callback: MatrixCallback<RegistrationResult>): Cancelable
 
+    fun createAccountWithType(userName: String,
+                              password: String,
+                              initialDeviceDisplayName: String?,
+                              loginFlowType: String,
+                              callback: MatrixCallback<RegistrationResult>): Cancelable
+
     fun addThreePid(threePid: RegisterThreePid, callback: MatrixCallback<RegistrationResult>): Cancelable
 
     fun sendAgainThreePid(callback: MatrixCallback<RegistrationResult>): Cancelable
