@@ -62,12 +62,12 @@ internal class WidgetManager @Inject constructor(private val integrationManager:
     private val lifecycleOwner: LifecycleOwner = LifecycleOwner { lifecycleRegistry }
     private val lifecycleRegistry: LifecycleRegistry = LifecycleRegistry(lifecycleOwner)
 
-    override fun onStart() {
+    override fun onSessionStarted() {
         lifecycleRegistry.currentState = Lifecycle.State.STARTED
         integrationManager.addListener(this)
     }
 
-    override fun onStop() {
+    override fun onSessionStopped() {
         integrationManager.removeListener(this)
         lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
     }
@@ -102,6 +102,10 @@ internal class WidgetManager @Inject constructor(private val integrationManager:
                 stateKey = widgetId
         )
         return widgetEvents.mapEventsToWidgets(widgetTypes, excludedTypes)
+    }
+
+    fun getWidgetComputedUrl(widget: Widget, isLightTheme: Boolean): String? {
+        return widgetFactory.computeURL(widget, isLightTheme)
     }
 
     private fun List<Event>.mapEventsToWidgets(widgetTypes: Set<String>? = null,
