@@ -36,7 +36,7 @@ interface RegistrationWizard {
 
     suspend fun checkIfEmailHasBeenValidated(delayMillis: Long): RegistrationResult
 
-    fun registrationAvailable(userName: String, callback: MatrixCallback<RegistrationAvailability>): Cancelable
+    suspend fun registrationAvailable(userName: String): RegistrationAvailability
 
     val currentThreePid: String?
 

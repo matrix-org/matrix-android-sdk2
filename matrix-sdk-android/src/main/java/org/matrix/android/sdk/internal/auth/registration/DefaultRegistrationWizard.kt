@@ -203,13 +203,7 @@ internal class DefaultRegistrationWizard(
         return RegistrationResult.Success(session)
     }
 
-    override fun registrationAvailable(userName: String, callback: MatrixCallback<RegistrationAvailability>): Cancelable {
-        return coroutineScope.launchToCallback(coroutineDispatchers.main, callback) {
-            checkRegistrationAvailable(userName)
-        }
-    }
-
-    private suspend fun checkRegistrationAvailable(userName: String): RegistrationAvailability {
+    override suspend fun registrationAvailable(userName: String): RegistrationAvailability {
         val availability = try {
             registerAvailableTask.execute(userName)
         } catch (exception: Throwable) {
