@@ -184,26 +184,23 @@ internal class DefaultRegistrationWizard(
         return performRegistrationRequest(params)
     }
 
-    override fun createAccountWithType(userName: String,
+    override suspend fun createAccountWithType(userName: String,
                                password: String,
                                initialDeviceDisplayName: String?,
-                               loginFlowType: String,
-                               callback: MatrixCallback<RegistrationResult>): Cancelable {
-        val safeSession = pendingSessionData.currentSession ?: run {
-            callback.onFailure(IllegalStateException("developer error, call getRegistrationFlow method first"))
-            return NoOpCancellable
-        }
+                               loginFlowType: String?): RegistrationResult {
+        val safeSession = pendingSessionData.currentSession
+                ?: throw IllegalStateException("developer error, call getRegistrationFlow() method first")
+
+        val type = loginFlowType ?: LoginFlowTypes.DUMMY
 
         val params = RegistrationParams(
                 username = userName,
                 password = password,
                 initialDeviceDisplayName = initialDeviceDisplayName,
-                auth = AuthParams(type = loginFlowType, session = safeSession)
+                auth = AuthParams(type = type, session = safeSession)
         )
 
-        return coroutineScope.launchToCallback(coroutineDispatchers.main, callback) {
-            performRegistrationRequest(params)
-        }
+        return performRegistrationRequest(params)
     }
 
     private suspend fun performRegistrationRequest(registrationParams: RegistrationParams,

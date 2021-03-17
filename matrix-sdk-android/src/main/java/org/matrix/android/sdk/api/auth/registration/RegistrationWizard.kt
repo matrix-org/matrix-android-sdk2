@@ -33,7 +33,7 @@ interface RegistrationWizard {
     suspend fun createAccountWithType(userName: String,
                               password: String,
                               initialDeviceDisplayName: String?,
-                              loginFlowType: String): RegistrationResult
+                              loginFlowType: String? = null): RegistrationResult
 
     suspend fun sendAgainThreePid(): RegistrationResult
 
