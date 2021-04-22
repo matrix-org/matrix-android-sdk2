@@ -16,7 +16,6 @@
 
 package org.matrix.android.sdk.internal.auth
 
-import org.matrix.android.sdk.api.auth.data.Availability
 import org.matrix.android.sdk.api.auth.data.Credentials
 import org.matrix.android.sdk.internal.auth.data.Availability
 import org.matrix.android.sdk.internal.auth.data.LoginFlowResponse
@@ -73,12 +72,6 @@ internal interface AuthAPI {
      */
     @GET(NetworkConstants.URI_API_PREFIX_PATH_R0 + "register/available")
     suspend fun registerAvailable(@Query("username") username: String): Availability
-
-    /**
-     * Checks to see if a username is available, and valid, for the server.
-     */
-    @GET(NetworkConstants.URI_API_PREFIX_PATH_R0 + "register/available")
-    fun registerAvailable(@Query("username") username: String): Call<Availability>
 
     /**
      * Add 3Pid during registration
