@@ -18,7 +18,11 @@ package org.matrix.android.sdk.internal.auth.registration
 
 import kotlinx.coroutines.delay
 import org.matrix.android.sdk.api.auth.data.LoginFlowTypes
-import org.matrix.android.sdk.api.auth.registration.*
+import org.matrix.android.sdk.api.auth.registration.RegisterThreePid
+import org.matrix.android.sdk.api.auth.registration.RegistrationAvailability
+import org.matrix.android.sdk.api.auth.registration.RegistrationResult
+import org.matrix.android.sdk.api.auth.registration.RegistrationWizard
+import org.matrix.android.sdk.api.auth.registration.toFlowResult
 import org.matrix.android.sdk.api.failure.Failure
 import org.matrix.android.sdk.api.failure.Failure.RegistrationFlowError
 import org.matrix.android.sdk.api.failure.isRegistrationAvailabilityError
@@ -38,10 +42,10 @@ internal class DefaultRegistrationWizard(
 
     private var pendingSessionData: PendingSessionData = pendingSessionStore.getPendingSessionData() ?: error("Pending session data should exist here")
 
-    private val registerTask = DefaultRegisterTask(authAPI)
-    private val registerAvailableTask = RegisterAvailableTask(authAPI)
-    private val registerAddThreePidTask = DefaultRegisterAddThreePidTask(authAPI)
-    private val validateCodeTask = DefaultValidateCodeTask(authAPI)
+    private val registerTask: RegisterTask = DefaultRegisterTask(authAPI)
+    private val registerAvailableTask: RegisterAvailableTask = DefaultRegisterAvailableTask(authAPI)
+    private val registerAddThreePidTask: RegisterAddThreePidTask = DefaultRegisterAddThreePidTask(authAPI)
+    private val validateCodeTask: ValidateCodeTask = DefaultValidateCodeTask(authAPI)
 
     override val currentThreePid: String?
         get() {
@@ -223,16 +227,6 @@ internal class DefaultRegistrationWizard(
     }
 
     override suspend fun registrationAvailable(userName: String): RegistrationAvailability {
-        val availability = try {
-            registerAvailableTask.execute(userName)
-        } catch (exception: Throwable) {
-            if(exception.isRegistrationAvailabilityError()) {
-                return RegistrationAvailability.NotAvailable(exception as Failure.ServerError)
-            } else {
-                throw exception
-            }
-        }
-
-        return RegistrationAvailability.Available(availability.available)
+        return registerAvailableTask.execute(RegisterAvailableTask.Params(userName))
     }
 }

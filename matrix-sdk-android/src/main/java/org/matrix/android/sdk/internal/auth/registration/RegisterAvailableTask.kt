@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Matrix.org Foundation C.I.C.
+ * Copyright 2021 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,32 @@
 
 package org.matrix.android.sdk.internal.auth.registration
 
-import org.matrix.android.sdk.api.auth.data.Availability
+import org.matrix.android.sdk.api.auth.registration.RegistrationAvailability
+import org.matrix.android.sdk.api.failure.Failure
+import org.matrix.android.sdk.api.failure.isRegistrationAvailabilityError
 import org.matrix.android.sdk.internal.auth.AuthAPI
 import org.matrix.android.sdk.internal.network.executeRequest
 import org.matrix.android.sdk.internal.task.Task
 
-internal class RegisterAvailableTask(private val authAPI: AuthAPI) : Task<String, Availability> {
-    override suspend fun execute(params: String): Availability {
-        return executeRequest(null) {
-            apiCall = authAPI.registerAvailable(params)
+internal interface RegisterAvailableTask : Task<RegisterAvailableTask.Params, RegistrationAvailability> {
+    data class Params(
+            val userName: String
+    )
+}
+
+internal class DefaultRegisterAvailableTask(private val authAPI: AuthAPI) : RegisterAvailableTask {
+    override suspend fun execute(params: RegisterAvailableTask.Params): RegistrationAvailability {
+        return try {
+            executeRequest(null) {
+                authAPI.registerAvailable(params.userName)
+            }
+            RegistrationAvailability.Available
+        } catch (exception: Throwable) {
+            if (exception.isRegistrationAvailabilityError()) {
+                RegistrationAvailability.NotAvailable(exception as Failure.ServerError)
+            } else {
+                throw exception
+            }
         }
     }
 }
