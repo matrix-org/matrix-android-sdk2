@@ -70,12 +70,15 @@ internal class UIEchoManager(
         return existingState != sendState
     }
 
-    fun onLocalEchoCreated(timelineEvent: TimelineEvent)  {
+    // return true if should update
+    fun onLocalEchoCreated(timelineEvent: TimelineEvent): Boolean {
+        var postSnapshot = false
+
         // Manage some ui echos (do it before filter because actual event could be filtered out)
         when (timelineEvent.root.getClearType()) {
             EventType.REDACTION -> {
             }
-            EventType.REACTION -> {
+            EventType.REACTION  -> {
                 val content = timelineEvent.root.content?.toModel<ReactionContent>()
                 if (RelationType.ANNOTATION == content?.relatesTo?.type) {
                     val reaction = content.relatesTo.key
@@ -88,14 +91,21 @@ internal class UIEchoManager(
                                             reaction = reaction
                                     )
                             )
-                    listener.rebuildEvent(relatedEventID) {
+                    postSnapshot = listener.rebuildEvent(relatedEventID) {
                         decorateEventWithReactionUiEcho(it)
-                    }
+                    } || postSnapshot
                 }
             }
         }
-        Timber.v("On local echo created: ${timelineEvent.eventId}")
-        inMemorySendingEvents.add(0, timelineEvent)
+
+        // do not add events that would have been filtered
+        if (listOf(timelineEvent).filterEventsWithSettings(settings).isNotEmpty()) {
+            Timber.v("On local echo created: ${timelineEvent.eventId}")
+            inMemorySendingEvents.add(0, timelineEvent)
+            postSnapshot = true
+        }
+
+        return postSnapshot
     }
 
     fun decorateEventWithReactionUiEcho(timelineEvent: TimelineEvent): TimelineEvent? {

@@ -25,6 +25,10 @@ data class TimelineSettings(
          */
         val initialSize: Int,
         /**
+         * Filters for timeline event
+         */
+        val filters: TimelineEventFilters = TimelineEventFilters(),
+        /**
          * If true, will build read receipts for each event.
          */
         val buildReadReceipts: Boolean = true

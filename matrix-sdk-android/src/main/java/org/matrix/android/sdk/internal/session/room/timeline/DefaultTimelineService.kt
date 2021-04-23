@@ -31,6 +31,7 @@ import org.matrix.android.sdk.api.session.room.timeline.TimelineService
 import org.matrix.android.sdk.api.session.room.timeline.TimelineSettings
 import org.matrix.android.sdk.api.util.Optional
 import org.matrix.android.sdk.internal.database.RealmSessionProvider
+import org.matrix.android.sdk.internal.database.mapper.ReadReceiptsSummaryMapper
 import org.matrix.android.sdk.internal.database.mapper.TimelineEventMapper
 import org.matrix.android.sdk.internal.database.model.TimelineEventEntity
 import org.matrix.android.sdk.internal.database.model.TimelineEventEntityFields
@@ -51,6 +52,7 @@ internal class DefaultTimelineService @AssistedInject constructor(
         private val paginationTask: PaginationTask,
         private val fetchTokenAndPaginateTask: FetchTokenAndPaginateTask,
         private val timelineEventMapper: TimelineEventMapper,
+        private val readReceiptsSummaryMapper: ReadReceiptsSummaryMapper,
         private val loadRoomMembersTask: LoadRoomMembersTask,
         private val readReceiptHandler: ReadReceiptHandler
 ) : TimelineService {
@@ -70,6 +72,7 @@ internal class DefaultTimelineService @AssistedInject constructor(
                 paginationTask = paginationTask,
                 timelineEventMapper = timelineEventMapper,
                 settings = settings,
+                hiddenReadReceipts = TimelineHiddenReadReceipts(readReceiptsSummaryMapper, roomId, settings),
                 timelineInput = timelineInput,
                 eventDecryptor = eventDecryptor,
                 fetchTokenAndPaginateTask = fetchTokenAndPaginateTask,
