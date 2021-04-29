@@ -13,14 +13,14 @@ else
   exit 1
 fi
 
-# Check that Element Android is on master branch
+# Check that Element Android is on main branch
 
 pushd $elementAndroidPath
 
 elementBranch=`git rev-parse --abbrev-ref HEAD`
 
-if [ "$elementBranch" != "master" ]; then
-  read -p "Warning, Element Android is not on master branch but on branch '${elementBranch}' . Continue (y/n)? " -n 1 CONT
+if [ "$elementBranch" != "main" ]; then
+  read -p "Warning, Element Android is not on main branch but on branch '${elementBranch}' . Continue (y/n)? " -n 1 CONT
   echo
   if [ "$CONT" != "y" ]; then
     exit 0
