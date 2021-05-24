@@ -45,6 +45,9 @@ internal class DefaultSaveFilterTask @Inject constructor(
             FilterService.FilterPreset.ElementFilter -> {
                 FilterFactory.createElementFilter()
             }
+            FilterService.FilterPreset.GlobeKeeperFilter -> {
+                FilterFactory.createGKFilter()
+            }
             FilterService.FilterPreset.NoFilter      -> {
                 FilterFactory.createDefaultFilter()
             }
@@ -52,6 +55,9 @@ internal class DefaultSaveFilterTask @Inject constructor(
         val roomFilter = when (params.filterPreset) {
             FilterService.FilterPreset.ElementFilter -> {
                 FilterFactory.createElementRoomFilter()
+            }
+            FilterService.FilterPreset.GlobeKeeperFilter -> {
+                FilterFactory.createGKRoomFilter()
             }
             FilterService.FilterPreset.NoFilter      -> {
                 FilterFactory.createDefaultRoomFilter()

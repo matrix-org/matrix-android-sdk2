@@ -42,6 +42,15 @@ internal object FilterFactory {
         )
     }
 
+    fun createGKFilter(): Filter { //TODO GK filter
+        return Filter(
+                room = RoomFilter(
+                        timeline = createElementTimelineFilter(),
+                        state = createElementStateFilter()
+                )
+        )
+    }
+
     fun createDefaultRoomFilter(): RoomEventFilter {
         return RoomEventFilter(
                 lazyLoadMembers = true
@@ -51,6 +60,15 @@ internal object FilterFactory {
     fun createElementRoomFilter(): RoomEventFilter {
         return RoomEventFilter(
                 lazyLoadMembers = true
+                // TODO Enable this for optimization
+                // types = (listOfSupportedEventTypes + listOfSupportedStateEventTypes).toMutableList()
+        )
+    }
+
+    fun createGKRoomFilter(): RoomEventFilter {
+        return RoomEventFilter(
+                lazyLoadMembers = true,
+                notTypes = listOf("com.globekeeper.connect.location")
                 // TODO Enable this for optimization
                 // types = (listOfSupportedEventTypes + listOfSupportedStateEventTypes).toMutableList()
         )

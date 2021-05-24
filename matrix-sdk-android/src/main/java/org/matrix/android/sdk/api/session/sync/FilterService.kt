@@ -24,7 +24,12 @@ interface FilterService {
         /**
          * Filter for Element, will include only known event type
          */
-        ElementFilter
+        ElementFilter,
+
+        /**
+         * Filter for GlobeKeeper, will include only known event type
+         */
+        GlobeKeeperFilter
     }
 
     /**
