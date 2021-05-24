@@ -33,11 +33,20 @@ internal object FilterFactory {
         return FilterUtil.enableLazyLoading(Filter(), true)
     }
 
-    fun createRiotFilter(): Filter {
+    fun createElementFilter(): Filter {
         return Filter(
                 room = RoomFilter(
-                        timeline = createRiotTimelineFilter(),
-                        state = createRiotStateFilter()
+                        timeline = createElementTimelineFilter(),
+                        state = createElementStateFilter()
+                )
+        )
+    }
+
+    fun createGKFilter(): Filter { //TODO GK filter
+        return Filter(
+                room = RoomFilter(
+                        timeline = createElementTimelineFilter(),
+                        state = createElementStateFilter()
                 )
         )
     }
@@ -48,7 +57,7 @@ internal object FilterFactory {
         )
     }
 
-    fun createRiotRoomFilter(): RoomEventFilter {
+    fun createElementRoomFilter(): RoomEventFilter {
         return RoomEventFilter(
                 lazyLoadMembers = true
                 // TODO Enable this for optimization
@@ -56,26 +65,35 @@ internal object FilterFactory {
         )
     }
 
-    private fun createRiotTimelineFilter(): RoomEventFilter {
-        return RoomEventFilter().apply {
-            // TODO Enable this for optimization
-            // types = listOfSupportedEventTypes.toMutableList()
-        }
+    fun createGKRoomFilter(): RoomEventFilter {
+        return RoomEventFilter(
+                lazyLoadMembers = true,
+                notTypes = listOf("com.globekeeper.connect.location")
+                // TODO Enable this for optimization
+                // types = (listOfSupportedEventTypes + listOfSupportedStateEventTypes).toMutableList()
+        )
     }
 
-    private fun createRiotStateFilter(): RoomEventFilter {
+    private fun createElementTimelineFilter(): RoomEventFilter? {
+        return null // RoomEventFilter().apply {
+            // TODO Enable this for optimization
+            // types = listOfSupportedEventTypes.toMutableList()
+        // }
+    }
+
+    private fun createElementStateFilter(): RoomEventFilter {
         return RoomEventFilter(
                 lazyLoadMembers = true
         )
     }
 
-    // Get only managed types by Riot
+    // Get only managed types by Element
     private val listOfSupportedEventTypes = listOf(
             // TODO Complete the list
             EventType.MESSAGE
     )
 
-    // Get only managed types by Riot
+    // Get only managed types by Element
     private val listOfSupportedStateEventTypes = listOf(
             // TODO Complete the list
             EventType.STATE_ROOM_MEMBER

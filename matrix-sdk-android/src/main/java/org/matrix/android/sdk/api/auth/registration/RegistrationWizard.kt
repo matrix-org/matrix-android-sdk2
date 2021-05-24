@@ -16,28 +16,32 @@
 
 package org.matrix.android.sdk.api.auth.registration
 
-import org.matrix.android.sdk.api.MatrixCallback
-import org.matrix.android.sdk.api.util.Cancelable
-
 interface RegistrationWizard {
 
-    fun getRegistrationFlow(callback: MatrixCallback<RegistrationResult>): Cancelable
+    suspend fun getRegistrationFlow(): RegistrationResult
 
-    fun createAccount(userName: String, password: String, initialDeviceDisplayName: String?, callback: MatrixCallback<RegistrationResult>): Cancelable
+    suspend fun createAccount(userName: String, password: String, initialDeviceDisplayName: String?): RegistrationResult
 
-    fun performReCaptcha(response: String, callback: MatrixCallback<RegistrationResult>): Cancelable
+    suspend fun performReCaptcha(response: String): RegistrationResult
 
-    fun acceptTerms(callback: MatrixCallback<RegistrationResult>): Cancelable
+    suspend fun acceptTerms(): RegistrationResult
 
-    fun dummy(callback: MatrixCallback<RegistrationResult>): Cancelable
+    suspend fun dummy(): RegistrationResult
 
-    fun addThreePid(threePid: RegisterThreePid, callback: MatrixCallback<RegistrationResult>): Cancelable
+    suspend fun addThreePid(threePid: RegisterThreePid): RegistrationResult
 
-    fun sendAgainThreePid(callback: MatrixCallback<RegistrationResult>): Cancelable
+    suspend fun createAccountWithType(userName: String,
+                              password: String,
+                              initialDeviceDisplayName: String?,
+                              loginFlowType: String? = null): RegistrationResult
 
-    fun handleValidateThreePid(code: String, callback: MatrixCallback<RegistrationResult>): Cancelable
+    suspend fun sendAgainThreePid(): RegistrationResult
 
-    fun checkIfEmailHasBeenValidated(delayMillis: Long, callback: MatrixCallback<RegistrationResult>): Cancelable
+    suspend fun handleValidateThreePid(code: String): RegistrationResult
+
+    suspend fun checkIfEmailHasBeenValidated(delayMillis: Long): RegistrationResult
+
+    suspend fun registrationAvailable(userName: String): RegistrationAvailability
 
     val currentThreePid: String?
 
