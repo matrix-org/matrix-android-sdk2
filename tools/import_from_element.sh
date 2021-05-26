@@ -39,6 +39,8 @@ cp -r ${elementAndroidPath}/matrix-sdk-android .
 # Add all changes to git
 git add -A
 
+read -p "Press enter to build the library (update the version first?)"
+
 # Build the library
 ./gradlew clean assembleRelease
 

@@ -20,6 +20,7 @@ import org.matrix.android.sdk.BuildConfig
 import org.matrix.android.sdk.api.session.group.model.GroupSummary
 import org.matrix.android.sdk.api.session.room.model.RoomMemberSummary
 import org.matrix.android.sdk.api.session.room.model.RoomSummary
+import org.matrix.android.sdk.api.session.room.model.SpaceChildInfo
 import org.matrix.android.sdk.api.session.room.model.roomdirectory.PublicRoom
 import org.matrix.android.sdk.api.session.room.sender.SenderInfo
 import org.matrix.android.sdk.api.session.user.model.User
@@ -116,22 +117,22 @@ sealed class MatrixItem(
                     var first = dn[startIndex]
 
                     // LEFT-TO-RIGHT MARK
-                    if (dn.length >= 2 && 0x200e == first.toInt()) {
+                    if (dn.length >= 2 && 0x200e == first.code) {
                         startIndex++
                         first = dn[startIndex]
                     }
 
                     // check if it’s the start of a surrogate pair
-                    if (first.toInt() in 0xD800..0xDBFF && dn.length > startIndex + 1) {
+                    if (first.code in 0xD800..0xDBFF && dn.length > startIndex + 1) {
                         val second = dn[startIndex + 1]
-                        if (second.toInt() in 0xDC00..0xDFFF) {
+                        if (second.code in 0xDC00..0xDFFF) {
                             length++
                         }
                     }
 
                     dn.substring(startIndex, startIndex + length)
                 }
-                .toUpperCase(Locale.ROOT)
+                .uppercase(Locale.ROOT)
     }
 
     companion object {
@@ -157,3 +158,5 @@ fun PublicRoom.toMatrixItem() = MatrixItem.RoomItem(roomId, name ?: getPrimaryAl
 fun RoomMemberSummary.toMatrixItem() = MatrixItem.UserItem(userId, displayName, avatarUrl)
 
 fun SenderInfo.toMatrixItem() = MatrixItem.UserItem(userId, disambiguatedDisplayName, avatarUrl)
+
+fun SpaceChildInfo.toMatrixItem() = MatrixItem.RoomItem(childRoomId, name ?: canonicalAlias ?: "", avatarUrl)

@@ -33,10 +33,12 @@ import org.matrix.android.sdk.api.auth.data.SessionParams
 import org.matrix.android.sdk.api.auth.data.sessionId
 import org.matrix.android.sdk.api.crypto.MXCryptoConfig
 import org.matrix.android.sdk.api.session.Session
+import org.matrix.android.sdk.api.session.SessionLifecycleObserver
 import org.matrix.android.sdk.api.session.accountdata.AccountDataService
 import org.matrix.android.sdk.api.session.events.EventService
 import org.matrix.android.sdk.api.session.homeserver.HomeServerCapabilitiesService
 import org.matrix.android.sdk.api.session.initsync.InitialSyncProgressService
+import org.matrix.android.sdk.api.session.openid.OpenIdService
 import org.matrix.android.sdk.api.session.permalinks.PermalinkService
 import org.matrix.android.sdk.api.session.securestorage.SecureStorageService
 import org.matrix.android.sdk.api.session.securestorage.SharedSecretStorageService
@@ -81,6 +83,7 @@ import org.matrix.android.sdk.internal.session.homeserver.DefaultHomeServerCapab
 import org.matrix.android.sdk.internal.session.identity.DefaultIdentityService
 import org.matrix.android.sdk.internal.session.initsync.DefaultInitialSyncProgressService
 import org.matrix.android.sdk.internal.session.integrationmanager.IntegrationManager
+import org.matrix.android.sdk.internal.session.openid.DefaultOpenIdService
 import org.matrix.android.sdk.internal.session.permalinks.DefaultPermalinkService
 import org.matrix.android.sdk.internal.session.room.EventRelationsAggregationProcessor
 import org.matrix.android.sdk.internal.session.room.create.RoomCreateEventProcessor
@@ -345,6 +348,10 @@ internal abstract class SessionModule {
 
     @Binds
     @IntoSet
+    abstract fun bindSessionCoroutineScopeHolder(holder: SessionCoroutineScopeHolder): SessionLifecycleObserver
+
+    @Binds
+    @IntoSet
     abstract fun bindEventSenderProcessorAsSessionLifecycleObserver(processor: EventSenderProcessorCoroutine): SessionLifecycleObserver
 
     @Binds
@@ -367,6 +374,9 @@ internal abstract class SessionModule {
 
     @Binds
     abstract fun bindPermalinkService(service: DefaultPermalinkService): PermalinkService
+
+    @Binds
+    abstract fun bindOpenIdTokenService(service: DefaultOpenIdService): OpenIdService
 
     @Binds
     abstract fun bindTypingUsersTracker(tracker: DefaultTypingUsersTracker): TypingUsersTracker

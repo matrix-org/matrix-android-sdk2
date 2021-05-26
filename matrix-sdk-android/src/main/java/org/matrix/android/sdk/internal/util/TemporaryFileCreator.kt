@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.api.session.room
+package org.matrix.android.sdk.internal.util
 
-import androidx.lifecycle.LiveData
-import androidx.paging.PagedList
-import org.matrix.android.sdk.api.session.room.model.RoomSummary
+import android.content.Context
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.util.UUID
+import javax.inject.Inject
 
-interface UpdatableFilterLivePageResult {
-    val livePagedList: LiveData<PagedList<RoomSummary>>
-
-    fun updateQuery(queryParams: RoomSummaryQueryParams)
+internal class TemporaryFileCreator @Inject constructor(
+        private val context: Context
+) {
+    suspend fun create(): File {
+        return withContext(Dispatchers.IO) {
+            File.createTempFile(UUID.randomUUID().toString(), null, context.cacheDir)
+        }
+    }
 }
