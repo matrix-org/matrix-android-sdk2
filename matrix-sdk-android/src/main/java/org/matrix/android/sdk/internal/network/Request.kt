@@ -51,7 +51,7 @@ internal suspend inline fun <DATA> executeRequest(globalErrorReceiver: GlobalErr
         try {
             return requestBlock()
         } catch (throwable: Throwable) {
-            val exception = when (throwable) {
+            /*val exception = when (throwable) {
                 is KotlinNullPointerException -> IllegalStateException("The request returned a null body")
                 is HttpException              -> throwable.toFailure(globalErrorReceiver)
                 else                          -> throwable
@@ -100,7 +100,7 @@ internal suspend inline fun <DATA> executeRequest(globalErrorReceiver: GlobalErr
                         e.printStackTrace()
                     }
                 }
-            }
+            }*/
         }
     }
 }
