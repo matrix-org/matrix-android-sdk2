@@ -71,7 +71,9 @@ import org.matrix.android.sdk.internal.session.room.relation.FindReactionEventFo
 import org.matrix.android.sdk.internal.session.room.relation.UpdateQuickReactionTask
 import org.matrix.android.sdk.internal.session.room.reporting.DefaultReportContentTask
 import org.matrix.android.sdk.internal.session.room.reporting.ReportContentTask
+import org.matrix.android.sdk.internal.session.room.state.DefaultSendLocationStateTask
 import org.matrix.android.sdk.internal.session.room.state.DefaultSendStateTask
+import org.matrix.android.sdk.internal.session.room.state.SendLocationStateTask
 import org.matrix.android.sdk.internal.session.room.state.SendStateTask
 import org.matrix.android.sdk.internal.session.room.tags.AddTagToRoomTask
 import org.matrix.android.sdk.internal.session.room.tags.DefaultAddTagToRoomTask
@@ -185,6 +187,9 @@ internal abstract class RoomModule {
 
     @Binds
     abstract fun bindSendStateTask(task: DefaultSendStateTask): SendStateTask
+
+    @Binds
+    abstract fun bindSendLocationStateTask(task: DefaultSendLocationStateTask): SendLocationStateTask
 
     @Binds
     abstract fun bindReportContentTask(task: DefaultReportContentTask): ReportContentTask

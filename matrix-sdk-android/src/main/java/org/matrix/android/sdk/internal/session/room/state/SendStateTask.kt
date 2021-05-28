@@ -18,7 +18,7 @@ package org.matrix.android.sdk.internal.session.room.state
 
 import org.matrix.android.sdk.api.util.JsonDict
 import org.matrix.android.sdk.internal.network.GlobalErrorReceiver
-import org.matrix.android.sdk.internal.network.executeRequestGK
+import org.matrix.android.sdk.internal.network.executeRequest
 import org.matrix.android.sdk.internal.session.room.RoomAPI
 import org.matrix.android.sdk.internal.task.Task
 import javax.inject.Inject
@@ -38,7 +38,7 @@ internal class DefaultSendStateTask @Inject constructor(
 ) : SendStateTask {
 
     override suspend fun execute(params: SendStateTask.Params) {
-        executeRequestGK {
+        return executeRequest(globalErrorReceiver) {
             if (params.stateKey == null) {
                 roomAPI.sendStateEvent(
                         roomId = params.roomId,
@@ -54,6 +54,5 @@ internal class DefaultSendStateTask @Inject constructor(
                 )
             }
         }
-        return
     }
 }

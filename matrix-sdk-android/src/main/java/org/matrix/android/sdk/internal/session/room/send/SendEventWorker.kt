@@ -26,6 +26,7 @@ import org.matrix.android.sdk.api.session.room.send.SendState
 import org.matrix.android.sdk.internal.crypto.tasks.SendEventTask
 import org.matrix.android.sdk.internal.di.SessionDatabase
 import org.matrix.android.sdk.internal.session.SessionComponent
+import org.matrix.android.sdk.internal.session.room.state.SendLocationStateTask
 import org.matrix.android.sdk.internal.worker.SessionSafeCoroutineWorker
 import org.matrix.android.sdk.internal.worker.SessionWorkerParams
 import timber.log.Timber
@@ -52,6 +53,7 @@ internal class SendEventWorker(context: Context,
 
     @Inject lateinit var localEchoRepository: LocalEchoRepository
     @Inject lateinit var sendEventTask: SendEventTask
+    @Inject lateinit var sendLocationEventTask: SendLocationStateTask
     @Inject lateinit var cryptoService: CryptoService
     @Inject lateinit var cancelSendTracker: CancelSendTracker
     @SessionDatabase @Inject lateinit var realmConfiguration: RealmConfiguration
