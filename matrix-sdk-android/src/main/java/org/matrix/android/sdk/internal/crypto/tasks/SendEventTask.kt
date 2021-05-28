@@ -40,26 +40,18 @@ internal class DefaultSendEventTask @Inject constructor(
         private val roomAPI: RoomAPI,
         private val globalErrorReceiver: GlobalErrorReceiver) : SendEventTask {
 
-    override suspend fun execute(params: SendEventTask.Params): String? {
+    override suspend fun execute(params: SendEventTask.Params): String {
         try {
             // Make sure to load all members in the room before sending the event.
             params.event.roomId
                     ?.takeIf { params.encrypt }
                     ?.let { roomId ->
-                        loadRoomMembersTask.execute(LoadRoomMembersTask.Params(roomId))
+                        executeRequestGK {LoadRoomMembersTask.Params(roomId)}
                     }
 
             val event = handleEncryption(params)
             val localId = event.eventId!!
             localEchoRepository.updateSendState(localId, params.event.roomId, SendState.SENDING)
-            /*val response = executeRequest(globalErrorReceiver) {
-                roomAPI.send(
-                        localId,
-                        roomId = event.roomId ?: "",
-                        content = event.content,
-                        eventType = event.type ?: ""
-                )
-            }*/
             val response = executeRequestGK {
                 roomAPI.send(
                         localId,
@@ -68,8 +60,16 @@ internal class DefaultSendEventTask @Inject constructor(
                         eventType = event.type ?: ""
                 )
             }
+            /*val response = executeRequestGK {
+                roomAPI.send(
+                        localId,
+                        roomId = event.roomId ?: "",
+                        content = event.content,
+                        eventType = event.type ?: ""
+                )
+            }*/
             localEchoRepository.updateSendState(localId, params.event.roomId, SendState.SENT)
-            return response?.eventId
+            return response?.eventId ?: ""
         } catch (e: Throwable) {
 //            localEchoRepository.updateSendState(params.event.eventId!!, SendState.UNDELIVERED)
             //throw e
