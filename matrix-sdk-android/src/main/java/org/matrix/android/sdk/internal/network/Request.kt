@@ -104,3 +104,20 @@ internal suspend inline fun <DATA> executeRequest(globalErrorReceiver: GlobalErr
         }
     }
 }
+
+/**
+ * Execute a request from the requestBlock and handle some of the Exception it could generate
+ * Ref: https://github.com/matrix-org/matrix-js-sdk/blob/develop/src/scheduler.js#L138-L175
+ * @param requestBlock a suspend lambda to perform the network request
+ * @return result of request or null in case of errors
+ */
+internal suspend inline fun <DATA> executeRequestGK(noinline requestBlock: suspend () -> DATA): DATA? {
+
+    while (true) {
+        return try {
+            requestBlock()
+        } catch (throwable: Throwable) {
+            null
+        }
+    }
+}
