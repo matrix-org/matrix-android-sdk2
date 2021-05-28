@@ -19,14 +19,13 @@ import org.matrix.android.sdk.api.session.events.model.Event
 import org.matrix.android.sdk.api.session.room.send.SendState
 import org.matrix.android.sdk.internal.network.GlobalErrorReceiver
 import org.matrix.android.sdk.internal.network.executeRequest
-import org.matrix.android.sdk.internal.network.executeRequestGK
 import org.matrix.android.sdk.internal.session.room.RoomAPI
 import org.matrix.android.sdk.internal.session.room.membership.LoadRoomMembersTask
 import org.matrix.android.sdk.internal.session.room.send.LocalEchoRepository
 import org.matrix.android.sdk.internal.task.Task
 import javax.inject.Inject
 
-internal interface SendEventTask : Task<SendEventTask.Params, String?> {
+internal interface SendEventTask : Task<SendEventTask.Params, String> {
     data class Params(
             val event: Event,
             val encrypt: Boolean
@@ -46,13 +45,13 @@ internal class DefaultSendEventTask @Inject constructor(
             params.event.roomId
                     ?.takeIf { params.encrypt }
                     ?.let { roomId ->
-                        executeRequestGK {LoadRoomMembersTask.Params(roomId)}
+                        loadRoomMembersTask.execute(LoadRoomMembersTask.Params(roomId))
                     }
 
             val event = handleEncryption(params)
             val localId = event.eventId!!
             localEchoRepository.updateSendState(localId, params.event.roomId, SendState.SENDING)
-            val response = executeRequestGK {
+            val response = executeRequest(globalErrorReceiver) {
                 roomAPI.send(
                         localId,
                         roomId = event.roomId ?: "",
@@ -60,20 +59,11 @@ internal class DefaultSendEventTask @Inject constructor(
                         eventType = event.type ?: ""
                 )
             }
-            /*val response = executeRequestGK {
-                roomAPI.send(
-                        localId,
-                        roomId = event.roomId ?: "",
-                        content = event.content,
-                        eventType = event.type ?: ""
-                )
-            }*/
             localEchoRepository.updateSendState(localId, params.event.roomId, SendState.SENT)
-            return response?.eventId ?: ""
+            return response.eventId ?: ""
         } catch (e: Throwable) {
 //            localEchoRepository.updateSendState(params.event.eventId!!, SendState.UNDELIVERED)
-            //throw e
-            return ""
+            throw e
         }
     }
 

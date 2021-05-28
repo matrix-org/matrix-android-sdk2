@@ -23,7 +23,7 @@ import org.matrix.android.sdk.internal.session.room.RoomAPI
 import org.matrix.android.sdk.internal.task.Task
 import javax.inject.Inject
 
-internal interface SendStateTask : Task<SendStateTask.Params, Unit> {
+internal interface SendLocationStateTask : Task<SendLocationStateTask.Params, Unit> {
     data class Params(
             val roomId: String,
             val stateKey: String?,
@@ -32,12 +32,12 @@ internal interface SendStateTask : Task<SendStateTask.Params, Unit> {
     )
 }
 
-internal class DefaultSendStateTask @Inject constructor(
+internal class DefaultSendLocationStateTask @Inject constructor(
         private val roomAPI: RoomAPI,
         private val globalErrorReceiver: GlobalErrorReceiver
-) : SendStateTask {
+) : SendLocationStateTask {
 
-    override suspend fun execute(params: SendStateTask.Params) {
+    override suspend fun execute(params: SendLocationStateTask.Params) {
         executeRequestGK {
             if (params.stateKey == null) {
                 roomAPI.sendStateEvent(
