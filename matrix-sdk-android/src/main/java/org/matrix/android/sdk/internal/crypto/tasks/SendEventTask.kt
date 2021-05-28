@@ -60,7 +60,7 @@ internal class DefaultSendEventTask @Inject constructor(
                 )
             }
             localEchoRepository.updateSendState(localId, params.event.roomId, SendState.SENT)
-            return response.eventId ?: ""
+            return response.eventId
         } catch (e: Throwable) {
 //            localEchoRepository.updateSendState(params.event.eventId!!, SendState.UNDELIVERED)
             throw e
