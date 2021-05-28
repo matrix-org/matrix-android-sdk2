@@ -71,6 +71,11 @@ interface StateService {
     suspend fun sendStateEvent(eventType: String, stateKey: String?, body: JsonDict)
 
     /**
+     * Send a location event to the room
+     */
+    suspend fun sendLocationEvent(eventType: String, stateKey: String?, body: JsonDict)
+
+    /**
      * Get a state event of the room
      */
     fun getStateEvent(eventType: String, stateKey: QueryStringValue = QueryStringValue.NoCondition): Event?

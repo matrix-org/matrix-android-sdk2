@@ -19,14 +19,13 @@ import org.matrix.android.sdk.api.session.events.model.Event
 import org.matrix.android.sdk.api.session.room.send.SendState
 import org.matrix.android.sdk.internal.network.GlobalErrorReceiver
 import org.matrix.android.sdk.internal.network.executeRequest
-import org.matrix.android.sdk.internal.network.executeRequestGK
 import org.matrix.android.sdk.internal.session.room.RoomAPI
 import org.matrix.android.sdk.internal.session.room.membership.LoadRoomMembersTask
 import org.matrix.android.sdk.internal.session.room.send.LocalEchoRepository
 import org.matrix.android.sdk.internal.task.Task
 import javax.inject.Inject
 
-internal interface SendEventTask : Task<SendEventTask.Params, String?> {
+internal interface SendEventTask : Task<SendEventTask.Params, String> {
     data class Params(
             val event: Event,
             val encrypt: Boolean
@@ -40,7 +39,7 @@ internal class DefaultSendEventTask @Inject constructor(
         private val roomAPI: RoomAPI,
         private val globalErrorReceiver: GlobalErrorReceiver) : SendEventTask {
 
-    override suspend fun execute(params: SendEventTask.Params): String? {
+    override suspend fun execute(params: SendEventTask.Params): String {
         try {
             // Make sure to load all members in the room before sending the event.
             params.event.roomId
@@ -52,15 +51,7 @@ internal class DefaultSendEventTask @Inject constructor(
             val event = handleEncryption(params)
             val localId = event.eventId!!
             localEchoRepository.updateSendState(localId, params.event.roomId, SendState.SENDING)
-            /*val response = executeRequest(globalErrorReceiver) {
-                roomAPI.send(
-                        localId,
-                        roomId = event.roomId ?: "",
-                        content = event.content,
-                        eventType = event.type ?: ""
-                )
-            }*/
-            val response = executeRequestGK {
+            val response = executeRequest(globalErrorReceiver) {
                 roomAPI.send(
                         localId,
                         roomId = event.roomId ?: "",
@@ -69,11 +60,10 @@ internal class DefaultSendEventTask @Inject constructor(
                 )
             }
             localEchoRepository.updateSendState(localId, params.event.roomId, SendState.SENT)
-            return response?.eventId
+            return response.eventId
         } catch (e: Throwable) {
 //            localEchoRepository.updateSendState(params.event.eventId!!, SendState.UNDELIVERED)
-            //throw e
-            return ""
+            throw e
         }
     }
 
