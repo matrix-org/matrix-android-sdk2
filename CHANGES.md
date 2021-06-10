@@ -1,4 +1,30 @@
-Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/master/CHANGES.md
+Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
+
+Changes in Matrix-SDK 1.1.9 (2021-06-10)
+===================================================
+
+Fix error with Jitpack on 1.1.8
+Imported from Element 1.1.9. (https://github.com/vector-im/element-android/releases/tag/v1.1.9)
+
+Changes in Matrix-SDK 1.1.8 (2021-05-26)
+===================================================
+
+Imported from Element 1.1.8. (https://github.com/vector-im/element-android/releases/tag/v1.1.8)
+
+Changes in Matrix-SDK 1.1.5 (2021-04-15)
+===================================================
+
+Imported from Element 1.1.5. (https://github.com/vector-im/element-android/releases/tag/v1.1.5)
+
+Changes in Matrix-SDK 1.1.4 (2021-04-09)
+===================================================
+
+Imported from Element 1.1.4. (https://github.com/vector-im/element-android/releases/tag/v1.1.4)
+
+Changes in Matrix-SDK 1.1.1 (2021-03-10)
+===================================================
+
+Imported from Element 1.1.1. (https://github.com/vector-im/element-android/releases/tag/v1.1.1)
 
 Changes in Matrix-SDK 1.0.16 (2021-02-08)
 ===================================================
@@ -75,4 +101,4 @@ Changes in Matrix-SDK 0.0.1 (2020-08-14)
 This is the first release of the Matrix SDK.
 
 This first release has been created from the develop branch of Element Android ([at this commit](https://github.com/vector-im/element-android/commit/5a3894036cb34d00177603e69c5b15431212152d)).
-Next releases will be done from master branch of Element Android and the version name will be the same between the SDK and Element Android
+Next releases will be done from main branch of Element Android and the version name will be the same between the SDK and Element Android

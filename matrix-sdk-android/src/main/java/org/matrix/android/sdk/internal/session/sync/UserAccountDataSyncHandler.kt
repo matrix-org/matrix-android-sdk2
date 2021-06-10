@@ -16,12 +16,14 @@
 
 package org.matrix.android.sdk.internal.session.sync
 
-import com.squareup.moshi.Moshi
 import com.zhuinden.monarchy.Monarchy
+import io.realm.Realm
+import io.realm.RealmList
+import io.realm.kotlin.where
 import org.matrix.android.sdk.api.pushrules.RuleScope
 import org.matrix.android.sdk.api.pushrules.RuleSetKey
 import org.matrix.android.sdk.api.pushrules.rest.GetPushRulesResponse
-import org.matrix.android.sdk.api.session.accountdata.UserAccountDataEvent
+import org.matrix.android.sdk.api.session.accountdata.AccountDataEvent
 import org.matrix.android.sdk.api.session.accountdata.UserAccountDataTypes
 import org.matrix.android.sdk.api.session.events.model.Content
 import org.matrix.android.sdk.api.session.events.model.toModel
@@ -37,11 +39,14 @@ import org.matrix.android.sdk.internal.database.model.RoomSummaryEntity
 import org.matrix.android.sdk.internal.database.model.RoomSummaryEntityFields
 import org.matrix.android.sdk.internal.database.model.UserAccountDataEntity
 import org.matrix.android.sdk.internal.database.model.UserAccountDataEntityFields
+import org.matrix.android.sdk.internal.database.model.deleteOnCascade
 import org.matrix.android.sdk.internal.database.query.getDirectRooms
 import org.matrix.android.sdk.internal.database.query.getOrCreate
 import org.matrix.android.sdk.internal.database.query.where
 import org.matrix.android.sdk.internal.di.SessionDatabase
 import org.matrix.android.sdk.internal.di.UserId
+import org.matrix.android.sdk.internal.session.room.RoomAvatarResolver
+import org.matrix.android.sdk.internal.session.room.membership.RoomDisplayNameResolver
 import org.matrix.android.sdk.internal.session.room.membership.RoomMemberHelper
 import org.matrix.android.sdk.internal.session.sync.model.InvitedRoomSync
 import org.matrix.android.sdk.internal.session.sync.model.accountdata.BreadcrumbsContent
@@ -50,9 +55,6 @@ import org.matrix.android.sdk.internal.session.sync.model.accountdata.IgnoredUse
 import org.matrix.android.sdk.internal.session.sync.model.accountdata.UserAccountDataSync
 import org.matrix.android.sdk.internal.session.user.accountdata.DirectChatsHelper
 import org.matrix.android.sdk.internal.session.user.accountdata.UpdateUserAccountDataTask
-import io.realm.Realm
-import io.realm.RealmList
-import io.realm.kotlin.where
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -60,8 +62,10 @@ internal class UserAccountDataSyncHandler @Inject constructor(
         @SessionDatabase private val monarchy: Monarchy,
         @UserId private val userId: String,
         private val directChatsHelper: DirectChatsHelper,
-        private val moshi: Moshi,
-        private val updateUserAccountDataTask: UpdateUserAccountDataTask) {
+        private val updateUserAccountDataTask: UpdateUserAccountDataTask,
+        private val roomAvatarResolver: RoomAvatarResolver,
+        private val roomDisplayNameResolver: RoomDisplayNameResolver
+) {
 
     fun handle(realm: Realm, accountData: UserAccountDataSync?) {
         accountData?.list?.forEach { event ->
@@ -109,11 +113,11 @@ internal class UserAccountDataSyncHandler @Inject constructor(
         }
     }
 
-    private fun handlePushRules(realm: Realm, event: UserAccountDataEvent) {
+    private fun handlePushRules(realm: Realm, event: AccountDataEvent) {
         val pushRules = event.content.toModel<GetPushRulesResponse>() ?: return
         realm.where(PushRulesEntity::class.java)
                 .findAll()
-                .deleteAllFromRealm()
+                .forEach { it.deleteOnCascade() }
 
         // Save only global rules for the moment
         val globalRules = pushRules.global
@@ -151,27 +155,33 @@ internal class UserAccountDataSyncHandler @Inject constructor(
         realm.insertOrUpdate(underrides)
     }
 
-    private fun handleDirectChatRooms(realm: Realm, event: UserAccountDataEvent) {
-        val oldDirectRooms = RoomSummaryEntity.getDirectRooms(realm)
-        oldDirectRooms.forEach {
-            it.isDirect = false
-            it.directUserId = null
-        }
+    private fun handleDirectChatRooms(realm: Realm, event: AccountDataEvent) {
         val content = event.content.toModel<DirectMessagesContent>() ?: return
-        content.forEach {
-            val userId = it.key
-            it.value.forEach { roomId ->
+        content.forEach { (userId, roomIds) ->
+            roomIds.forEach { roomId ->
                 val roomSummaryEntity = RoomSummaryEntity.where(realm, roomId).findFirst()
                 if (roomSummaryEntity != null) {
                     roomSummaryEntity.isDirect = true
                     roomSummaryEntity.directUserId = userId
-                    realm.insertOrUpdate(roomSummaryEntity)
+                    // Also update the avatar and displayname, there is a specific treatment for DMs
+                    roomSummaryEntity.avatarUrl = roomAvatarResolver.resolve(realm, roomId)
+                    roomSummaryEntity.displayName = roomDisplayNameResolver.resolve(realm, roomId)
                 }
             }
         }
+
+        // Handle previous direct rooms
+        RoomSummaryEntity.getDirectRooms(realm, excludeRoomIds = content.values.flatten().toSet())
+                .forEach {
+                    it.isDirect = false
+                    it.directUserId = null
+                    // Also update the avatar and displayname, there was a specific treatment for DMs
+                    it.avatarUrl = roomAvatarResolver.resolve(realm, it.roomId)
+                    it.displayName = roomDisplayNameResolver.resolve(realm, it.roomId)
+                }
     }
 
-    private fun handleIgnoredUsers(realm: Realm, event: UserAccountDataEvent) {
+    private fun handleIgnoredUsers(realm: Realm, event: AccountDataEvent) {
         val userIds = event.content.toModel<IgnoredUsersContent>()?.ignoredUsers?.keys ?: return
         realm.where(IgnoredUserEntity::class.java)
                 .findAll()
@@ -181,7 +191,7 @@ internal class UserAccountDataSyncHandler @Inject constructor(
         // TODO If not initial sync, we should execute a init sync
     }
 
-    private fun handleBreadcrumbs(realm: Realm, event: UserAccountDataEvent) {
+    private fun handleBreadcrumbs(realm: Realm, event: AccountDataEvent) {
         val recentRoomIds = event.content.toModel<BreadcrumbsContent>()?.recentRoomIds ?: return
         val entity = BreadcrumbsEntity.getOrCreate(realm)
 

@@ -1,8 +1,9 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.4.20'
-    ext.kotlin_coroutines_version = "1.4.1"
+    // Ref: https://kotlinlang.org/releases.html
+    ext.kotlin_version = '1.5.10'
+    ext.kotlin_coroutines_version = "1.5.0"
     repositories {
         google()
         jcenter()
@@ -11,7 +12,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.1'
+        classpath 'com.android.tools.build:gradle:4.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -31,17 +32,14 @@ allprojects {
                 includeGroupByRegex "com\\.github\\.Zhuinden"
             }
         }
-        // Jitsi repo
-        maven {
-            url "https://github.com/vector-im/jitsi_libre_maven/raw/master/android-sdk-2.9.3"
-        }
         google()
         jcenter()
     }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
         // Warnings are potential errors, so stop ignoring them
-        kotlinOptions.allWarningsAsErrors = true
+        // Ignore on the SDK for the moment
+        kotlinOptions.allWarningsAsErrors = false
     }
 
 }

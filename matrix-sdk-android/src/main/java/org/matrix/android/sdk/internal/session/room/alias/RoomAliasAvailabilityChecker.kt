@@ -36,13 +36,17 @@ internal class RoomAliasAvailabilityChecker @Inject constructor(
     @Throws(RoomAliasError::class)
     suspend fun check(aliasLocalPart: String?) {
         if (aliasLocalPart.isNullOrEmpty()) {
-            throw RoomAliasError.AliasEmpty
+            // don't check empty or not provided alias
+            return
+        }
+        if (aliasLocalPart.isBlank()) {
+            throw RoomAliasError.AliasIsBlank
         }
         // Check alias availability
         val fullAlias = aliasLocalPart.toFullLocalAlias(userId)
         try {
-            executeRequest<RoomAliasDescription>(globalErrorReceiver) {
-                apiCall = directoryAPI.getRoomIdByAlias(fullAlias)
+            executeRequest(globalErrorReceiver) {
+                directoryAPI.getRoomIdByAlias(fullAlias)
             }
         } catch (throwable: Throwable) {
             if (throwable is Failure.ServerError && throwable.httpCode == 404) {

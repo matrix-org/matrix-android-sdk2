@@ -1,4 +1,4 @@
-[![Latest version](https://img.shields.io/jitpack/v/github/matrix-org/matrix-android-sdk2)](https://jitpack.io/#matrix-org/matrix-android-sdk2) [![Build status](https://badge.buildkite.com/1f5af13987f4e309ae7d6d09e818e19a5a709008c249238c1a.svg?branch=master)](https://buildkite.com/matrix-dot-org/matrix-android-sdk2)
+[![Latest version](https://img.shields.io/jitpack/v/github/matrix-org/matrix-android-sdk2)](https://jitpack.io/#matrix-org/matrix-android-sdk2) [![Build status](https://badge.buildkite.com/1f5af13987f4e309ae7d6d09e818e19a5a709008c249238c1a.svg?branch=main)](https://buildkite.com/matrix-dot-org/matrix-android-sdk2)
 
 # matrix-android-sdk2
 

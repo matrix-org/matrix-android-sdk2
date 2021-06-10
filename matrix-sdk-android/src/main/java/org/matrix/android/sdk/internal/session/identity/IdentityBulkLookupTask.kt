@@ -83,7 +83,7 @@ internal class DefaultIdentityBulkLookupTask @Inject constructor(
         return try {
             LookUpData(hashedAddresses,
                     executeRequest(null) {
-                        apiCall = identityAPI.lookup(IdentityLookUpParams(
+                        identityAPI.lookup(IdentityLookUpParams(
                                 hashedAddresses,
                                 IdentityHashDetailResponse.ALGORITHM_SHA256,
                                 hashDetailResponse.pepper
@@ -117,7 +117,7 @@ internal class DefaultIdentityBulkLookupTask @Inject constructor(
         return withOlmUtility { olmUtility ->
             threePids.map { threePid ->
                 base64ToBase64Url(
-                        olmUtility.sha256(threePid.value.toLowerCase(Locale.ROOT)
+                        olmUtility.sha256(threePid.value.lowercase(Locale.ROOT)
                                 + " " + threePid.toMedium() + " " + pepper)
                 )
             }
@@ -126,7 +126,7 @@ internal class DefaultIdentityBulkLookupTask @Inject constructor(
 
     private suspend fun fetchHashDetails(identityAPI: IdentityAPI): IdentityHashDetailResponse {
         return executeRequest(null) {
-            apiCall = identityAPI.hashDetails()
+            identityAPI.hashDetails()
         }
     }
 

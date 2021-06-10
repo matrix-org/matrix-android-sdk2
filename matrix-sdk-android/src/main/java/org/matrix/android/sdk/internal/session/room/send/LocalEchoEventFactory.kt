@@ -20,7 +20,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
 import androidx.exifinterface.media.ExifInterface
-import org.matrix.android.sdk.R
 import org.matrix.android.sdk.api.session.content.ContentAttachmentData
 import org.matrix.android.sdk.api.session.events.model.Content
 import org.matrix.android.sdk.api.session.events.model.Event
@@ -42,7 +41,6 @@ import org.matrix.android.sdk.api.session.room.model.message.MessageOptionsConte
 import org.matrix.android.sdk.api.session.room.model.message.MessagePollResponseContent
 import org.matrix.android.sdk.api.session.room.model.message.MessageTextContent
 import org.matrix.android.sdk.api.session.room.model.message.MessageType
-import org.matrix.android.sdk.api.session.room.model.message.MessageVerificationRequestContent
 import org.matrix.android.sdk.api.session.room.model.message.MessageVideoContent
 import org.matrix.android.sdk.api.session.room.model.message.OPTION_TYPE_POLL
 import org.matrix.android.sdk.api.session.room.model.message.OptionItem
@@ -59,7 +57,6 @@ import org.matrix.android.sdk.internal.di.UserId
 import org.matrix.android.sdk.internal.session.content.ThumbnailExtractor
 import org.matrix.android.sdk.internal.session.permalinks.PermalinkFactory
 import org.matrix.android.sdk.internal.session.room.send.pills.TextPillsUtils
-import org.matrix.android.sdk.internal.util.StringProvider
 import javax.inject.Inject
 
 /**
@@ -74,9 +71,9 @@ import javax.inject.Inject
 internal class LocalEchoEventFactory @Inject constructor(
         private val context: Context,
         @UserId private val userId: String,
-        private val stringProvider: StringProvider,
         private val markdownParser: MarkdownParser,
         private val textPillsUtils: TextPillsUtils,
+        private val thumbnailExtractor: ThumbnailExtractor,
         private val localEchoRepository: LocalEchoRepository,
         private val permalinkFactory: PermalinkFactory
 ) {
@@ -248,7 +245,7 @@ internal class LocalEchoEventFactory @Inject constructor(
                         mimeType = attachment.getSafeMimeType(),
                         width = width?.toInt() ?: 0,
                         height = height?.toInt() ?: 0,
-                        size = attachment.size.toInt()
+                        size = attachment.size
                 ),
                 url = attachment.queryUri.toString()
         )
@@ -265,7 +262,7 @@ internal class LocalEchoEventFactory @Inject constructor(
         val width = firstFrame?.width ?: 0
         mediaDataRetriever.release()
 
-        val thumbnailInfo = ThumbnailExtractor.extractThumbnail(context, attachment)?.let {
+        val thumbnailInfo = thumbnailExtractor.extractThumbnail(attachment)?.let {
             ThumbnailInfo(
                     width = it.width,
                     height = it.height,
@@ -330,25 +327,6 @@ internal class LocalEchoEventFactory @Inject constructor(
                 eventId = localId,
                 type = type,
                 content = content,
-                unsignedData = UnsignedData(age = null, transactionId = localId)
-        )
-    }
-
-    fun createVerificationRequest(roomId: String, fromDevice: String, toUserId: String, methods: List<String>): Event {
-        val localId = LocalEcho.createLocalEchoId()
-        return Event(
-                roomId = roomId,
-                originServerTs = dummyOriginServerTs(),
-                senderId = userId,
-                eventId = localId,
-                type = EventType.MESSAGE,
-                content = MessageVerificationRequestContent(
-                        body = stringProvider.getString(R.string.key_verification_request_fallback_message, userId),
-                        fromDevice = fromDevice,
-                        toUserId = toUserId,
-                        timestamp = System.currentTimeMillis(),
-                        methods = methods
-                ).toContent(),
                 unsignedData = UnsignedData(age = null, transactionId = localId)
         )
     }

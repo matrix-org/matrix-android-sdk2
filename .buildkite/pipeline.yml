@@ -38,7 +38,7 @@ steps:
       - docker#v3.1.0:
           image: "runmymind/docker-android-sdk"
 
-  # Build release version of the SDK, from the master branch
+  # Build release version of the SDK, from the main branch
 
   - label: "Assemble Release version"
     agents:
