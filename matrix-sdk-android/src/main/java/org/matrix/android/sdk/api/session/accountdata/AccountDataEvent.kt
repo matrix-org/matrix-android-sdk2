@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 The Matrix.org Foundation C.I.C
+ * Copyright 2020 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.api.session.thirdparty.model
+package org.matrix.android.sdk.api.session.accountdata
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import org.matrix.android.sdk.api.util.JsonDict
+import org.matrix.android.sdk.api.session.events.model.Content
 
+/**
+ * This is a simplified Event with just a type and a content.
+ * Currently used types are defined in [UserAccountDataTypes].
+ */
 @JsonClass(generateAdapter = true)
-data class ThirdPartyUser(
-        /**
-         * Required. A Matrix User ID representing a third party user.
-         */
-        @Json(name = "userid") val userId: String,
-        /**
-         * Required. The protocol ID that the third party location is a part of.
-         */
-        @Json(name = "protocol") val protocol: String,
-        /**
-         *  Required. Information used to identify this third party location.
-         */
-        @Json(name = "fields") val fields: JsonDict
+data class AccountDataEvent(
+        @Json(name = "type") val type: String,
+        @Json(name = "content") val content: Content
 )
