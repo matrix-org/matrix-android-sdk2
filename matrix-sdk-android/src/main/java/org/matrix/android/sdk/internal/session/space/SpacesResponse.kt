@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.api.session.accountdata
+package org.matrix.android.sdk.internal.session.space
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import org.matrix.android.sdk.api.session.events.model.Content
+import org.matrix.android.sdk.api.session.events.model.Event
 
-/**
- * This is a simplified Event with just a type and a content.
- * Currently used types are defined in [UserAccountDataTypes].
- */
 @JsonClass(generateAdapter = true)
-data class UserAccountDataEvent(
-        @Json(name = "type") val type: String,
-        @Json(name = "content") val content: Content
+internal data class SpacesResponse(
+        /** Its presence indicates that there are more results to return. */
+        @Json(name = "next_batch") val nextBatch: String? = null,
+        /** Rooms information like name/avatar/type ... */
+        @Json(name = "rooms") val rooms: List<SpaceChildSummaryResponse>? = null,
+        /** These are the edges of the graph. The objects in the array are complete (or stripped?) m.room.parent or m.space.child events. */
+        @Json(name = "events") val events: List<Event>? = null
 )

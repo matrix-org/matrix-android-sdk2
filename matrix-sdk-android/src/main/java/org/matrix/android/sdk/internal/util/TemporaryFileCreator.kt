@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 The Matrix.org Foundation C.I.C.
+ * Copyright (c) 2021 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.api.session.room.model.call
+package org.matrix.android.sdk.internal.util
 
-interface CallSignallingContent {
-    /**
-     * Required. A unique identifier for the call.
-     */
-    val callId: String?
+import android.content.Context
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.util.UUID
+import javax.inject.Inject
 
-    /**
-     * Required. ID to let user identify remote echo of their own events
-     */
-    val partyId: String?
-
-    /**
-     * Required. The version of the VoIP specification this message adheres to. This specification is version 0.
-     */
-    val version: String?
+internal class TemporaryFileCreator @Inject constructor(
+        private val context: Context
+) {
+    suspend fun create(): File {
+        return withContext(Dispatchers.IO) {
+            File.createTempFile(UUID.randomUUID().toString(), null, context.cacheDir)
+        }
+    }
 }

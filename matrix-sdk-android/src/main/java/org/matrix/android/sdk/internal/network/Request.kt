@@ -89,11 +89,11 @@ internal suspend inline fun <DATA> executeRequest(globalErrorReceiver: GlobalErr
             } else {
                 try {
                     throw when (exception) {
-                        is IOException -> Failure.NetworkConnection(exception)
+                        is IOException              -> Failure.NetworkConnection(exception)
                         is Failure.ServerError,
-                        is Failure.OtherServerError -> exception
-                        is CancellationException -> Failure.Cancelled(exception)
-                        else -> Failure.Unknown(exception)
+                        is Failure.OtherServerError,
+                        is CancellationException    -> exception
+                        else                        -> Failure.Unknown(exception)
                     }
                 } catch (e: Exception) {
                     if (BuildConfig.DEBUG) {

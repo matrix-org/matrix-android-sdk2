@@ -22,7 +22,8 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import org.matrix.android.sdk.api.query.QueryStringValue
-import org.matrix.android.sdk.api.session.accountdata.UserAccountDataEvent
+import org.matrix.android.sdk.api.session.Session
+import org.matrix.android.sdk.api.session.accountdata.AccountDataEvent
 import org.matrix.android.sdk.api.session.accountdata.UserAccountDataTypes
 import org.matrix.android.sdk.api.session.events.model.Content
 import org.matrix.android.sdk.api.session.events.model.Event
@@ -34,11 +35,11 @@ import org.matrix.android.sdk.api.session.room.powerlevels.PowerLevelsHelper
 import org.matrix.android.sdk.api.session.widgets.WidgetManagementFailure
 import org.matrix.android.sdk.api.session.widgets.model.Widget
 import org.matrix.android.sdk.internal.di.UserId
-import org.matrix.android.sdk.internal.session.SessionLifecycleObserver
+import org.matrix.android.sdk.api.session.SessionLifecycleObserver
 import org.matrix.android.sdk.internal.session.SessionScope
 import org.matrix.android.sdk.internal.session.integrationmanager.IntegrationManager
 import org.matrix.android.sdk.internal.session.room.state.StateEventDataSource
-import org.matrix.android.sdk.internal.session.user.accountdata.AccountDataDataSource
+import org.matrix.android.sdk.internal.session.user.accountdata.UserAccountDataDataSource
 import org.matrix.android.sdk.internal.session.widgets.helper.WidgetFactory
 import org.matrix.android.sdk.internal.session.widgets.helper.extractWidgetSequence
 import java.util.HashMap
@@ -46,7 +47,7 @@ import javax.inject.Inject
 
 @SessionScope
 internal class WidgetManager @Inject constructor(private val integrationManager: IntegrationManager,
-                                                 private val accountDataDataSource: AccountDataDataSource,
+                                                 private val accountDataDataSource: UserAccountDataDataSource,
                                                  private val stateEventDataSource: StateEventDataSource,
                                                  private val createWidgetTask: CreateWidgetTask,
                                                  private val widgetFactory: WidgetFactory,
@@ -57,12 +58,12 @@ internal class WidgetManager @Inject constructor(private val integrationManager:
     private val lifecycleOwner: LifecycleOwner = LifecycleOwner { lifecycleRegistry }
     private val lifecycleRegistry: LifecycleRegistry = LifecycleRegistry(lifecycleOwner)
 
-    override fun onSessionStarted() {
+    override fun onSessionStarted(session: Session) {
         lifecycleRegistry.currentState = Lifecycle.State.STARTED
         integrationManager.addListener(this)
     }
 
-    override fun onSessionStopped() {
+    override fun onSessionStopped(session: Session) {
         integrationManager.removeListener(this)
         lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
     }
@@ -149,8 +150,8 @@ internal class WidgetManager @Inject constructor(private val integrationManager:
         return widgetsAccountData.mapToWidgets(widgetTypes, excludedTypes)
     }
 
-    private fun UserAccountDataEvent.mapToWidgets(widgetTypes: Set<String>? = null,
-                                                  excludedTypes: Set<String>? = null): List<Widget> {
+    private fun AccountDataEvent.mapToWidgets(widgetTypes: Set<String>? = null,
+                                              excludedTypes: Set<String>? = null): List<Widget> {
         return extractWidgetSequence(widgetFactory)
                 .filter {
                     val widgetType = it.widgetContent.type ?: return@filter false
