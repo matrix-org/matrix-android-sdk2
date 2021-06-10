@@ -23,9 +23,11 @@ import org.matrix.android.sdk.api.failure.MatrixError
 import org.matrix.android.sdk.api.failure.getRetryDelay
 import org.matrix.android.sdk.api.failure.shouldBeRetried
 import org.matrix.android.sdk.internal.network.ssl.CertUtil
+import org.matrix.olm.BuildConfig
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
+import java.lang.Exception
 
 /**
  * Execute a request from the requestBlock and handle some of the Exception it could generate
@@ -85,14 +87,37 @@ internal suspend inline fun <DATA> executeRequest(globalErrorReceiver: GlobalErr
                 currentDelay = currentDelay.times(2L).coerceAtMost(maxDelayBeforeRetry)
                 // Try again (loop)
             } else {
-                throw when (exception) {
-                    is IOException              -> Failure.NetworkConnection(exception)
-                    is Failure.ServerError,
-                    is Failure.OtherServerError -> exception
-                    is CancellationException    -> Failure.Cancelled(exception)
-                    else                        -> Failure.Unknown(exception)
+                try {
+                    throw when (exception) {
+                        is IOException -> Failure.NetworkConnection(exception)
+                        is Failure.ServerError,
+                        is Failure.OtherServerError -> exception
+                        is CancellationException -> Failure.Cancelled(exception)
+                        else -> Failure.Unknown(exception)
+                    }
+                } catch (e: Exception) {
+                    if (BuildConfig.DEBUG) {
+                        e.printStackTrace()
+                    }
                 }
             }
+        }
+    }
+}
+
+/**
+ * Execute a request from the requestBlock and handle some of the Exception it could generate
+ * Ref: https://github.com/matrix-org/matrix-js-sdk/blob/develop/src/scheduler.js#L138-L175
+ * @param requestBlock a suspend lambda to perform the network request
+ * @return result of request or null in case of errors
+ */
+internal suspend inline fun <DATA> executeRequestGK(noinline requestBlock: suspend () -> DATA): DATA? {
+
+    while (true) {
+        return try {
+            requestBlock()
+        } catch (throwable: Throwable) {
+            null
         }
     }
 }

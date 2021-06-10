@@ -96,6 +96,8 @@ import org.matrix.android.sdk.internal.session.cache.RealmClearCacheTask
 import io.realm.RealmConfiguration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
+import org.matrix.android.sdk.internal.session.room.state.DefaultSendLocationStateTask
+import org.matrix.android.sdk.internal.session.room.state.SendLocationStateTask
 import retrofit2.Retrofit
 import java.io.File
 

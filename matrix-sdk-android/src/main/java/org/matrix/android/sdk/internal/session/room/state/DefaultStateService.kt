@@ -38,6 +38,7 @@ import org.matrix.android.sdk.internal.session.content.FileUploader
 internal class DefaultStateService @AssistedInject constructor(@Assisted private val roomId: String,
                                                                private val stateEventDataSource: StateEventDataSource,
                                                                private val sendStateTask: SendStateTask,
+                                                               private val sendLocationStateTask: SendLocationStateTask,
                                                                private val fileUploader: FileUploader
 ) : StateService {
 
@@ -74,6 +75,16 @@ internal class DefaultStateService @AssistedInject constructor(@Assisted private
                 body = body.toSafeJson(eventType)
         )
         sendStateTask.execute(params)
+    }
+
+    override suspend fun sendLocationEvent(eventType: String, stateKey: String?, body: JsonDict) {
+        val params = SendLocationStateTask.Params(
+                roomId = roomId,
+                stateKey = stateKey,
+                eventType = eventType,
+                body = body.toSafeJson(eventType)
+        )
+        sendLocationStateTask.execute(params)
     }
 
     private fun JsonDict.toSafeJson(eventType: String): JsonDict {
