@@ -16,6 +16,8 @@
 
 package org.matrix.android.sdk.api.auth.registration
 
+import org.matrix.android.sdk.api.auth.data.LoginFlowTypes
+
 /**
  * Set of methods to be able to create an account on a homeserver.
  *
@@ -82,13 +84,15 @@ interface RegistrationWizard {
     suspend fun addThreePid(threePid: RegisterThreePid): RegistrationResult
 
     /**
-     * This is the first method to call in order to create an account and start the registration process.
+     * Alternative first method to call in order to create an account and start the registration process,
+     * with additional authorisation type.
      *
      * @param userName the desired username. Ex: "alice"
      * @param password the desired password
      * @param initialDeviceDisplayName the device display name
+     * @param loginFlowType authorisation type. [LoginFlowTypes.DUMMY] by default
      */
-    suspend fun createAccountWithType(userName: String, //TODO
+    suspend fun createAccountWithType(userName: String,
                                       password: String,
                                       initialDeviceDisplayName: String?,
                                       loginFlowType: String? = null): RegistrationResult
