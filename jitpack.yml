@@ -1,0 +1,3 @@
+install:
+  - ./gradlew :matrix-sdk-android:build :matrix-sdk-android:publishToMavenLocal -x :matrix-sdk-android:test
+  - find . -name "*.aar"

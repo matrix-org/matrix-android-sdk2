@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Matrix.org Foundation C.I.C.
+ * Copyright (c) 2021 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,8 @@
 
 package org.matrix.android.sdk.api.session.call
 
-interface CallSignalingService {
+import java.util.UUID
 
-    suspend fun getTurnServer(): TurnServerResponse
-
-    /**
-     * Create an outgoing call
-     */
-    fun createOutgoingCall(roomId: String, otherUserId: String, isVideoCall: Boolean): MxCall
-
-    fun addCallListener(listener: CallListener)
-
-    fun removeCallListener(listener: CallListener)
-
-    fun getCallWithId(callId: String): MxCall?
-
-    fun isThereAnyActiveCall(): Boolean
+object CallIdGenerator {
+    fun generate() = UUID.randomUUID().toString()
 }
