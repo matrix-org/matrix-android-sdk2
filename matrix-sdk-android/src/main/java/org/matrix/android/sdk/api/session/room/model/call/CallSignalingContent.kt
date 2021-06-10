@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Matrix.org Foundation C.I.C.
+ * Copyright (c) 2020 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.api.session.call
+package org.matrix.android.sdk.api.session.room.model.call
 
-interface CallSignalingService {
-
-    suspend fun getTurnServer(): TurnServerResponse
+interface CallSignalingContent {
+    /**
+     * Required. A unique identifier for the call.
+     */
+    val callId: String?
 
     /**
-     * Create an outgoing call
+     * Required. ID to let user identify remote echo of their own events
      */
-    fun createOutgoingCall(roomId: String, otherUserId: String, isVideoCall: Boolean): MxCall
+    val partyId: String?
 
-    fun addCallListener(listener: CallListener)
-
-    fun removeCallListener(listener: CallListener)
-
-    fun getCallWithId(callId: String): MxCall?
-
-    fun isThereAnyActiveCall(): Boolean
+    /**
+     * Required. The version of the VoIP specification this message adheres to. This specification is version 0.
+     */
+    val version: String?
 }
