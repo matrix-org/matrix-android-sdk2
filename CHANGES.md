@@ -1,5 +1,11 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK 1.1.9 (2021-06-10)
+===================================================
+
+Fix error with Jitpack on 1.1.8
+Imported from Element 1.1.9. (https://github.com/vector-im/element-android/releases/tag/v1.1.9)
+
 Changes in Matrix-SDK 1.1.8 (2021-05-26)
 ===================================================
 
