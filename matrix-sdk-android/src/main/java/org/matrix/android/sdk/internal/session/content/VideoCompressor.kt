@@ -18,6 +18,7 @@ package org.matrix.android.sdk.internal.session.content
 
 import com.otaliastudios.transcoder.Transcoder
 import com.otaliastudios.transcoder.TranscoderListener
+import com.otaliastudios.transcoder.strategy.DefaultVideoStrategies
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.withContext
@@ -44,6 +45,7 @@ internal class VideoCompressor @Inject constructor(
         var failure: Throwable? = null
         Transcoder.into(destinationFile.path)
                 .addDataSource(videoFile.path)
+                .setVideoTrackStrategy(DefaultVideoStrategies.for360x480())
                 .setListener(object : TranscoderListener {
                     override fun onTranscodeProgress(progress: Double) {
                         Timber.d("Compressing: $progress%")
