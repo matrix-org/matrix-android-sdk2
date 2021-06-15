@@ -163,7 +163,8 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                         && params.compressBeforeSending) {
                     notifyTracker(params) { contentUploadStateTracker.setCompressingImage(it) }
 
-                    fileToUpload = imageCompressor.compress(workingFile, MAX_IMAGE_SIZE, MAX_IMAGE_SIZE)
+                    //fileToUpload = imageCompressor.compress(workingFile, MAX_IMAGE_SIZE, MAX_IMAGE_SIZE)
+                    fileToUpload = imageCompressor.compress(workingFile, GK_MAX_IMAGE_WIDTH, GK_MAX_IMAGE_HEIGHT)
                             .also { compressedFile ->
                                 // Get new Bitmap size
                                 compressedFile.inputStream().use {
@@ -455,5 +456,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
 
     companion object {
         private const val MAX_IMAGE_SIZE = 640
+        private const val GK_MAX_IMAGE_WIDTH = 900
+        private const val GK_MAX_IMAGE_HEIGHT = 1200
     }
 }
