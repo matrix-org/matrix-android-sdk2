@@ -74,6 +74,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
             val attachment: ContentAttachmentData,
             val isEncrypted: Boolean,
             val compressBeforeSending: Boolean,
+            val caption: String?,
             override val lastFailureMessage: String? = null
     ) : SessionWorkerParams
 
@@ -155,7 +156,8 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                 var newAttachmentAttributes = NewAttachmentAttributes(
                         params.attachment.width?.toInt(),
                         params.attachment.height?.toInt(),
-                        params.attachment.size
+                        params.attachment.size,
+                        params.attachment.caption
                 )
 
                 if (attachment.type == ContentAttachmentData.Type.IMAGE
@@ -174,7 +176,8 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                                     newAttachmentAttributes = NewAttachmentAttributes(
                                             newWidth = options.outWidth,
                                             newHeight = options.outHeight,
-                                            newFileSize = compressedFile.length()
+                                            newFileSize = compressedFile.length(),
+                                            caption = params.attachment.caption
                                     )
                                 }
                             }
@@ -209,7 +212,8 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                                         newAttachmentAttributes = newAttachmentAttributes.copy(
                                                 newFileSize = compressedFile.length(),
                                                 newWidth = compressedWidth ?: newAttachmentAttributes.newWidth,
-                                                newHeight = compressedHeight ?: newAttachmentAttributes.newHeight
+                                                newHeight = compressedHeight ?: newAttachmentAttributes.newHeight,
+                                                caption = params.attachment.caption
                                         )
                                         compressedFile
                                                 .also { filesToDelete.add(it) }
