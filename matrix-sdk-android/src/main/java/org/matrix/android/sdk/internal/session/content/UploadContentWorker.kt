@@ -56,7 +56,8 @@ import javax.inject.Inject
 private data class NewAttachmentAttributes(
         val newWidth: Int? = null,
         val newHeight: Int? = null,
-        val newFileSize: Long
+        val newFileSize: Long,
+        val caption: String? = null
 )
 
 /**
@@ -411,7 +412,8 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                 info = info?.copy(
                         width = newAttachmentAttributes?.newWidth ?: info.width,
                         height = newAttachmentAttributes?.newHeight ?: info.height,
-                        size = newAttachmentAttributes?.newFileSize ?: info.size
+                        size = newAttachmentAttributes?.newFileSize ?: info.size,
+                        caption = newAttachmentAttributes?.caption
                 )
         )
     }
@@ -429,7 +431,8 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                         thumbnailFile = thumbnailEncryptedFileInfo?.copy(url = thumbnailUrl),
                         width = newAttachmentAttributes?.newWidth ?: videoInfo.width,
                         height = newAttachmentAttributes?.newHeight ?: videoInfo.height,
-                        size = newAttachmentAttributes?.newFileSize ?: videoInfo.size
+                        size = newAttachmentAttributes?.newFileSize ?: videoInfo.size,
+                        caption = newAttachmentAttributes?.caption
                 )
         )
     }
