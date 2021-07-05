@@ -74,7 +74,6 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
             val attachment: ContentAttachmentData,
             val isEncrypted: Boolean,
             val compressBeforeSending: Boolean,
-            val caption: String?,
             override val lastFailureMessage: String? = null
     ) : SessionWorkerParams
 
