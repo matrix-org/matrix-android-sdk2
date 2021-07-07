@@ -245,7 +245,8 @@ internal class LocalEchoEventFactory @Inject constructor(
                         mimeType = attachment.getSafeMimeType(),
                         width = width?.toInt() ?: 0,
                         height = height?.toInt() ?: 0,
-                        size = attachment.size
+                        size = attachment.size,
+                        caption = attachment.caption
                 ),
                 url = attachment.queryUri.toString()
         )
@@ -281,7 +282,8 @@ internal class LocalEchoEventFactory @Inject constructor(
                         duration = attachment.duration?.toInt() ?: 0,
                         // Glide will be able to use the local path and extract a thumbnail.
                         thumbnailUrl = attachment.queryUri.toString(),
-                        thumbnailInfo = thumbnailInfo
+                        thumbnailInfo = thumbnailInfo,
+                        caption = attachment.caption
                 ),
                 url = attachment.queryUri.toString()
         )

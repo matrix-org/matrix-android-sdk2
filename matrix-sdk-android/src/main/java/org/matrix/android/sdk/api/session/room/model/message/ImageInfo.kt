@@ -55,7 +55,12 @@ data class ImageInfo(
         /**
          * Information on the encrypted thumbnail file, as specified in End-to-end encryption. Only present if the thumbnail is encrypted.
          */
-        @Json(name = "thumbnail_file") val thumbnailFile: EncryptedFileInfo? = null
+        @Json(name = "thumbnail_file") val thumbnailFile: EncryptedFileInfo? = null,
+
+        /**
+         * Caption is added by user that is attached to the multimedia event
+         */
+        @Json(name = "caption") val caption: String? = null
 )
 
 /**
