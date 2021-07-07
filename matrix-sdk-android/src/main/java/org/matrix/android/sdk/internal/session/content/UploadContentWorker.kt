@@ -26,6 +26,7 @@ import org.json.JSONObject
 import org.matrix.android.sdk.api.extensions.tryOrNull
 import org.matrix.android.sdk.api.listeners.ProgressListener
 import org.matrix.android.sdk.api.session.content.ContentAttachmentData
+import org.matrix.android.sdk.api.session.events.model.Content
 import org.matrix.android.sdk.api.session.events.model.toContent
 import org.matrix.android.sdk.api.session.events.model.toModel
 import org.matrix.android.sdk.api.session.room.model.message.MessageAudioContent
@@ -408,15 +409,16 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                 else                   -> messageContent
             }
 
-            if (newAttachmentAttributes.locationJson != null)
-                addLocationToContent(updatedContent, newAttachmentAttributes.locationJson)
-
-            event.content = ContentMapper.map(updatedContent.toContent())
+            if (newAttachmentAttributes.locationJson != null) {
+                event.content = ContentMapper.map(addLocationToContent(updatedContent, newAttachmentAttributes.locationJson))
+            } else {
+                event.content = ContentMapper.map(updatedContent.toContent())
+            }
         }
     }
 
-    private fun addLocationToContent(updatedContent: MessageContent?, locationJson: JSONObject) {
-        updatedContent?.toContent()?.toMutableMap()?.put("location", locationJson)
+    private fun addLocationToContent(updatedContent: MessageContent?, locationJson: JSONObject): Content? {
+        return updatedContent?.toContent()?.toMutableMap()?.put("location", locationJson)?.toContent()
     }
 
     private fun convertStringToJsonObject(locationJson: String?): JSONObject? {
