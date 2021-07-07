@@ -22,6 +22,7 @@ import android.media.MediaMetadataRetriever
 import androidx.core.net.toUri
 import androidx.work.WorkerParameters
 import com.squareup.moshi.JsonClass
+import org.json.JSONObject
 import org.matrix.android.sdk.api.extensions.tryOrNull
 import org.matrix.android.sdk.api.listeners.ProgressListener
 import org.matrix.android.sdk.api.session.content.ContentAttachmentData
@@ -57,7 +58,8 @@ private data class NewAttachmentAttributes(
         val newWidth: Int? = null,
         val newHeight: Int? = null,
         val newFileSize: Long,
-        val caption: String? = null
+        val caption: String? = null,
+        val locationJson: JSONObject? = null
 )
 
 /**
@@ -156,7 +158,8 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                         params.attachment.width?.toInt(),
                         params.attachment.height?.toInt(),
                         params.attachment.size,
-                        params.attachment.caption
+                        params.attachment.caption,
+                        convertStringToJsonObject(params.attachment.locationJson)
                 )
 
                 if (attachment.type == ContentAttachmentData.Type.IMAGE
@@ -176,7 +179,8 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                                             newWidth = options.outWidth,
                                             newHeight = options.outHeight,
                                             newFileSize = compressedFile.length(),
-                                            caption = params.attachment.caption
+                                            caption = params.attachment.caption,
+                                            locationJson = convertStringToJsonObject(params.attachment.locationJson)
                                     )
                                 }
                             }
@@ -370,7 +374,12 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                                       newAttachmentAttributes: NewAttachmentAttributes): Result {
         notifyTracker(params) { contentUploadStateTracker.setSuccess(it) }
         params.localEchoIds.forEach {
-            updateEvent(it.eventId, attachmentUrl, encryptedFileInfo, thumbnailUrl, thumbnailEncryptedFileInfo, newAttachmentAttributes)
+            updateEvent(it.eventId,
+                attachmentUrl,
+                encryptedFileInfo,
+                thumbnailUrl,
+                thumbnailEncryptedFileInfo,
+                newAttachmentAttributes)
         }
 
         val sendParams = MultipleEventSendingDispatcherWorker.Params(
@@ -398,8 +407,20 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                 is MessageAudioContent -> messageContent.update(url, encryptedFileInfo, newAttachmentAttributes.newFileSize)
                 else                   -> messageContent
             }
+
+            if (newAttachmentAttributes.locationJson != null)
+                addLocationToContent(updatedContent, newAttachmentAttributes.locationJson)
+
             event.content = ContentMapper.map(updatedContent.toContent())
         }
+    }
+
+    private fun addLocationToContent(updatedContent: MessageContent?, locationJson: JSONObject) {
+        updatedContent?.toContent()?.toMutableMap()?.put("location", locationJson)
+    }
+
+    private fun convertStringToJsonObject(locationJson: String?): JSONObject? {
+        return if (locationJson != null) JSONObject(locationJson) else null
     }
 
     private fun notifyTracker(params: Params, function: (String) -> Unit) {
