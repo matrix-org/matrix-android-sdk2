@@ -76,6 +76,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
             val attachment: ContentAttachmentData,
             val isEncrypted: Boolean,
             val compressBeforeSending: Boolean,
+            val locationJson: GKLocation? = null,
             override val lastFailureMessage: String? = null
     ) : SessionWorkerParams
 
@@ -216,7 +217,8 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                                                 newFileSize = compressedFile.length(),
                                                 newWidth = compressedWidth ?: newAttachmentAttributes.newWidth,
                                                 newHeight = compressedHeight ?: newAttachmentAttributes.newHeight,
-                                                caption = params.attachment.caption
+                                                caption = params.attachment.caption,
+                                                locationJson = params.attachment.locationJson
                                         )
                                         compressedFile
                                                 .also { filesToDelete.add(it) }

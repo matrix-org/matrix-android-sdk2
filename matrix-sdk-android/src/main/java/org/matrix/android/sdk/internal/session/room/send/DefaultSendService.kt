@@ -311,7 +311,7 @@ internal class DefaultSendService @AssistedInject constructor(
         val localEchoIds = allLocalEchos.map {
             LocalEchoIdentifiers(it.roomId!!, it.eventId!!)
         }
-        val uploadMediaWorkerParams = UploadContentWorker.Params(sessionId, localEchoIds, attachment, isRoomEncrypted, compressBeforeSending)
+        val uploadMediaWorkerParams = UploadContentWorker.Params(sessionId, localEchoIds, attachment, isRoomEncrypted, compressBeforeSending, attachment.locationJson)
         val uploadWorkData = WorkerParamsFactory.toData(uploadMediaWorkerParams)
 
         return workManagerProvider.matrixOneTimeWorkRequestBuilder<UploadContentWorker>()
