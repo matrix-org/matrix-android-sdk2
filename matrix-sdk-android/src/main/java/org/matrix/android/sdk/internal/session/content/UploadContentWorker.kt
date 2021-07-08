@@ -22,11 +22,9 @@ import android.media.MediaMetadataRetriever
 import androidx.core.net.toUri
 import androidx.work.WorkerParameters
 import com.squareup.moshi.JsonClass
-import org.json.JSONObject
 import org.matrix.android.sdk.api.extensions.tryOrNull
 import org.matrix.android.sdk.api.listeners.ProgressListener
 import org.matrix.android.sdk.api.session.content.ContentAttachmentData
-import org.matrix.android.sdk.api.session.events.model.Content
 import org.matrix.android.sdk.api.session.events.model.toContent
 import org.matrix.android.sdk.api.session.events.model.toModel
 import org.matrix.android.sdk.api.session.room.model.message.MessageAudioContent
@@ -42,6 +40,7 @@ import org.matrix.android.sdk.internal.database.mapper.asDomain
 import org.matrix.android.sdk.internal.network.ProgressRequestBody
 import org.matrix.android.sdk.internal.session.DefaultFileService
 import org.matrix.android.sdk.internal.session.SessionComponent
+import org.matrix.android.sdk.internal.session.media.GKLocation
 import org.matrix.android.sdk.internal.session.room.send.CancelSendTracker
 import org.matrix.android.sdk.internal.session.room.send.LocalEchoIdentifiers
 import org.matrix.android.sdk.internal.session.room.send.LocalEchoRepository
@@ -60,7 +59,7 @@ private data class NewAttachmentAttributes(
         val newHeight: Int? = null,
         val newFileSize: Long,
         val caption: String? = null,
-        val locationJson: JSONObject? = null
+        val locationJson: GKLocation? = null
 )
 
 /**
@@ -160,7 +159,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                         params.attachment.height?.toInt(),
                         params.attachment.size,
                         params.attachment.caption,
-                        convertStringToJsonObject(params.attachment.locationJson)
+                        params.attachment.locationJson
                 )
 
                 if (attachment.type == ContentAttachmentData.Type.IMAGE
@@ -181,7 +180,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                                             newHeight = options.outHeight,
                                             newFileSize = compressedFile.length(),
                                             caption = params.attachment.caption,
-                                            locationJson = convertStringToJsonObject(params.attachment.locationJson)
+                                            locationJson = params.attachment.locationJson
                                     )
                                 }
                             }
@@ -413,10 +412,6 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
         }
     }
 
-    private fun convertStringToJsonObject(locationJson: String?): JSONObject? {
-        return if (locationJson != null) JSONObject(locationJson) else null
-    }
-
     private fun notifyTracker(params: Params, function: (String) -> Unit) {
         params.localEchoIds.forEach { function.invoke(it.eventId) }
     }
@@ -433,7 +428,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                         size = newAttachmentAttributes?.newFileSize ?: info.size,
                         caption = newAttachmentAttributes?.caption
                 ),
-                location = newAttachmentAttributes?.locationJson?.toString()
+                location = newAttachmentAttributes?.locationJson?.toContent()
         )
     }
 
@@ -453,7 +448,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                         size = newAttachmentAttributes?.newFileSize ?: videoInfo.size,
                         caption = newAttachmentAttributes?.caption
                 ),
-                location = newAttachmentAttributes?.locationJson?.toString()
+                location = newAttachmentAttributes?.locationJson?.toContent()
         )
     }
 

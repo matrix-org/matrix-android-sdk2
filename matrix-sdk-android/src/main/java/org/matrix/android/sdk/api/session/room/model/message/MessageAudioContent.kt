@@ -55,7 +55,7 @@ data class MessageAudioContent(
         /**
          * Required if the current user's location data should be sent with an event
          */
-        @Json(name = "location") val location: String? = null
+        @Json(name = "location") val location: Content? = null
 ) : MessageWithAttachmentContent {
 
     override val mimeType: String?

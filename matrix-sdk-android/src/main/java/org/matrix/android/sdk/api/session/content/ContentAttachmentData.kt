@@ -23,6 +23,7 @@ import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
 import org.matrix.android.sdk.api.util.MimeTypes.normalizeMimeType
+import org.matrix.android.sdk.internal.session.media.GKLocation
 
 @Parcelize
 @JsonClass(generateAdapter = true)
@@ -38,7 +39,7 @@ data class ContentAttachmentData(
         val mimeType: String?,
         val type: Type,
         val caption: String? = null,
-        val locationJson: String? = null
+        val locationJson: GKLocation? = null
 ) : Parcelable {
 
     @JsonClass(generateAdapter = false)
