@@ -57,7 +57,7 @@ data class MessageImageContent(
         /**
          * Required if the current user's location data should be sent with an event
          */
-        @Json(name = "location") override val location: String? = null
+        @Json(name = "location") val location: String? = null
 ) : MessageImageInfoContent {
     override val mimeType: String?
         get() = encryptedFileInfo?.mimetype ?: info?.mimeType ?: MimeTypes.Images
