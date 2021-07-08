@@ -17,7 +17,6 @@
 package org.matrix.android.sdk.internal.di
 
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import org.matrix.android.sdk.api.session.room.model.message.MessageAudioContent
 import org.matrix.android.sdk.api.session.room.model.message.MessageContent
 import org.matrix.android.sdk.api.session.room.model.message.MessageDefaultContent
@@ -46,7 +45,6 @@ object MoshiProvider {
             .add(ForceToBooleanJsonAdapter())
             .add(CipherSuiteMoshiAdapter())
             .add(TlsVersionMoshiAdapter())
-            .add(KotlinJsonAdapterFactory())
             // Use addLast here so we can inject a SplitLazyRoomSyncJsonAdapter later to override the default parsing.
             .addLast(DefaultLazyRoomSyncEphemeralJsonAdapter())
             .add(RuntimeJsonAdapterFactory.of(MessageContent::class.java, "msgtype", MessageDefaultContent::class.java)
