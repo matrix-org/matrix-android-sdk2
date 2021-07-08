@@ -24,4 +24,5 @@ interface MessageContent {
     val body: String
     val relatesTo: RelationDefaultContent?
     val newContent: Content?
+    val location: String?
 }

@@ -409,16 +409,8 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                 else                   -> messageContent
             }
 
-            if (newAttachmentAttributes.locationJson != null) {
-                event.content = ContentMapper.map(addLocationToContent(updatedContent, newAttachmentAttributes.locationJson))
-            } else {
-                event.content = ContentMapper.map(updatedContent.toContent())
-            }
+            event.content = ContentMapper.map(updatedContent.toContent())
         }
-    }
-
-    private fun addLocationToContent(updatedContent: MessageContent?, locationJson: JSONObject): Content? {
-        return updatedContent?.toContent()?.toMutableMap()?.put("location", locationJson)?.toContent()
     }
 
     private fun convertStringToJsonObject(locationJson: String?): JSONObject? {
@@ -440,7 +432,8 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                         height = newAttachmentAttributes?.newHeight ?: info.height,
                         size = newAttachmentAttributes?.newFileSize ?: info.size,
                         caption = newAttachmentAttributes?.caption
-                )
+                ),
+                location = newAttachmentAttributes?.locationJson?.toString()
         )
     }
 
@@ -459,7 +452,8 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                         height = newAttachmentAttributes?.newHeight ?: videoInfo.height,
                         size = newAttachmentAttributes?.newFileSize ?: videoInfo.size,
                         caption = newAttachmentAttributes?.caption
-                )
+                ),
+                location = newAttachmentAttributes?.locationJson?.toString()
         )
     }
 

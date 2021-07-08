@@ -50,7 +50,12 @@ data class MessageAudioContent(
         /**
          * Required if the file is encrypted. Information on the encrypted file, as specified in End-to-end encryption.
          */
-        @Json(name = "file") override val encryptedFileInfo: EncryptedFileInfo? = null
+        @Json(name = "file") override val encryptedFileInfo: EncryptedFileInfo? = null,
+
+        /**
+         * Required if the current user's location data should be sent with an event
+         */
+        @Json(name = "location") override val location: String? = null
 ) : MessageWithAttachmentContent {
 
     override val mimeType: String?
