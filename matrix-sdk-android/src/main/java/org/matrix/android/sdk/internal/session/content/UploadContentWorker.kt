@@ -40,6 +40,7 @@ import org.matrix.android.sdk.internal.database.mapper.asDomain
 import org.matrix.android.sdk.internal.network.ProgressRequestBody
 import org.matrix.android.sdk.internal.session.DefaultFileService
 import org.matrix.android.sdk.internal.session.SessionComponent
+import org.matrix.android.sdk.internal.session.media.GKLocation
 import org.matrix.android.sdk.internal.session.room.send.CancelSendTracker
 import org.matrix.android.sdk.internal.session.room.send.LocalEchoIdentifiers
 import org.matrix.android.sdk.internal.session.room.send.LocalEchoRepository
@@ -57,7 +58,8 @@ private data class NewAttachmentAttributes(
         val newWidth: Int? = null,
         val newHeight: Int? = null,
         val newFileSize: Long,
-        val caption: String? = null
+        val caption: String? = null,
+        val locationJson: GKLocation? = null
 )
 
 /**
@@ -74,6 +76,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
             val attachment: ContentAttachmentData,
             val isEncrypted: Boolean,
             val compressBeforeSending: Boolean,
+            val locationJson: GKLocation? = null,
             override val lastFailureMessage: String? = null
     ) : SessionWorkerParams
 
@@ -156,7 +159,8 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                         params.attachment.width?.toInt(),
                         params.attachment.height?.toInt(),
                         params.attachment.size,
-                        params.attachment.caption
+                        params.attachment.caption,
+                        params.attachment.locationJson
                 )
 
                 if (attachment.type == ContentAttachmentData.Type.IMAGE
@@ -176,7 +180,8 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                                             newWidth = options.outWidth,
                                             newHeight = options.outHeight,
                                             newFileSize = compressedFile.length(),
-                                            caption = params.attachment.caption
+                                            caption = params.attachment.caption,
+                                            locationJson = params.attachment.locationJson
                                     )
                                 }
                             }
@@ -212,7 +217,8 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                                                 newFileSize = compressedFile.length(),
                                                 newWidth = compressedWidth ?: newAttachmentAttributes.newWidth,
                                                 newHeight = compressedHeight ?: newAttachmentAttributes.newHeight,
-                                                caption = params.attachment.caption
+                                                caption = params.attachment.caption,
+                                                locationJson = params.attachment.locationJson
                                         )
                                         compressedFile
                                                 .also { filesToDelete.add(it) }
@@ -370,7 +376,12 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                                       newAttachmentAttributes: NewAttachmentAttributes): Result {
         notifyTracker(params) { contentUploadStateTracker.setSuccess(it) }
         params.localEchoIds.forEach {
-            updateEvent(it.eventId, attachmentUrl, encryptedFileInfo, thumbnailUrl, thumbnailEncryptedFileInfo, newAttachmentAttributes)
+            updateEvent(it.eventId,
+                attachmentUrl,
+                encryptedFileInfo,
+                thumbnailUrl,
+                thumbnailEncryptedFileInfo,
+                newAttachmentAttributes)
         }
 
         val sendParams = MultipleEventSendingDispatcherWorker.Params(
@@ -398,6 +409,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                 is MessageAudioContent -> messageContent.update(url, encryptedFileInfo, newAttachmentAttributes.newFileSize)
                 else                   -> messageContent
             }
+
             event.content = ContentMapper.map(updatedContent.toContent())
         }
     }
@@ -417,7 +429,8 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                         height = newAttachmentAttributes?.newHeight ?: info.height,
                         size = newAttachmentAttributes?.newFileSize ?: info.size,
                         caption = newAttachmentAttributes?.caption
-                )
+                ),
+                location = newAttachmentAttributes?.locationJson?.toContent()
         )
     }
 
@@ -436,7 +449,8 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                         height = newAttachmentAttributes?.newHeight ?: videoInfo.height,
                         size = newAttachmentAttributes?.newFileSize ?: videoInfo.size,
                         caption = newAttachmentAttributes?.caption
-                )
+                ),
+                location = newAttachmentAttributes?.locationJson?.toContent()
         )
     }
 

@@ -52,7 +52,12 @@ data class MessageImageContent(
         /**
          * Required if the file is encrypted. Information on the encrypted file, as specified in End-to-end encryption.
          */
-        @Json(name = "file") override val encryptedFileInfo: EncryptedFileInfo? = null
+        @Json(name = "file") override val encryptedFileInfo: EncryptedFileInfo? = null,
+
+        /**
+         * Required if the current user's location data should be sent with an event
+         */
+        @Json(name = "location") val location: Content? = null
 ) : MessageImageInfoContent {
     override val mimeType: String?
         get() = encryptedFileInfo?.mimetype ?: info?.mimeType ?: MimeTypes.Images
