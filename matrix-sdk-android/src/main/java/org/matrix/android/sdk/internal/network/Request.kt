@@ -87,19 +87,13 @@ internal suspend inline fun <DATA> executeRequest(globalErrorReceiver: GlobalErr
                 currentDelay = currentDelay.times(2L).coerceAtMost(maxDelayBeforeRetry)
                 // Try again (loop)
             } else {
-//                try {
-                    throw when (exception) {
-                        is IOException              -> Failure.NetworkConnection(exception)
-                        is Failure.ServerError,
-                        is Failure.OtherServerError,
-                        is CancellationException    -> exception
-                        else                        -> Failure.Unknown(exception)
-                    }
-//                } catch (e: Exception) {
-//                    if (BuildConfig.DEBUG) {
-//                        e.printStackTrace()
-//                    }
-//                }
+                throw when (exception) {
+                    is IOException              -> Failure.NetworkConnection(exception)
+                    is Failure.ServerError,
+                    is Failure.OtherServerError,
+                    is CancellationException    -> exception
+                    else                        -> Failure.Unknown(exception)
+                }
             }
         }
     }
