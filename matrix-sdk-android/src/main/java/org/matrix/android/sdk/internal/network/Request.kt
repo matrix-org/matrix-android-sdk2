@@ -23,11 +23,9 @@ import org.matrix.android.sdk.api.failure.MatrixError
 import org.matrix.android.sdk.api.failure.getRetryDelay
 import org.matrix.android.sdk.api.failure.shouldBeRetried
 import org.matrix.android.sdk.internal.network.ssl.CertUtil
-import org.matrix.olm.BuildConfig
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
-import java.lang.Exception
 
 /**
  * Execute a request from the requestBlock and handle some of the Exception it could generate
