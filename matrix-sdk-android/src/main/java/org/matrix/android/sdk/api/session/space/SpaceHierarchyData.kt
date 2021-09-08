@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Matrix.org Foundation C.I.C.
+ * Copyright 2021 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.api.failure
+package org.matrix.android.sdk.api.session.space
 
-import org.matrix.android.sdk.internal.network.ssl.Fingerprint
+import org.matrix.android.sdk.api.session.events.model.Event
+import org.matrix.android.sdk.api.session.room.model.RoomSummary
+import org.matrix.android.sdk.api.session.room.model.SpaceChildInfo
 
-// This class will be sent to the bus
-sealed class GlobalError {
-    data class InvalidToken(val softLogout: Boolean) : GlobalError()
-    data class ConsentNotGivenError(val consentUri: String) : GlobalError()
-    data class CertificateError(val fingerprint: Fingerprint) : GlobalError()
-    object ExpiredAccount : GlobalError()
-}
+data class SpaceHierarchyData(
+        val rootSummary: RoomSummary,
+        val children: List<SpaceChildInfo>,
+        val childrenState: List<Event>,
+        val nextToken: String? = null
+)
