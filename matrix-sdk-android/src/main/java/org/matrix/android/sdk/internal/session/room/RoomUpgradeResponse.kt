@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Matrix.org Foundation C.I.C.
+ * Copyright 2021 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.api.session.accountdata
+package org.matrix.android.sdk.internal.session.room
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import org.matrix.android.sdk.api.session.events.model.Content
 
-/**
- * This is a simplified Event with just a type and a content.
- * Currently used types are defined in [UserAccountDataTypes].
- */
 @JsonClass(generateAdapter = true)
-data class AccountDataEvent(
-        @Json(name = "type") val type: String,
-        @Json(name = "content") val content: Content
+internal data class RoomUpgradeResponse(
+        @Json(name = "replacement_room")
+        val replacementRoomId: String
 )
