@@ -12,26 +12,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
-
-package org.matrix.android.sdk.api.session.room.model
+package org.matrix.android.sdk.internal.session.pushers
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class RoomJoinRulesAllowEntry(
-        /**
-         * The room ID to check the membership of.
-         */
-        @Json(name = "room_id") val roomId: String?,
-        /**
-         * "m.room_membership" to describe that we are allowing access via room membership. Future MSCs may define other types.
-         */
-        @Json(name = "type") val type: String?
-) {
-    companion object {
-        fun restrictedToRoom(roomId: String) = RoomJoinRulesAllowEntry(roomId, "m.room_membership")
-    }
-}
+internal data class EnabledBody(
+        @Json(name = "enabled")
+        val enabled: Boolean
+)
