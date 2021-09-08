@@ -1,5 +1,13 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK 1.2.0 (2021-09-08)
+===================================================
+
+Imported from Element 1.2.0. (https://github.com/vector-im/element-android/releases/tag/v1.2.0)
+Still an issue with Jitpack: https://github.com/jitpack/jitpack.io/issues/4721
+We are working to make the library available in MavenCentral. In the mean time, you can get the library from GitHub here:
+https://github.com/matrix-org/matrix-android-sdk2/releases/tag/v1.2.0
+
 Changes in Matrix-SDK 1.1.9 (2021-06-10)
 ===================================================
 
