@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'realm-android'
-apply plugin: 'maven-publish'
+apply plugin: "com.vanniktech.maven.publish"
 
 buildscript {
     repositories {
@@ -192,14 +192,4 @@ dependencies {
     androidTestImplementation 'net.lachlanmckee:timber-junit-rule:1.0.1'
 
     androidTestUtil 'androidx.test:orchestrator:1.4.0'
-}
-
-project.afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                from components.release
-            }
-        }
-    }
 }
