@@ -1,5 +1,10 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK 1.2.2 (2021-09-13)
+===================================================
+
+Fix a security issue with message key sharing. See https://matrix.org/blog/2021/09/13/vulnerability-disclosure-key-sharing for details.
+
 Changes in Matrix-SDK 1.2.1 (2021-09-08)
 ===================================================
 
