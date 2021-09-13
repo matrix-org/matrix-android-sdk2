@@ -1,4 +1,4 @@
-[![Latest version](https://img.shields.io/jitpack/v/github/matrix-org/matrix-android-sdk2)](https://jitpack.io/#matrix-org/matrix-android-sdk2) [![Build status](https://badge.buildkite.com/1f5af13987f4e309ae7d6d09e818e19a5a709008c249238c1a.svg?branch=main)](https://buildkite.com/matrix-dot-org/matrix-android-sdk2)
+![Latest version](https://img.shields.io/maven-central/v/org.matrix.android/matrix-android-sdk2) [![Build status](https://badge.buildkite.com/1f5af13987f4e309ae7d6d09e818e19a5a709008c249238c1a.svg?branch=main)](https://buildkite.com/matrix-dot-org/matrix-android-sdk2)
 
 # matrix-android-sdk2
 
@@ -23,12 +23,10 @@ Please open any issue in the Element Android project: [Create an issue](https://
 To integrate the SDK to your application, add the following gradle dependency to the build.gradle of your application module:
 
 ```gradle
-implementation 'com.github.matrix-org:matrix-android-sdk2:v0.0.1'
+implementation 'org.matrix.android:matrix-android-sdk2:1.2.1'
 ```
 
-Latest version: [![Latest version](https://img.shields.io/jitpack/v/github/matrix-org/matrix-android-sdk2)](https://jitpack.io/#matrix-org/matrix-android-sdk2)
-
-You need to add Jitpack as a repository in your main build.gradle file. Please follow instructions here: https://jitpack.io/#matrix-org/matrix-android-sdk2
+Latest version: ![Latest version](https://img.shields.io/maven-central/v/org.matrix.android/matrix-android-sdk2)
 
 ### Sample application
 
