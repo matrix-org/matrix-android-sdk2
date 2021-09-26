@@ -23,7 +23,7 @@ import io.realm.kotlin.where
 import org.matrix.android.sdk.api.pushrules.RuleScope
 import org.matrix.android.sdk.api.pushrules.RuleSetKey
 import org.matrix.android.sdk.api.pushrules.rest.GetPushRulesResponse
-import org.matrix.android.sdk.api.session.accountdata.AccountDataEvent
+import org.matrix.android.sdk.api.session.accountdata.UserAccountDataEvent
 import org.matrix.android.sdk.api.session.accountdata.UserAccountDataTypes
 import org.matrix.android.sdk.api.session.events.model.Content
 import org.matrix.android.sdk.api.session.events.model.toModel
@@ -53,6 +53,7 @@ import org.matrix.android.sdk.internal.session.sync.model.accountdata.Breadcrumb
 import org.matrix.android.sdk.internal.session.sync.model.accountdata.DirectMessagesContent
 import org.matrix.android.sdk.internal.session.sync.model.accountdata.IgnoredUsersContent
 import org.matrix.android.sdk.internal.session.sync.model.accountdata.UserAccountDataSync
+import org.matrix.android.sdk.internal.session.sync.model.accountdata.toMutable
 import org.matrix.android.sdk.internal.session.user.accountdata.DirectChatsHelper
 import org.matrix.android.sdk.internal.session.user.accountdata.UpdateUserAccountDataTask
 import timber.log.Timber
@@ -83,7 +84,7 @@ internal class UserAccountDataSyncHandler @Inject constructor(
     // If we get some direct chat invites, we synchronize the user account data including those.
     suspend fun synchronizeWithServerIfNeeded(invites: Map<String, InvitedRoomSync>) {
         if (invites.isNullOrEmpty()) return
-        val directChats = directChatsHelper.getLocalUserAccount()
+        val directChats = directChatsHelper.getLocalDirectMessages().toMutable()
         var hasUpdate = false
         monarchy.doWithRealm { realm ->
             invites.forEach { (roomId, _) ->
@@ -113,7 +114,7 @@ internal class UserAccountDataSyncHandler @Inject constructor(
         }
     }
 
-    private fun handlePushRules(realm: Realm, event: AccountDataEvent) {
+    private fun handlePushRules(realm: Realm, event: UserAccountDataEvent) {
         val pushRules = event.content.toModel<GetPushRulesResponse>() ?: return
         realm.where(PushRulesEntity::class.java)
                 .findAll()
@@ -155,7 +156,7 @@ internal class UserAccountDataSyncHandler @Inject constructor(
         realm.insertOrUpdate(underrides)
     }
 
-    private fun handleDirectChatRooms(realm: Realm, event: AccountDataEvent) {
+    private fun handleDirectChatRooms(realm: Realm, event: UserAccountDataEvent) {
         val content = event.content.toModel<DirectMessagesContent>() ?: return
         content.forEach { (userId, roomIds) ->
             roomIds.forEach { roomId ->
@@ -181,7 +182,7 @@ internal class UserAccountDataSyncHandler @Inject constructor(
                 }
     }
 
-    private fun handleIgnoredUsers(realm: Realm, event: AccountDataEvent) {
+    private fun handleIgnoredUsers(realm: Realm, event: UserAccountDataEvent) {
         val userIds = event.content.toModel<IgnoredUsersContent>()?.ignoredUsers?.keys ?: return
         realm.where(IgnoredUserEntity::class.java)
                 .findAll()
@@ -191,7 +192,7 @@ internal class UserAccountDataSyncHandler @Inject constructor(
         // TODO If not initial sync, we should execute a init sync
     }
 
-    private fun handleBreadcrumbs(realm: Realm, event: AccountDataEvent) {
+    private fun handleBreadcrumbs(realm: Realm, event: UserAccountDataEvent) {
         val recentRoomIds = event.content.toModel<BreadcrumbsContent>()?.recentRoomIds ?: return
         val entity = BreadcrumbsEntity.getOrCreate(realm)
 

@@ -52,6 +52,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import org.matrix.android.sdk.api.extensions.orFalse
 import org.matrix.android.sdk.api.session.Session
+import org.matrix.android.sdk.internal.session.identity.model.SignInvitationResult
 import timber.log.Timber
 import javax.inject.Inject
 import javax.net.ssl.HttpsURLConnection
@@ -79,6 +80,7 @@ internal class DefaultIdentityService @Inject constructor(
         private val identityApiProvider: IdentityApiProvider,
         private val accountDataDataSource: UserAccountDataDataSource,
         private val homeServerCapabilitiesService: HomeServerCapabilitiesService,
+        private val sign3pidInvitationTask: DefaultSign3pidInvitationTask,
         private val sessionParams: SessionParams
 ) : IdentityService, SessionLifecycleObserver {
 
@@ -191,7 +193,7 @@ internal class DefaultIdentityService @Inject constructor(
         } else {
             // Disconnect previous one if any, first, because the token will change.
             // In case of error when configuring the new identity server, this is not a big deal,
-            // we will ask for a new token on the previous Identity server
+            // we will ask for a new token on the previous identity server
             runCatching { identityDisconnectTask.execute(Unit) }
                     .onFailure { Timber.w(it, "Unable to disconnect identity server") }
 
@@ -241,7 +243,7 @@ internal class DefaultIdentityService @Inject constructor(
 
     override suspend fun getShareStatus(threePids: List<ThreePid>): Map<ThreePid, SharedState> {
         // Note: we do not require user consent here, because it is used for emails and phone numbers that the user has already sent
-        // to the home server, and not emails and phone numbers from the contact book of the user
+        // to the homeserver, and not emails and phone numbers from the contact book of the user
 
         if (threePids.isEmpty()) {
             return emptyMap()
@@ -288,6 +290,14 @@ internal class DefaultIdentityService @Inject constructor(
         val token = identityRegisterTask.execute(IdentityRegisterTask.Params(api, openIdToken))
 
         return token.token
+    }
+
+    override suspend fun sign3pidInvitation(identiyServer: String, token: String, secret: String): SignInvitationResult {
+        return sign3pidInvitationTask.execute(Sign3pidInvitationTask.Params(
+                url = identiyServer,
+                token = token,
+                privateKey = secret
+        ))
     }
 
     override fun addListener(listener: IdentityServiceListener) {

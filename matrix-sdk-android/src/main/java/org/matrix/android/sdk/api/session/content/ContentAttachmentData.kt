@@ -38,6 +38,7 @@ data class ContentAttachmentData(
         val queryUri: Uri,
         val mimeType: String?,
         val type: Type,
+        val waveform: List<Int>? = null
         val caption: String? = null,
         val locationJson: GKLocation? = null
 ) : Parcelable {

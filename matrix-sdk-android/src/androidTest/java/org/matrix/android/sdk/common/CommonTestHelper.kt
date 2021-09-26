@@ -78,7 +78,7 @@ class CommonTestHelper(context: Context) {
     }
 
     /**
-     * Create a Home server configuration, with Http connection allowed for test
+     * Create a homeserver configuration, with Http connection allowed for test
      */
     fun createHomeServerConfig(): HomeServerConnectionConfig {
         return HomeServerConnectionConfig.Builder()
@@ -91,6 +91,7 @@ class CommonTestHelper(context: Context) {
      *
      * @param session    the session to sync
      */
+    @Suppress("EXPERIMENTAL_API_USAGE")
     fun syncSession(session: Session, timeout: Long = TestConstants.timeOutMillis) {
         val lock = CountDownLatch(1)
 
@@ -327,6 +328,7 @@ class CommonTestHelper(context: Context) {
         assertTrue(latch.await(timeout ?: TestConstants.timeOutMillis, TimeUnit.MILLISECONDS))
     }
 
+    @Suppress("EXPERIMENTAL_API_USAGE")
     fun retryPeriodicallyWithLatch(latch: CountDownLatch, condition: (() -> Boolean)) {
         GlobalScope.launch {
             while (true) {

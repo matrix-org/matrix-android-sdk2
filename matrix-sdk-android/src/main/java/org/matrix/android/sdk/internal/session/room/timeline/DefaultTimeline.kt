@@ -24,7 +24,6 @@ import io.realm.RealmQuery
 import io.realm.RealmResults
 import io.realm.Sort
 import org.matrix.android.sdk.api.MatrixCallback
-import org.matrix.android.sdk.api.NoOpMatrixCallback
 import org.matrix.android.sdk.api.extensions.orFalse
 import org.matrix.android.sdk.api.extensions.tryOrNull
 import org.matrix.android.sdk.api.session.events.model.EventType
@@ -179,9 +178,7 @@ internal class DefaultTimeline(
                 }
 
                 loadRoomMembersTask
-                        .configureWith(LoadRoomMembersTask.Params(roomId)) {
-                            this.callback = NoOpMatrixCallback()
-                        }
+                        .configureWith(LoadRoomMembersTask.Params(roomId))
                         .executeBy(taskExecutor)
 
                 // Ensure ReadReceipt from init sync are loaded

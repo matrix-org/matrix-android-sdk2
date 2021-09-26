@@ -27,6 +27,7 @@ import org.matrix.android.sdk.api.session.room.model.create.CreateRoomParams
 import org.matrix.android.sdk.api.session.room.peeking.PeekResult
 import org.matrix.android.sdk.api.session.room.summary.RoomAggregateNotificationCount
 import org.matrix.android.sdk.api.util.Optional
+import org.matrix.android.sdk.internal.session.identity.model.SignInvitationResult
 import org.matrix.android.sdk.internal.session.room.alias.RoomAliasDescription
 
 /**
@@ -62,6 +63,18 @@ interface RoomService {
     suspend fun joinRoom(roomIdOrAlias: String,
                          reason: String? = null,
                          viaServers: List<String> = emptyList())
+
+    /**
+     * @param roomId the roomId of the room to join
+     * @param reason optional reason for joining the room
+     * @param thirdPartySigned A signature of an m.third_party_invite token to prove that this user owns a third party identity
+     * which has been invited to the room.
+     */
+    suspend fun joinRoom(
+            roomId: String,
+            reason: String? = null,
+            thirdPartySigned: SignInvitationResult
+    )
 
     /**
      * Get a room from a roomId
@@ -124,6 +137,12 @@ interface RoomService {
      * Delete a room alias
      */
     suspend fun deleteRoomAlias(roomAlias: String)
+
+    /**
+     * Return the current local changes membership for the given room.
+     * see [getChangeMembershipsLive] for more details.
+     */
+    fun getChangeMemberships(roomIdOrAlias: String): ChangeMembershipState
 
     /**
      * Return a live data of all local changes membership that happened since the session has been opened.

@@ -38,6 +38,7 @@ import org.matrix.android.sdk.api.util.toOptional
 import org.matrix.android.sdk.internal.database.mapper.asDomain
 import org.matrix.android.sdk.internal.database.model.RoomMemberSummaryEntityFields
 import org.matrix.android.sdk.internal.di.SessionDatabase
+import org.matrix.android.sdk.internal.session.identity.model.SignInvitationResult
 import org.matrix.android.sdk.internal.session.room.alias.DeleteRoomAliasTask
 import org.matrix.android.sdk.internal.session.room.alias.GetRoomIdByAliasTask
 import org.matrix.android.sdk.internal.session.room.alias.RoomAliasDescription
@@ -122,6 +123,12 @@ internal class DefaultRoomService @Inject constructor(
         joinRoomTask.execute(JoinRoomTask.Params(roomIdOrAlias, reason, viaServers))
     }
 
+    override suspend fun joinRoom(roomId: String,
+                                  reason: String?,
+                                  thirdPartySigned: SignInvitationResult) {
+        joinRoomTask.execute(JoinRoomTask.Params(roomId, reason, thirdPartySigned = thirdPartySigned))
+    }
+
     override suspend fun markAllAsRead(roomIds: List<String>) {
         markAllRoomsReadTask.execute(MarkAllRoomsReadTask.Params(roomIds))
     }
@@ -132,6 +139,10 @@ internal class DefaultRoomService @Inject constructor(
 
     override suspend fun deleteRoomAlias(roomAlias: String) {
         deleteRoomAliasTask.execute(DeleteRoomAliasTask.Params(roomAlias))
+    }
+
+    override fun getChangeMemberships(roomIdOrAlias: String): ChangeMembershipState {
+        return roomChangeMembershipStateDataSource.getState(roomIdOrAlias)
     }
 
     override fun getChangeMembershipsLive(): LiveData<Map<String, ChangeMembershipState>> {

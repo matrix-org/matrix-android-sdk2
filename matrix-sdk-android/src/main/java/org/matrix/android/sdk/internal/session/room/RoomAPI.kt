@@ -159,7 +159,8 @@ internal interface RoomAPI {
     @POST(NetworkConstants.URI_API_PREFIX_PATH_R0 + "rooms/{roomId}/receipt/{receiptType}/{eventId}")
     suspend fun sendReceipt(@Path("roomId") roomId: String,
                             @Path("receiptType") receiptType: String,
-                            @Path("eventId") eventId: String)
+                            @Path("eventId") eventId: String,
+                            @Body body: JsonDict = emptyMap())
 
     /**
      * Invite a user to the given room.
@@ -253,7 +254,7 @@ internal interface RoomAPI {
     @POST(NetworkConstants.URI_API_PREFIX_PATH_R0 + "join/{roomIdOrAlias}")
     suspend fun join(@Path("roomIdOrAlias") roomIdOrAlias: String,
                      @Query("server_name") viaServers: List<String>,
-                     @Body params: Map<String, String?>): JoinRoomResponse
+                     @Body params:  JsonDict): JoinRoomResponse
 
     /**
      * Leave the given room.
@@ -369,4 +370,15 @@ internal interface RoomAPI {
                                    @Path("roomId") roomId: String,
                                    @Path("type") type: String,
                                    @Body content: JsonDict)
+
+    /**
+     * Upgrades the given room to a particular room version.
+     * Errors:
+     * 400, The request was invalid. One way this can happen is if the room version requested is not supported by the homeserver
+     * (M_UNSUPPORTED_ROOM_VERSION)
+     * 403: The user is not permitted to upgrade the room.(M_FORBIDDEN)
+     */
+    @POST(NetworkConstants.URI_API_PREFIX_PATH_R0 + "rooms/{roomId}/upgrade")
+    suspend fun upgradeRoom(@Path("roomId") roomId: String,
+                            @Body body: RoomUpgradeBody): RoomUpgradeResponse
 }
