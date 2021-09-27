@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'realm-android'
+// WARNING: always restore this line after importing code from Element Android (1/2)
 apply plugin: "com.vanniktech.maven.publish"
 
 buildscript {
@@ -32,6 +33,7 @@ android {
         // that the app's state is completely cleared between tests.
         testInstrumentationRunnerArguments clearPackageData: 'true'
 
+        // WARNING: always restore this line after importing code from Element Android (2/2)
         buildConfigField "String", "SDK_VERSION", "\"${project.getProperties().getOrDefault("VERSION_NAME", "0.0.0")}\""
 
         buildConfigField "String", "GIT_SDK_REVISION", "\"${gitRevision()}\""
