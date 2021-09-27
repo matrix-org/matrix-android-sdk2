@@ -1,5 +1,15 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK 1.3.0 (2021-09-27)
+===================================================
+
+Imported from Element 1.3.0. (https://github.com/vector-im/element-android/releases/tag/v1.3.0)
+
+SDK API changes ⚠️
+------------------
+ - InitialSyncProgressService has been renamed to SyncStatusService and its function getInitialSyncProgressStatus() has been renamed to getSyncStatusLive() ([#4046](https://github.com/vector-im/element-android/issues/4046))
+
+
 Changes in Matrix-SDK 1.2.2 (2021-09-13)
 ===================================================
 

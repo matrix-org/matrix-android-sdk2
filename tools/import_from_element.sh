@@ -36,6 +36,9 @@ echo "Importing matrix-sdk-android..."
 rm -rf ./matrix-sdk-android
 cp -r ${elementAndroidPath}/matrix-sdk-android .
 
+# Copy other files
+cp -r ${elementAndroidPath}/dependencies.gradle .
+
 # Add all changes to git
 git add -A
 
