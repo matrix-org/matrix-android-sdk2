@@ -42,7 +42,7 @@ cp -r ${elementAndroidPath}/dependencies.gradle .
 # Add all changes to git
 git add -A
 
-read -p "Press enter to build the library (update the version first?)"
+read -p "Press enter to build the library (check the diff in the file ./matrix-sdk-android/build.gradle first)"
 
 # Build the library
 ./gradlew clean assembleRelease --stacktrace

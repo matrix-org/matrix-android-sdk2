@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.matrix.android.sdk.internal.session.sync.model
 
-import com.squareup.moshi.Json
+package org.matrix.android.sdk.api.session.sync.model
+
 import com.squareup.moshi.JsonClass
-import org.matrix.android.sdk.api.session.events.model.Event
 
-// RoomInviteState represents the state of a room that the user has been invited to.
+/**
+ * This class describes the device list response from a sync request
+ */
 @JsonClass(generateAdapter = true)
-internal data class RoomInviteState(
-
-        /**
-         * List of state events (array of MXEvent).
-         */
-        @Json(name = "events") val events: List<Event> = emptyList()
+data class DeviceListResponse(
+        // user ids list which have new crypto devices
+        val changed: List<String> = emptyList(),
+        //  List of user ids who are no more tracked.
+        val left: List<String> = emptyList()
 )
