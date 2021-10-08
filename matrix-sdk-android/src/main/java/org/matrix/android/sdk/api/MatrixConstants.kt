@@ -14,12 +14,21 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.internal.session.sync.model
+package org.matrix.android.sdk.api
 
-import com.squareup.moshi.JsonClass
+/**
+ * This object define some global constants regarding the Matrix specification
+ */
+object MatrixConstants {
+    /**
+     * Max length for an alias. Room aliases MUST NOT exceed 255 bytes (including the # sigil and the domain).
+     * See [maxAliasLocalPartLength]
+     * Ref. https://matrix.org/docs/spec/appendices#room-aliases
+     */
+    const val ALIAS_MAX_LENGTH = 255
 
-@JsonClass(generateAdapter = false)
-internal sealed class LazyRoomSyncEphemeral {
-    data class Parsed(val _roomSyncEphemeral: RoomSyncEphemeral) : LazyRoomSyncEphemeral()
-    object Stored : LazyRoomSyncEphemeral()
+    fun maxAliasLocalPartLength(domain: String): Int {
+        return (ALIAS_MAX_LENGTH - 1 /* # sigil */ - 1 /* ':' */ - domain.length)
+                .coerceAtLeast(0)
+    }
 }

@@ -14,28 +14,17 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.internal.session.sync.model
+package org.matrix.android.sdk.api.session.sync.model
 
-import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.matrix.android.sdk.api.session.events.model.Event
 
-/**
- * `MXRoomSyncUnreadNotifications` represents the unread counts for a room.
- */
+//  PresenceSyncResponse represents the updates to the presence status of other users during server sync v2.
 @JsonClass(generateAdapter = true)
-internal data class RoomSyncUnreadNotifications(
-        /**
-         * List of account data events (array of Event).
-         */
-        @Json(name = "events") val events: List<Event>? = null,
+data class PresenceSyncResponse(
 
         /**
-         * The number of unread messages that match the push notification rules.
+         * List of presence events (array of Event with type m.presence).
          */
-        @Json(name = "notification_count") val notificationCount: Int? = null,
-
-        /**
-         * The number of highlighted unread messages (subset of notifications).
-         */
-        @Json(name = "highlight_count") val highlightCount: Int? = null)
+        val events: List<Event>? = null
+)

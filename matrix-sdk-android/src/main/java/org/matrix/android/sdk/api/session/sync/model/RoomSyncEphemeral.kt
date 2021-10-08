@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.internal.session.sync.model
+package org.matrix.android.sdk.api.session.sync.model
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.matrix.android.sdk.api.session.events.model.Event
 
-// RoomSyncState represents the state updates for a room during server sync v2.
+// RoomSyncEphemeral represents the ephemeral events in the room that aren't recorded in the timeline or state of the room (e.g. typing).
 @JsonClass(generateAdapter = true)
-internal data class RoomSyncState(
-
+data class RoomSyncEphemeral(
         /**
-         * List of state events (array of Event). The resulting state corresponds to the *start* of the timeline.
+         * List of ephemeral events (array of Event).
          */
         @Json(name = "events") val events: List<Event>? = null
 )
