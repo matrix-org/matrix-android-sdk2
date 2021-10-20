@@ -1,5 +1,16 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK 1.3.4 (2021-10-20)
+===================================================
+
+Imported from Element 1.3.4. (https://github.com/vector-im/element-android/releases/tag/v1.3.4)
+
+SDK API changes ⚠️
+------------------
+Add Presence support:
+- PresenceService has been added, with the ability to set the presence of the current user
+- For DM, the presence of the other user is added to the RoomSummary
+
 Changes in Matrix-SDK 1.3.2 (2021-10-08)
 ===================================================
 
