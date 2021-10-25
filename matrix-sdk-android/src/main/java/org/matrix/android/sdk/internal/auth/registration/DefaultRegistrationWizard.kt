@@ -18,6 +18,7 @@ package org.matrix.android.sdk.internal.auth.registration
 
 import kotlinx.coroutines.delay
 import org.matrix.android.sdk.api.auth.data.LoginFlowTypes
+import org.matrix.android.sdk.api.auth.data.LoginFlowTypes.EMAIL_IDENTITY
 import org.matrix.android.sdk.api.auth.registration.RegisterThreePid
 import org.matrix.android.sdk.api.auth.registration.RegistrationAvailability
 import org.matrix.android.sdk.api.auth.registration.RegistrationResult
@@ -80,6 +81,25 @@ internal class DefaultRegistrationWizard(
                     pendingSessionData = pendingSessionData.copy(isRegistrationStarted = true)
                             .also { pendingSessionStore.savePendingSessionData(it) }
                 }
+    }
+    override suspend fun createGKAccount(clientSecret: String,
+                                         sid: String,
+                                         id_server: String,
+                                         username: String,
+                                         password: String): RegistrationResult {
+        val safeSession = pendingSessionData.currentSession
+        val threePidCredentials = ThreePidCredentials(clientSecret = clientSecret, sid = sid, idServer = id_server)
+        val params = RegistrationParams(
+            username = username,
+            password = password,
+            auth = AuthParams(type = EMAIL_IDENTITY,
+            threePidCredentials = threePidCredentials,
+            session = safeSession))
+        return performRegistrationRequest(params)
+            .also {
+                pendingSessionData = pendingSessionData.copy(isRegistrationStarted = true)
+                    .also { pendingSessionStore.savePendingSessionData(it) }
+            }
     }
 
     override suspend fun performReCaptcha(response: String): RegistrationResult {

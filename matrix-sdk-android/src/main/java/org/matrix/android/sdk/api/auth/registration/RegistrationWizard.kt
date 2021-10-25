@@ -58,6 +58,12 @@ interface RegistrationWizard {
                               password: String?,
                               initialDeviceDisplayName: String?): RegistrationResult
 
+    suspend fun createGKAccount(clientSecret: String,
+                                sid: String,
+                                id_server: String,
+                                userName: String,
+                                password: String): RegistrationResult
+
     /**
      * Perform the "m.login.recaptcha" stage.
      *
