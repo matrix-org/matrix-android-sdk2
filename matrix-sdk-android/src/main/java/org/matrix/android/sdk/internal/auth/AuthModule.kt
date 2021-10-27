@@ -29,7 +29,9 @@ import org.matrix.android.sdk.internal.auth.db.AuthRealmModule
 import org.matrix.android.sdk.internal.auth.db.RealmPendingSessionStore
 import org.matrix.android.sdk.internal.auth.db.RealmSessionParamsStore
 import org.matrix.android.sdk.internal.auth.login.DefaultDirectLoginTask
+import org.matrix.android.sdk.internal.auth.login.DefaultDirectTokenLoginTask
 import org.matrix.android.sdk.internal.auth.login.DirectLoginTask
+import org.matrix.android.sdk.internal.auth.login.DirectTokenLoginTask
 import org.matrix.android.sdk.internal.database.RealmKeysUtils
 import org.matrix.android.sdk.internal.di.AuthDatabase
 import org.matrix.android.sdk.internal.legacy.DefaultLegacySessionImporter
@@ -81,6 +83,9 @@ internal abstract class AuthModule {
 
     @Binds
     abstract fun bindDirectLoginTask(task: DefaultDirectLoginTask): DirectLoginTask
+
+    @Binds
+    abstract fun bindDirectTokenLoginTask(task: DefaultDirectTokenLoginTask): DirectTokenLoginTask
 
     @Binds
     abstract fun bindIsValidClientServerApiTask(task: DefaultIsValidClientServerApiTask): IsValidClientServerApiTask

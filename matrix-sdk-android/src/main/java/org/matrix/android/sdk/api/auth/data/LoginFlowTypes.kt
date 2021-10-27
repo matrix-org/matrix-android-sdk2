@@ -28,4 +28,6 @@ object LoginFlowTypes {
     const val TERMS = "m.login.terms"
     const val TOKEN = "m.login.token"
     const val SSO = "m.login.sso"
+
+    const val JWT = "org.matrix.login.jwt"
 }

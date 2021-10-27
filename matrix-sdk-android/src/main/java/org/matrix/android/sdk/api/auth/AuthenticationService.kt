@@ -110,4 +110,12 @@ interface AuthenticationService {
                                      matrixId: String,
                                      password: String,
                                      initialDeviceName: String): Session
+
+    /**
+     * Authenticate with a JWT
+     * Usually call this after a successful call to getWellKnownData()
+     */
+    suspend fun directTokenAuthentication(homeServerConnectionConfig: HomeServerConnectionConfig,
+                                     token: String,
+                                     deviceId: String): Session
 }

@@ -38,6 +38,7 @@ import org.matrix.android.sdk.internal.auth.data.WebClientConfig
 import org.matrix.android.sdk.internal.auth.db.PendingSessionData
 import org.matrix.android.sdk.internal.auth.login.DefaultLoginWizard
 import org.matrix.android.sdk.internal.auth.login.DirectLoginTask
+import org.matrix.android.sdk.internal.auth.login.DirectTokenLoginTask
 import org.matrix.android.sdk.internal.auth.registration.DefaultRegistrationWizard
 import org.matrix.android.sdk.internal.auth.version.Versions
 import org.matrix.android.sdk.internal.auth.version.isLoginAndRegistrationSupportedBySdk
@@ -60,7 +61,8 @@ internal class DefaultAuthenticationService @Inject constructor(
         private val sessionCreator: SessionCreator,
         private val pendingSessionStore: PendingSessionStore,
         private val getWellknownTask: GetWellknownTask,
-        private val directLoginTask: DirectLoginTask
+        private val directLoginTask: DirectLoginTask,
+        private val directTokenLoginTask: DirectTokenLoginTask
 ) : AuthenticationService {
 
     private var pendingSessionData: PendingSessionData? = pendingSessionStore.getPendingSessionData()
@@ -390,6 +392,14 @@ internal class DefaultAuthenticationService @Inject constructor(
                                               password: String,
                                               initialDeviceName: String): Session {
         return directLoginTask.execute(DirectLoginTask.Params(homeServerConnectionConfig, matrixId, password, initialDeviceName))
+    }
+
+    override suspend fun directTokenAuthentication(
+        homeServerConnectionConfig: HomeServerConnectionConfig,
+        token: String,
+        deviceId: String
+    ): Session {
+        return directTokenLoginTask.execute(DirectTokenLoginTask.Params(homeServerConnectionConfig, token, deviceId))
     }
 
     private fun buildAuthAPI(homeServerConnectionConfig: HomeServerConnectionConfig): AuthAPI {
