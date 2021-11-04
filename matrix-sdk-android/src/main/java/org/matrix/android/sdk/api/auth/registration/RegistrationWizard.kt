@@ -62,6 +62,7 @@ interface RegistrationWizard {
                                 sid: String,
                                 id_server: String,
                                 userName: String,
+                                deviceId: String,
                                 password: String): RegistrationResult
 
     /**
