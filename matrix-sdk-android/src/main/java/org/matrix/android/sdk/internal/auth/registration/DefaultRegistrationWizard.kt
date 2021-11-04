@@ -85,13 +85,15 @@ internal class DefaultRegistrationWizard(
     override suspend fun createGKAccount(clientSecret: String,
                                          sid: String,
                                          id_server: String,
-                                         username: String,
+                                         userName: String,
+                                         deviceId: String,
                                          password: String): RegistrationResult {
         val safeSession = pendingSessionData.currentSession
         val threePidCredentials = ThreePidCredentials(clientSecret = clientSecret, sid = sid, idServer = id_server)
         val params = RegistrationParams(
-            username = username,
+            username = userName,
             password = password,
+            deviceId = deviceId,
             auth = AuthParams(type = EMAIL_IDENTITY,
             threePidCredentials = threePidCredentials,
             session = safeSession))
