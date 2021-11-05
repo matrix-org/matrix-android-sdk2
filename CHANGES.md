@@ -1,5 +1,15 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK 1.3.7 (2021-11-05)
+===================================================
+
+Imported from Element 1.3.7. (https://github.com/vector-im/element-android/releases/tag/v1.3.7-RC2)
+
+SDK API changes ⚠️
+------------------
+ - Add API `LoginWizard.loginCustom(data: JsonDict): Session` to be able to login to a homeserver using arbitrary request content ([#4266](https://github.com/vector-im/element-android/issues/4266))
+ - Add optional deviceId to the login API ([#4334](https://github.com/vector-im/element-android/issues/4334))
+
 Changes in Matrix-SDK 1.3.4 (2021-10-20)
 ===================================================
 
