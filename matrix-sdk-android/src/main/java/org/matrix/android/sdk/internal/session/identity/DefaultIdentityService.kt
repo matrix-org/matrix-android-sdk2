@@ -22,6 +22,7 @@ import androidx.lifecycle.LifecycleRegistry
 import dagger.Lazy
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
+import org.matrix.android.sdk.api.MatrixCoroutineDispatchers
 import org.matrix.android.sdk.api.auth.data.SessionParams
 import org.matrix.android.sdk.api.extensions.orFalse
 import org.matrix.android.sdk.api.extensions.tryOrNull
@@ -51,7 +52,6 @@ import org.matrix.android.sdk.internal.session.profile.UnbindThreePidsTask
 import org.matrix.android.sdk.internal.session.sync.model.accountdata.IdentityServerContent
 import org.matrix.android.sdk.internal.session.user.accountdata.UpdateUserAccountDataTask
 import org.matrix.android.sdk.internal.session.user.accountdata.UserAccountDataDataSource
-import org.matrix.android.sdk.internal.util.MatrixCoroutineDispatchers
 import org.matrix.android.sdk.internal.util.ensureProtocol
 import timber.log.Timber
 import javax.inject.Inject
@@ -80,7 +80,7 @@ internal class DefaultIdentityService @Inject constructor(
         private val identityApiProvider: IdentityApiProvider,
         private val accountDataDataSource: UserAccountDataDataSource,
         private val homeServerCapabilitiesService: HomeServerCapabilitiesService,
-        private val sign3pidInvitationTask: DefaultSign3pidInvitationTask,
+        private val sign3pidInvitationTask: Sign3pidInvitationTask,
         private val sessionParams: SessionParams
 ) : IdentityService, SessionLifecycleObserver {
 
@@ -320,12 +320,12 @@ internal class DefaultIdentityService @Inject constructor(
 }
 
 private fun Throwable.isInvalidToken(): Boolean {
-    return this is Failure.ServerError
-            && httpCode == HttpsURLConnection.HTTP_UNAUTHORIZED /* 401 */
+    return this is Failure.ServerError &&
+            httpCode == HttpsURLConnection.HTTP_UNAUTHORIZED /* 401 */
 }
 
 private fun Throwable.isTermsNotSigned(): Boolean {
-    return this is Failure.ServerError
-            && httpCode == HttpsURLConnection.HTTP_FORBIDDEN /* 403 */
-            && error.code == MatrixError.M_TERMS_NOT_SIGNED
+    return this is Failure.ServerError &&
+            httpCode == HttpsURLConnection.HTTP_FORBIDDEN && /* 403 */
+            error.code == MatrixError.M_TERMS_NOT_SIGNED
 }

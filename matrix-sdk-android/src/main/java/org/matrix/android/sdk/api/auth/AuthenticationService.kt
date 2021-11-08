@@ -109,7 +109,8 @@ interface AuthenticationService {
     suspend fun directAuthentication(homeServerConnectionConfig: HomeServerConnectionConfig,
                                      matrixId: String,
                                      password: String,
-                                     initialDeviceName: String): Session
+                                     initialDeviceName: String,
+                                     deviceId: String? = null): Session
 
     /**
      * Authenticate with a JWT
