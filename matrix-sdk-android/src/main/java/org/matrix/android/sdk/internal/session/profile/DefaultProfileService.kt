@@ -94,6 +94,13 @@ internal class DefaultProfileService @Inject constructor(private val taskExecuto
         )
     }
 
+    override suspend fun getThreePidsSync(): List<ThreePid> {
+        return refreshUserThreePidsTask
+            .configureWith()
+            .execute(Unit)
+            .map { it.asDomain() }
+    }
+
     override fun getThreePidsLive(refreshData: Boolean): LiveData<List<ThreePid>> {
         if (refreshData) {
             // Force a refresh of the values

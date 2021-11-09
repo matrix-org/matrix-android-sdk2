@@ -78,6 +78,11 @@ interface ProfileService {
     fun getThreePids(): List<ThreePid>
 
     /**
+     * Fetch, update and return current user 3Pids
+     */
+    suspend fun getThreePidsSync(): List<ThreePid>
+
+    /**
      * Get the current user 3Pids Live
      * @param refreshData set to true to fetch data from the homeserver
      */
