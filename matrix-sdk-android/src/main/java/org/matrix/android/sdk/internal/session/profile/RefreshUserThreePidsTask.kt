@@ -26,16 +26,18 @@ import org.matrix.android.sdk.internal.util.awaitTransaction
 import timber.log.Timber
 import javax.inject.Inject
 
-internal abstract class RefreshUserThreePidsTask : Task<Unit, Unit>
+internal abstract class RefreshUserThreePidsTask : Task<Unit, List<UserThreePidEntity>>
 
 internal class DefaultRefreshUserThreePidsTask @Inject constructor(private val profileAPI: ProfileAPI,
                                                                    @SessionDatabase private val monarchy: Monarchy,
                                                                    private val globalErrorReceiver: GlobalErrorReceiver) : RefreshUserThreePidsTask() {
 
-    override suspend fun execute(params: Unit) {
+    override suspend fun execute(params: Unit): List<UserThreePidEntity> {
         val accountThreePidsResponse = executeRequest(globalErrorReceiver) {
             profileAPI.getThreePIDs()
         }
+
+        val threePidsToReturn = mutableListOf<UserThreePidEntity>()
 
         Timber.d("Get ${accountThreePidsResponse.threePids?.size} threePids")
         // Store the list in DB
@@ -48,8 +50,11 @@ internal class DefaultRefreshUserThreePidsTask @Inject constructor(private val p
                         it.validatedAt.toLong(),
                         it.addedAt.toLong())
                 realm.insertOrUpdate(entity)
+                threePidsToReturn.add((entity))
             }
         }
+
+        return threePidsToReturn
     }
 }
 
