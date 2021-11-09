@@ -87,7 +87,7 @@ android {
     }
 }
 
-    static def gitRevision() {
+static def gitRevision() {
     def cmd = "git rev-parse --short=8 HEAD"
     return cmd.execute().text.trim()
 }
@@ -103,8 +103,6 @@ static def gitRevisionDate() {
 }
 
 dependencies {
-
-    implementation libs.jetbrains.kotlinStdlibJdk7
     implementation libs.jetbrains.coroutinesCore
     implementation libs.jetbrains.coroutinesAndroid
 
@@ -118,7 +116,7 @@ dependencies {
     implementation libs.squareup.retrofit
     implementation libs.squareup.retrofitMoshi
 
-    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.9.1"))
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.9.2"))
     implementation 'com.squareup.okhttp3:okhttp'
     implementation 'com.squareup.okhttp3:logging-interceptor'
     implementation 'com.squareup.okhttp3:okhttp-urlconnection'
@@ -133,6 +131,7 @@ dependencies {
 
     // Database
     implementation 'com.github.Zhuinden:realm-monarchy:0.7.1'
+
     kapt 'dk.ilios:realmfieldnameshelper:2.0.0'
 
     // Work
@@ -156,8 +155,11 @@ dependencies {
     // Video compression
     implementation 'com.otaliastudios:transcoder:0.10.4'
 
+    // Exif data handling
+    implementation libs.apache.commonsImaging
+
     // Phone number https://github.com/google/libphonenumber
-    implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.33'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.36'
 
     testImplementation libs.tests.junit
     testImplementation 'org.robolectric:robolectric:4.6.1'
@@ -168,6 +170,8 @@ dependencies {
     implementation libs.jetbrains.coroutinesAndroid
     // Plant Timber tree for test
     testImplementation 'net.lachlanmckee:timber-junit-rule:1.0.1'
+    // Transitively required for mocking realm as monarchy doesn't expose Rx
+    testImplementation libs.rx.rxKotlin
 
     kaptAndroidTest libs.dagger.daggerCompiler
     androidTestImplementation libs.androidx.testCore

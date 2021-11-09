@@ -1,5 +1,37 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK 1.3.7 (2021-11-05)
+===================================================
+
+Imported from Element 1.3.7. (https://github.com/vector-im/element-android/releases/tag/v1.3.7-RC2)
+
+SDK API changes ⚠️
+------------------
+ - Add API `LoginWizard.loginCustom(data: JsonDict): Session` to be able to login to a homeserver using arbitrary request content ([#4266](https://github.com/vector-im/element-android/issues/4266))
+ - Add optional deviceId to the login API ([#4334](https://github.com/vector-im/element-android/issues/4334))
+
+Changes in Matrix-SDK 1.3.4 (2021-10-20)
+===================================================
+
+Imported from Element 1.3.4. (https://github.com/vector-im/element-android/releases/tag/v1.3.4)
+
+SDK API changes ⚠️
+------------------
+Add Presence support:
+- PresenceService has been added, with the ability to set the presence of the current user
+- For DM, the presence of the other user is added to the RoomSummary
+
+Changes in Matrix-SDK 1.3.2 (2021-10-08)
+===================================================
+
+Imported from Element 1.3.2. (https://github.com/vector-im/element-android/releases/tag/v1.3.2)
+Note that Element 1.3.1 do not contain any changes in the SDK, that's why SDK 1.3.1 has not been released.
+
+SDK API changes ⚠️
+------------------
+- Create extension `String.isMxcUrl()` ([#4158](https://github.com/vector-im/element-android/issues/4158))
+
+
 Changes in Matrix-SDK 1.3.0 (2021-09-27)
 ===================================================
 
