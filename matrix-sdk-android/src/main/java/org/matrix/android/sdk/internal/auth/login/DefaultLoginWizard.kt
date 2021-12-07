@@ -17,6 +17,7 @@
 package org.matrix.android.sdk.internal.auth.login
 
 import android.util.Patterns
+import org.matrix.android.sdk.api.auth.data.LoginFlowTypes
 import org.matrix.android.sdk.api.auth.login.LoginProfileInfo
 import org.matrix.android.sdk.api.auth.login.LoginWizard
 import org.matrix.android.sdk.api.auth.registration.RegisterThreePid
@@ -30,7 +31,9 @@ import org.matrix.android.sdk.internal.auth.data.ThreePidMedium
 import org.matrix.android.sdk.internal.auth.data.TokenLoginParams
 import org.matrix.android.sdk.internal.auth.db.PendingSessionData
 import org.matrix.android.sdk.internal.auth.registration.AddThreePidRegistrationParams
+import org.matrix.android.sdk.internal.auth.registration.AuthParams
 import org.matrix.android.sdk.internal.auth.registration.RegisterAddThreePidTask
+import org.matrix.android.sdk.internal.auth.registration.ThreePidCredentials
 import org.matrix.android.sdk.internal.network.executeRequest
 import org.matrix.android.sdk.internal.session.content.DefaultContentUrlResolver
 
@@ -134,5 +137,29 @@ internal class DefaultLoginWizard(
 
         // Set to null?
         // resetPasswordData = null
+    }
+
+    override suspend fun resetPasswordMailConfirmedGK(
+        newPassword: String,
+        clientSecret: String,
+        sid: String,
+        idServer: String
+    ) {
+        val param = ResetPasswordMailConfirmed(
+            logoutDevices = true,
+            auth = AuthParams(
+                type = LoginFlowTypes.EMAIL_IDENTITY,
+                session = null,
+                threePidCredentials = ThreePidCredentials(
+                    clientSecret = clientSecret,
+                    sid = sid,
+                    idServer = idServer
+                )
+            ),
+            newPassword = newPassword
+        )
+        executeRequest(null) {
+            authAPI.resetPasswordMailConfirmed(param)
+        }
     }
 }

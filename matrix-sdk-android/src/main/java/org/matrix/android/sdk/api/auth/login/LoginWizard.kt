@@ -18,6 +18,7 @@ package org.matrix.android.sdk.api.auth.login
 
 import org.matrix.android.sdk.api.session.Session
 import org.matrix.android.sdk.api.util.JsonDict
+import org.matrix.android.sdk.internal.auth.login.ResetPasswordMailConfirmed
 
 /**
  * Set of methods to be able to login to an existing account on a homeserver.
@@ -73,4 +74,13 @@ interface LoginWizard {
      * When this method succeed, tha account password will be effectively modified.
      */
     suspend fun resetPasswordMailConfirmed()
+
+    /**
+     * Confirm the new password, once the user has checked their email
+     * When this method succeed, tha account password will be effectively modified.
+     */
+    suspend fun resetPasswordMailConfirmedGK(newPassword: String,
+                                             clientSecret: String,
+                                             sid: String,
+                                             idServer: String)
 }
