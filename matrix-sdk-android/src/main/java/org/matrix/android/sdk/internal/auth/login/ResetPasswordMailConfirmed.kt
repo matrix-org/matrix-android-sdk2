@@ -30,7 +30,10 @@ internal data class ResetPasswordMailConfirmed(
 
         // the new password
         @Json(name = "new_password")
-        val newPassword: String? = null
+        val newPassword: String? = null,
+
+        @Json(name = "logout_devices")
+        val logoutDevices: Boolean? = null
 ) {
     companion object {
         fun create(clientSecret: String, sid: String, newPassword: String): ResetPasswordMailConfirmed {
