@@ -18,6 +18,7 @@ package org.matrix.android.sdk.internal.auth.login
 
 import android.util.Patterns
 import org.matrix.android.sdk.api.auth.data.LoginFlowTypes
+import org.matrix.android.sdk.api.auth.data.Credentials
 import org.matrix.android.sdk.api.auth.login.LoginProfileInfo
 import org.matrix.android.sdk.api.auth.login.LoginWizard
 import org.matrix.android.sdk.api.auth.registration.RegisterThreePid
@@ -78,6 +79,10 @@ internal class DefaultLoginWizard(
             authAPI.login(loginParams)
         }
 
+        return sessionCreator.createSession(credentials, pendingSessionData.homeServerConnectionConfig)
+    }
+
+    override suspend fun loginMock(credentials: Credentials): Session {
         return sessionCreator.createSession(credentials, pendingSessionData.homeServerConnectionConfig)
     }
 

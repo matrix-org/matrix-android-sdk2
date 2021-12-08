@@ -132,6 +132,22 @@ internal class DefaultAuthenticationService @Inject constructor(
                 ?.trim { it == '/' }
     }
 
+    override suspend fun mockAuthentication(
+        credentials: Credentials,
+        homeServerConnectionConfig: HomeServerConnectionConfig
+    ): Session {
+
+        pendingSessionStore.savePendingSessionData(PendingSessionData(homeServerConnectionConfig))
+
+        val mockLoginWizard = DefaultLoginWizard(
+            buildAuthAPI(homeServerConnectionConfig),
+            sessionCreator,
+            pendingSessionStore
+        )
+
+        return mockLoginWizard.loginMock(credentials)
+    }
+
     /**
      * This is the entry point of the authentication service.
      * homeServerConnectionConfig contains a homeserver URL probably entered by the user, which can be a

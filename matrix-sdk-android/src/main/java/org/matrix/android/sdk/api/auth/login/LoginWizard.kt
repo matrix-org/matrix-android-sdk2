@@ -16,6 +16,7 @@
 
 package org.matrix.android.sdk.api.auth.login
 
+import org.matrix.android.sdk.api.auth.data.Credentials
 import org.matrix.android.sdk.api.session.Session
 import org.matrix.android.sdk.api.util.JsonDict
 import org.matrix.android.sdk.internal.auth.login.ResetPasswordMailConfirmed
@@ -58,6 +59,11 @@ interface LoginWizard {
      * The data should contain at least one entry "type" with a String value.
      */
     suspend fun loginCustom(data: JsonDict): Session
+
+    /**
+     * Mock session with given credentials.
+     */
+    suspend fun loginMock(credentials: Credentials): Session
 
     /**
      * Ask the homeserver to reset the user password. The password will not be reset until

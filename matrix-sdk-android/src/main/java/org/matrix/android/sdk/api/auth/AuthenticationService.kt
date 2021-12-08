@@ -57,6 +57,12 @@ interface AuthenticationService {
     fun getLoginWizard(): LoginWizard
 
     /**
+     * Creates and authorises mocked session with provided credentials.
+     */
+    suspend fun mockAuthentication(credentials: Credentials,
+                                   homeServerConnectionConfig: HomeServerConnectionConfig): Session
+
+    /**
      * Return a RegistrationWizard, to create an matrix account on the homeserver. The login flow has to be retrieved first.
      *
      * See [RegistrationWizard] for more details.
