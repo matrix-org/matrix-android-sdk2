@@ -17,6 +17,7 @@
 package org.matrix.android.sdk.api
 
 import okhttp3.ConnectionSpec
+import okhttp3.Interceptor
 import org.matrix.android.sdk.api.crypto.MXCryptoConfig
 import java.net.Proxy
 
@@ -60,7 +61,11 @@ data class MatrixConfiguration(
         /**
          * RoomDisplayNameFallbackProvider to provide default room display name.
          */
-        val roomDisplayNameFallbackProvider: RoomDisplayNameFallbackProvider
+        val roomDisplayNameFallbackProvider: RoomDisplayNameFallbackProvider,
+        /**
+         * Optional interceptor for http client.
+         */
+        val additionalNetworkInterceptor: Interceptor? = null
 ) {
 
     /**

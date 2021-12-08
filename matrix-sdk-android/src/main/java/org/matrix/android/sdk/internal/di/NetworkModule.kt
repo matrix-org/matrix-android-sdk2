@@ -78,6 +78,9 @@ internal object NetworkModule {
                     if (BuildConfig.DEBUG) {
                         addNetworkInterceptor(stethoInterceptor)
                     }
+                    matrixConfiguration.additionalNetworkInterceptor?.let {
+                        addNetworkInterceptor(it)
+                    }
                 }
                 .addInterceptor(timeoutInterceptor)
                 .addInterceptor(userAgentInterceptor)
