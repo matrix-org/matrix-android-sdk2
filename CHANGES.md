@@ -8,12 +8,6 @@ Imported from Element 1.3.10. (https://github.com/vector-im/element-android/rele
 SDK API changes ⚠️
 ------------------
 
-You will have to add a maven repository in your main build.gradle file:
-```groovy
-    // For olm library.
-    maven { url 'https://gitlab.matrix.org/api/v4/projects/27/packages/maven' }
-```
-
 - New API TermsService.getHomeserverTerms() to get the terms of service from a homeserver
 - API SendService.sendOptionsReply() is replaced by SendService.voteToPoll()
 - New API SendService.endPoll()
