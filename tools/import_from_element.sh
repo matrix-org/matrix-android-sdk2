@@ -38,6 +38,7 @@ cp -r ${elementAndroidPath}/matrix-sdk-android .
 
 # Copy other files
 cp -r ${elementAndroidPath}/dependencies.gradle .
+cp -r ${elementAndroidPath}/dependencies_groups.gradle .
 
 # Add all changes to git
 git add -A

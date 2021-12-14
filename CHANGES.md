@@ -1,5 +1,17 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK 1.3.10 (2021-12-14)
+===================================================
+
+Imported from Element 1.3.10. (https://github.com/vector-im/element-android/releases/tag/v1.3.10)
+
+SDK API changes ⚠️
+------------------
+
+- New API TermsService.getHomeserverTerms() to get the terms of service from a homeserver
+- API SendService.sendOptionsReply() is replaced by SendService.voteToPoll()
+- New API SendService.endPoll()
+
 Changes in Matrix-SDK 1.3.9 (2021-12-01)
 ===================================================
 
