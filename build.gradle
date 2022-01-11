@@ -22,14 +22,6 @@ buildscript {
 
 allprojects {
     repositories {
-        // For olm library.
-        maven {
-            url 'https://gitlab.matrix.org/api/v4/projects/27/packages/maven'
-            content {
-                groups.olm.regex.each { includeGroupByRegex it }
-                groups.olm.group.each { includeGroup it }
-            }
-        }
         maven {
             url 'https://jitpack.io'
             content {
