@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 The Matrix.org Foundation C.I.C.
+ * Copyright (c) 2022 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.api.session.room.model.message
+package org.matrix.android.sdk.api.session.statistics
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import org.matrix.android.sdk.api.session.Session
 
-@JsonClass(generateAdapter = true)
-data class PollCreationInfo(
-    @Json(name = "question") val question: PollQuestion? = null,
-    @Json(name = "kind") val kind: PollType? = PollType.DISCLOSED,
-    @Json(name = "max_selections") val maxSelections: Int = 1,
-    @Json(name = "answers") val answers: List<PollAnswer>? = null
-)
+interface StatisticsListener {
+    fun onStatisticsEvent(session: Session, statisticEvent: StatisticEvent) = Unit
+}
