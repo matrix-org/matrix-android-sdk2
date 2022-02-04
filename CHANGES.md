@@ -1,5 +1,22 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK 1.3.18 (2022-02-04)
+===================================================
+
+**Warning**: This release may trigger an initial sync.
+
+Imported from Element 1.3.18. (https://github.com/vector-im/element-android/releases/tag/v1.3.18)
+
+Bugfixes 🐛
+----------
+ - Avoid deleting root event of CurrentState on gappy sync. In order to restore lost Events an initial sync may be triggered. ([#5137](https://github.com/vector-im/element-android/issues/5137))
+
+SDK API changes ⚠️
+------------------
+ - `StateService.sendStateEvent()` now takes a non-nullable String for the parameter `stateKey`. If null was used, just now use an empty string. ([#4895](https://github.com/vector-im/element-android/issues/4895))
+ - 429 are not automatically retried anymore in case of too long retry delay ([#4995](https://github.com/vector-im/element-android/issues/4995))
+
+
 Changes in Matrix-SDK 1.3.14 (2022-01-12)
 ===================================================
 
