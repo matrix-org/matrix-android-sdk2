@@ -142,6 +142,9 @@ dependencies {
 
     kapt 'dk.ilios:realmfieldnameshelper:2.0.0'
 
+    // Shared Preferences
+    implementation libs.androidx.preferenceKtx
+
     // Work
     implementation libs.androidx.work
 
@@ -167,7 +170,7 @@ dependencies {
     implementation libs.apache.commonsImaging
 
     // Phone number https://github.com/google/libphonenumber
-    implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.42'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.43'
 
     testImplementation libs.tests.junit
     testImplementation 'org.robolectric:robolectric:4.7.3'
