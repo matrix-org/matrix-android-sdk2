@@ -1,5 +1,17 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK 1.4.4 (2022-03-16)
+===================================================
+
+Bugfixes 🐛
+----------
+- Overflowing media size ([#5394](https://github.com/vector-im/element-android/issues/5394))
+- Updating avatar failing due to wrong thread on some devices ([#5402](https://github.com/vector-im/element-android/issues/5402))
+
+SDK API changes ⚠️
+------------------
+- Change name of getTimeLineEvent and getTimeLineEventLive methods to getTimelineEvent and getTimelineEventLive. ([#5330](https://github.com/vector-im/element-android/issues/5330))
+
 Changes in Matrix-SDK 1.4.2 (2022-02-28)
 ===================================================
 
