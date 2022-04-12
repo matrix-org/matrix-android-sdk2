@@ -1,5 +1,14 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK 1.4.11 (2022-04-12)
+===================================================
+
+Imported from Element 1.4.11. (https://github.com/vector-im/element-android/releases/tag/v1.4.11)
+
+SDK API changes ⚠️
+------------------
+ - Adds support for MSC3440, additional threads homeserver capabilities ([#5271](https://github.com/vector-im/element-android/issues/5271))
+
 Changes in Matrix-SDK 1.4.4 (2022-03-16)
 ===================================================
 
