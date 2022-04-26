@@ -1,5 +1,20 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK 1.4.13 (2022-04-26)
+===================================================
+
+Imported from Element 1.4.13. (https://github.com/vector-im/element-android/releases/tag/v1.4.13)
+
+SDK API changes ⚠️
+------------------
+ - Include original event in live decryption listeners and update sync status naming to InitialSyncProgressing for clarity. ([#5639](https://github.com/vector-im/element-android/issues/5639))
+ - KeysBackupService.getCurrentVersion takes a new type `KeysBackupLastVersionResult` in the callback. ([#5703](https://github.com/vector-im/element-android/issues/5703))
+ - A lot of classes which were exposed to the clients and were located in the package `org.matrix.android.sdk.internal` have been moved to the package `org.matrix.android.sdk.api`.
+  All the classes which are in the package `org.matrix.android.sdk.internal` should now be declared `internal`.
+  Some unused code and classes have been removed. ([#5744](https://github.com/vector-im/element-android/issues/5744))
+ - Some data classes are now immutable, using `val` instead of `var` ([#5762](https://github.com/vector-im/element-android/issues/5762))
+
+
 Changes in Matrix-SDK 1.4.11 (2022-04-12)
 ===================================================
 
