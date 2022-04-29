@@ -1,4 +1,4 @@
-name: Generate and publish Android Matrix SDK documentation
+name: Documentation
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   docs:
-    name: Docs
+    name: Generate and publish Android Matrix SDK documentation
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
