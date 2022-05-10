@@ -1,5 +1,28 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK 1.4.14 (2022-05-10)
+===================================================
+
+Imported from Element 1.4.14. (https://github.com/vector-im/element-android/releases/tag/v1.4.14)
+
+Bugfixes 🐛
+----------
+- Fixes crash when accepting or receiving VOIP calls ([#5421](https://github.com/vector-im/element-android/issues/5421))
+- Improve/fix crashes on messages decryption ([#5592](https://github.com/vector-im/element-android/issues/5592))
+- Don't pause timer when call is held. ([#5885](https://github.com/vector-im/element-android/issues/5885))
+
+SDK API changes ⚠️
+------------------
+- Added registrationCustom into RegistrationWizard to send custom auth params for sign up
+- Moved terms converter into api package to make it accessible in sdk ([#5575](https://github.com/vector-im/element-android/issues/5575))
+- Move package `org.matrix.android.sdk.api.pushrules` to `org.matrix.android.sdk.api.session.pushrules` ([#5812](https://github.com/vector-im/element-android/issues/5812))
+- Some `Session` apis are now available by requesting the service first. For instance `Session.updateAvatar(...)` is now `Session.profileService().updateAvatar(...)`
+- The shortcut `Room.search()` has been removed, you have to use `Session.searchService().search()` ([#5816](https://github.com/vector-im/element-android/issues/5816))
+- Add return type to RoomApi.sendStateEvent() to retrieve the created event id ([#5855](https://github.com/vector-im/element-android/issues/5855))
+- `Room` apis are now available by requesting the service first. For instance `Room.updateAvatar(...)` is now `Room.stateService().updateAvatar(...)` ([#5858](https://github.com/vector-im/element-android/issues/5858))
+- Remove unecessary field `eventId` from `EventAnnotationsSummary` and `ReferencesAggregatedSummary` ([#5890](https://github.com/vector-im/element-android/issues/5890))
+- Replace usage of `System.currentTimeMillis()` by a `Clock` interface ([#5907](https://github.com/vector-im/element-android/issues/5907))
+
 Changes in Matrix-SDK 1.4.13 (2022-04-26)
 ===================================================
 
