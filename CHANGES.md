@@ -1,5 +1,20 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK 1.4.16 (2022-05-23)
+===================================================
+
+Imported from Element 1.4.16. (https://github.com/vector-im/element-android/releases/tag/v1.4.16)
+
+SDK API changes ⚠️
+------------------
+- New API to enable/disable key forwarding CryptoService#enableKeyGossiping()
+- New API to limit room key request only to own devices MXCryptoConfig#limitRoomKeyRequestsToMyDevices
+- Event Trail API has changed, now using AuditTrail events
+- New API to manually accept an incoming key request CryptoService#manuallyAcceptRoomKeyRequest() ([#5559](https://github.com/vector-im/element-android/issues/5559))
+- Small change in the Matrix class: deprecated methods have been removed and the constructor is now public. Also the fun `workerFactory()` has been renamed to `getWorkerFactory()` ([#5887](https://github.com/vector-im/element-android/issues/5887))
+- Including SSL/TLS error handing when doing WellKnown lookups without a custom HomeServerConnectionConfig ([#5965](https://github.com/vector-im/element-android/issues/5965))
+
+
 Changes in Matrix-SDK 1.4.14 (2022-05-10)
 ===================================================
 

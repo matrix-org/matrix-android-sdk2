@@ -13,7 +13,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build docs
-        run: ./gradlew dokkaHtml
+        run: |
+          sed -i.bak "s/.*nightly documentation.*//" ./matrix-sdk-android/docs/modules.md
+          rm ./matrix-sdk-android/docs/modules.md.bak
+          ./gradlew dokkaHtml
 
       - name: Deploy docs
         uses: peaceiris/actions-gh-pages@v3
