@@ -20,7 +20,7 @@ import android.net.Uri
 import dagger.Lazy
 import okhttp3.OkHttpClient
 import org.matrix.android.sdk.api.MatrixPatterns
-import org.matrix.android.sdk.api.MatrixPatterns.getDomain
+import org.matrix.android.sdk.api.MatrixPatterns.getServerName
 import org.matrix.android.sdk.api.auth.AuthenticationService
 import org.matrix.android.sdk.api.auth.data.Credentials
 import org.matrix.android.sdk.api.auth.data.HomeServerConnectionConfig
@@ -130,16 +130,7 @@ internal class DefaultAuthenticationService @Inject constructor(
                 ?.trim { it == '/' }
     }
 
-    /**
-     * This is the entry point of the authentication service.
-     * homeServerConnectionConfig contains a homeserver URL probably entered by the user, which can be a
-     * valid homeserver API url, the url of Element Web, or anything else.
-     */
     override suspend fun getLoginFlow(homeServerConnectionConfig: HomeServerConnectionConfig): LoginFlowResult {
-        pendingSessionData = null
-
-        pendingSessionStore.delete()
-
         val result = runCatching {
             getLoginFlowInternal(homeServerConnectionConfig)
         }
@@ -290,7 +281,7 @@ internal class DefaultAuthenticationService @Inject constructor(
 
                 getLoginFlowResult(newAuthAPI, versions, wellknownResult.homeServerUrl)
             }
-            else                      -> throw Failure.OtherServerError("", HttpsURLConnection.HTTP_NOT_FOUND /* 404 */)
+            else -> throw Failure.OtherServerError("", HttpsURLConnection.HTTP_NOT_FOUND /* 404 */)
         }
     }
 
@@ -323,8 +314,7 @@ internal class DefaultAuthenticationService @Inject constructor(
                 }
     }
 
-    override val isRegistrationStarted: Boolean
-        get() = currentRegistrationWizard?.isRegistrationStarted == true
+    override fun isRegistrationStarted() = currentRegistrationWizard?.isRegistrationStarted() == true
 
     override fun getLoginWizard(): LoginWizard {
         return currentLoginWizard
@@ -368,20 +358,24 @@ internal class DefaultAuthenticationService @Inject constructor(
         pendingSessionStore.delete()
     }
 
-    override suspend fun createSessionFromSso(homeServerConnectionConfig: HomeServerConnectionConfig,
-                                              credentials: Credentials): Session {
+    override suspend fun createSessionFromSso(
+            homeServerConnectionConfig: HomeServerConnectionConfig,
+            credentials: Credentials
+    ): Session {
         return sessionCreator.createSession(credentials, homeServerConnectionConfig)
     }
 
-    override suspend fun getWellKnownData(matrixId: String,
-                                          homeServerConnectionConfig: HomeServerConnectionConfig?): WellknownResult {
+    override suspend fun getWellKnownData(
+            matrixId: String,
+            homeServerConnectionConfig: HomeServerConnectionConfig?
+    ): WellknownResult {
         if (!MatrixPatterns.isUserId(matrixId)) {
             throw MatrixIdFailure.InvalidMatrixId
         }
 
         return getWellknownTask.execute(
                 GetWellknownTask.Params(
-                        domain = matrixId.getDomain(),
+                        domain = matrixId.getServerName().substringBeforeLast(":"),
                         homeServerConnectionConfig = homeServerConnectionConfig.orWellKnownDefaults()
                 )
         )
@@ -392,11 +386,13 @@ internal class DefaultAuthenticationService @Inject constructor(
             .withHomeServerUri("https://dummy.org")
             .build()
 
-    override suspend fun directAuthentication(homeServerConnectionConfig: HomeServerConnectionConfig,
-                                              matrixId: String,
-                                              password: String,
-                                              initialDeviceName: String,
-                                              deviceId: String?): Session {
+    override suspend fun directAuthentication(
+            homeServerConnectionConfig: HomeServerConnectionConfig,
+            matrixId: String,
+            password: String,
+            initialDeviceName: String,
+            deviceId: String?
+    ): Session {
         return directLoginTask.execute(
                 DirectLoginTask.Params(
                         homeServerConnectionConfig = homeServerConnectionConfig,
