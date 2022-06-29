@@ -1,5 +1,30 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK 1.4.25 (2022-06-29)
+===================================================
+
+Imported from Element 1.4.25. (https://github.com/vector-im/element-android/releases/tag/v1.4.25)
+
+SDK API changes ⚠️
+------------------
+- Some methods from `Session` have been moved to a new `SyncService`, that you can retrieve from a `Session`.
+- `SyncStatusService` method has been moved to the new `SyncService`
+- `InitSyncStep` have been moved and renamed to `InitialSyncStep`
+- `SyncStatusService.Status` has been renamed to `SyncRequestState`
+- The existing `SyncService` has been renamed to `SyncAndroidService` because of name clash with the new SDK Service ([#6029](https://github.com/vector-im/element-android/issues/6029))
+- Allows `AuthenticationService.getLoginFlow` to fail without resetting state from previously successful calls ([#6093](https://github.com/vector-im/element-android/issues/6093))
+- Allows new passwords to be passed at the point of confirmation when resetting a password ([#6169](https://github.com/vector-im/element-android/issues/6169))
+- Notifies other devices when a verification request sent from an Android device is accepted.` ([#5724](https://github.com/vector-im/element-android/issues/5724))
+- Some `val` have been changed to `fun` to increase their visibility in the generated documentation. Just add `()` if you were using them.
+- `KeysBackupService.state` has been replaced by `KeysBackupService.getState()`
+- `KeysBackupService.isStucked` has been replaced by `KeysBackupService.isStuck()`
+- SDK documentation improved ([#5952](https://github.com/vector-im/element-android/issues/5952))
+- Improve replay attacks and reduce duplicate message index errors ([#6077](https://github.com/vector-im/element-android/issues/6077))
+- Remove `RoomSummaryQueryParams.roomId`. If you need to observe a single room, use the new API `RoomService.getRoomSummaryLive(roomId: String)`
+- `ActiveSpaceFilter` has been renamed to `SpaceFilter`
+- `RoomCategoryFilter.ALL` has been removed, just pass `null` to not filter on Room category. ([#6143](https://github.com/vector-im/element-android/issues/6143))
+
+
 Changes in Matrix-SDK 1.4.16 (2022-05-23)
 ===================================================
 
