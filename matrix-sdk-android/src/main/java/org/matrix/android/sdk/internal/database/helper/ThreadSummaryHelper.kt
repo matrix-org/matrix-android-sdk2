@@ -54,7 +54,8 @@ internal fun ThreadSummaryEntity.updateThreadSummary(
         numberOfThreads: Int?,
         latestThreadEventEntity: EventEntity?,
         isUserParticipating: Boolean,
-        roomMemberContentsByUser: HashMap<String, RoomMemberContent?>) {
+        roomMemberContentsByUser: HashMap<String, RoomMemberContent?>
+) {
     updateThreadSummaryRootEvent(rootThreadEventEntity, roomMemberContentsByUser)
     updateThreadSummaryLatestEvent(latestThreadEventEntity, roomMemberContentsByUser)
     this.isUserParticipating = isUserParticipating
@@ -180,7 +181,7 @@ internal fun ThreadSummaryEntity.Companion.createOrUpdate(
 
             roomEntity.addIfNecessary(threadSummary)
         }
-        ThreadSummaryUpdateType.ADD     -> {
+        ThreadSummaryUpdateType.ADD -> {
             val rootThreadEventId = threadEventEntity?.rootThreadEventId ?: return
             Timber.i("###THREADS ThreadSummaryHelper ADD for root eventId:$rootThreadEventId")
 
@@ -303,6 +304,7 @@ private fun getLatestEvent(rootThreadEvent: Event): Event? {
 /**
  * Find all ThreadSummaryEntity for the specified roomId, sorted by origin server.
  * note: Sorting cannot be provided by server, so we have to use that unstable property.
+ * @param realm the realm instance
  * @param roomId The id of the room
  */
 internal fun ThreadSummaryEntity.Companion.findAllThreadsForRoomId(realm: Realm, roomId: String): RealmQuery<ThreadSummaryEntity> =

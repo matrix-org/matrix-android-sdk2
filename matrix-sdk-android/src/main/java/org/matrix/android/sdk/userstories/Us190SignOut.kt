@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 The Matrix.org Foundation C.I.C.
+ * Copyright (c) 2022 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.internal.session.initsync
+@file:Suppress("unused")
 
-import org.matrix.android.sdk.api.session.initsync.InitSyncStep
+package org.matrix.android.sdk.userstories
 
-internal interface ProgressReporter {
-    fun startTask(initSyncStep: InitSyncStep,
-                  totalProgress: Int,
-                  parentWeight: Float)
-
-    fun reportProgress(progress: Float)
-
-    fun endTask()
-}
+/**
+ * ### Title
+ * Sign out.
+ *
+ * #### Required APIs:
+ * - TODO
+ */
+class Us190SignOut private constructor()
