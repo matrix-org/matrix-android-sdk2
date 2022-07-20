@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.internal.session.securestorage
+package org.matrix.android.sdk.api.util
 
-import org.matrix.android.sdk.internal.util.system.BuildVersionSdkIntProvider
-
-class TestBuildVersionSdkIntProvider : BuildVersionSdkIntProvider {
-    var value: Int = 0
-
-    override fun get() = value
+interface BuildVersionSdkIntProvider {
+    /**
+     * Return the current version of the Android SDK.
+     */
+    fun get(): Int
 }
