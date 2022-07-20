@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.internal.util.system
+package org.matrix.android.sdk.api.util
 
 import android.os.Build
 import javax.inject.Inject
 
-internal class DefaultBuildVersionSdkIntProvider @Inject constructor() :
+class DefaultBuildVersionSdkIntProvider @Inject constructor() :
         BuildVersionSdkIntProvider {
     override fun get() = Build.VERSION.SDK_INT
 }

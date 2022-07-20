@@ -7,6 +7,10 @@ apply plugin: "org.jetbrains.dokka"
 // WARNING: always restore this line after importing code from Element Android (1/2)
 apply plugin: "com.vanniktech.maven.publish"
 
+if (project.hasProperty("coverage")) {
+    apply plugin: 'jacoco'
+}
+
 buildscript {
     repositories {
         // Do not use `mavenCentral()`, it prevents Dependabot from working properly
@@ -77,7 +81,9 @@ android {
 
     buildTypes {
         debug {
-            testCoverageEnabled true
+            if (project.hasProperty("coverage")) {
+                testCoverageEnabled = coverage.enableTestCoverage
+            }
             // Set to true to log privacy or sensible data, such as token
             buildConfigField "boolean", "LOG_PRIVATE_DATA", project.property("vector.debugPrivateData")
             // Set to BODY instead of NONE to enable logging
@@ -196,7 +202,7 @@ dependencies {
     implementation libs.apache.commonsImaging
 
     // Phone number https://github.com/google/libphonenumber
-    implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.50'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.51'
 
     testImplementation libs.tests.junit
     // Note: version sticks to 1.9.2 due to https://github.com/mockk/mockk/issues/281
