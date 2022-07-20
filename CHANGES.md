@@ -1,5 +1,16 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK 1.4.27 (2022-07-20)
+===================================================
+
+Imported from Element 1.4.27-RC2. (https://github.com/vector-im/element-android/releases/tag/v1.4.27-RC2)
+
+SDK API changes ⚠️
+------------------
+- Group all location sharing related API into LocationSharingService ([#5864](https://github.com/vector-im/element-android/issues/5864))
+- Add support for MSC2457 - opting in or out of logging out all devices when changing password ([#6191](https://github.com/vector-im/element-android/issues/6191))
+- Create `QueryStateEventValue` to do query on `stateKey` for State Event. Also remove the default parameter values for those type. ([#6319](https://github.com/vector-im/element-android/issues/6319))
+
 Changes in Matrix-SDK 1.4.25 (2022-06-29)
 ===================================================
 
