@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.api.debug
+package org.matrix.android.sdk.internal.database
 
-import io.realm.RealmConfiguration
+import io.realm.DefaultCompactOnLaunchCallback
 
-/**
- * Useful methods to access to some private data managed by the SDK.
- */
-interface DebugService {
+class RealmCompactOnLaunch : DefaultCompactOnLaunchCallback() {
     /**
-     * Get all the available Realm Configuration.
+     * Forces all RealmCompactOnLaunch instances to be equal.
+     * Avoids Realm throwing when multiple instances of this class are used.
      */
-    fun getAllRealmConfigurations(): List<RealmConfiguration>
-
-    /**
-     * Get info on DB size.
-     */
-    fun getDbUsageInfo(): String
+    override fun equals(other: Any?) = other is RealmCompactOnLaunch
+    override fun hashCode() = 0x1000
 }
