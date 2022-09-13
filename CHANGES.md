@@ -1,5 +1,15 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Element v1.4.36 (2022-09-13)
+=======================================
+
+Imported from Element 1.4.36. (https://github.com/vector-im/element-android/releases/tag/v1.4.36)
+
+SDK API changes ⚠️
+------------------
+
+- Some methods have been renamed in `CryptoService`
+
 Changes in Element v1.4.34 (2022-08-30)
 =======================================
 
