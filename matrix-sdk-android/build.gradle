@@ -166,6 +166,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor'
 
     implementation libs.squareup.moshi
+    implementation libs.squareup.moshiAdapters
     kapt libs.squareup.moshiKotlin
 
     api "com.atlassian.commonmark:commonmark:0.13.0"
@@ -201,8 +202,7 @@ dependencies {
     // Exif data handling
     implementation libs.apache.commonsImaging
 
-    // Phone number https://github.com/google/libphonenumber
-    implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.54'
+    implementation libs.google.phonenumber
 
     testImplementation libs.tests.junit
     // Note: version sticks to 1.9.2 due to https://github.com/mockk/mockk/issues/281
