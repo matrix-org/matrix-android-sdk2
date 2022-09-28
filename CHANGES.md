@@ -1,6 +1,17 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
-Changes in Element v1.4.36 (2022-09-13)
+Changes in Matrix-SDK v1.5.1 (2022-09-28)
+=======================================
+
+Imported from Element 1.5.1. (https://github.com/vector-im/element-android/releases/tag/v1.5.1)
+
+Security ⚠️
+----------
+
+This update provides important security fixes, update now.
+Ref: CVE-2022-39246 CVE-2022-39248
+
+Changes in Matrix-SDK v1.4.36 (2022-09-13)
 =======================================
 
 Imported from Element 1.4.36. (https://github.com/vector-im/element-android/releases/tag/v1.4.36)
@@ -10,7 +21,7 @@ SDK API changes ⚠️
 
 - Some methods have been renamed in `CryptoService`
 
-Changes in Element v1.4.34 (2022-08-30)
+Changes in Matrix-SDK v1.4.34 (2022-08-30)
 =======================================
 
 Imported from Element 1.4.34. (https://github.com/vector-im/element-android/releases/tag/v1.4.34)
@@ -20,12 +31,12 @@ SDK API changes ⚠️
 
 - Rename `DebugService.logDbUsageInfo` (resp. `Session.logDbUsageInfo`) to `DebugService.getDbUsageInfo` (resp. `Session.getDbUsageInfo`) and return a String instead of logging. The caller may want to log the String. ([#6884](https://github.com/vector-im/element-android/issues/6884))
 
-Changes in Element v1.4.32 (2022-08-10)
+Changes in Matrix-SDK v1.4.32 (2022-08-10)
 =======================================
 
 Imported from Element 1.4.32. (https://github.com/vector-im/element-android/releases/tag/v1.4.32)
 
-Changes in Element v1.4.30 (2022-07-29)
+Changes in Matrix-SDK v1.4.30 (2022-07-29)
 =======================================
 
 SDK API changes ⚠️
