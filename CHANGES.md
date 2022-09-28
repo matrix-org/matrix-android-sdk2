@@ -1,5 +1,16 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK v1.5.1 (2022-09-28)
+=======================================
+
+Imported from Element 1.5.1. (https://github.com/vector-im/element-android/releases/tag/v1.5.1)
+
+Security ⚠️
+----------
+
+This update provides important security fixes, update now.
+Ref: CVE-2022-39246 CVE-2022-39248
+
 Changes in Matrix-SDK v1.4.36 (2022-09-13)
 =======================================
 
