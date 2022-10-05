@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Matrix.org Foundation C.I.C.
+ * Copyright 2022 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,15 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.internal.network
+package org.matrix.android.sdk.api.session.crypto.model
 
-import org.matrix.android.sdk.api.MatrixConfiguration
-import org.matrix.android.sdk.internal.di.MatrixScope
-import javax.inject.Inject
+enum class UserVerificationLevel {
 
-@MatrixScope
-internal class UserAgentHolder @Inject constructor(
-        matrixConfiguration: MatrixConfiguration,
-        computeUserAgentUseCase: ComputeUserAgentUseCase,
-) {
+    VERIFIED_ALL_DEVICES_TRUSTED,
 
-    var userAgent: String = ""
-        private set
+    VERIFIED_WITH_DEVICES_UNTRUSTED,
 
-    init {
-        userAgent = computeUserAgentUseCase.execute(matrixConfiguration.applicationFlavor)
-    }
+    UNVERIFIED_BUT_WAS_PREVIOUSLY,
+
+    WAS_NEVER_VERIFIED,
 }
