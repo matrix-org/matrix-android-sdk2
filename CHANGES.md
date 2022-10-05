@@ -1,5 +1,20 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK v1.5.2 (2022-10-05)
+=======================================
+
+Imported from Element 1.5.2. (https://github.com/vector-im/element-android/releases/tag/v1.5.2)
+
+SDK API changes ⚠️
+------------------
+- Allow the sync timeout to be configured (mainly useful for testing) ([#7198](https://github.com/vector-im/element-android/issues/7198))
+- Ports SDK instrumentation tests to use suspending functions instead of countdown latches ([#7207](https://github.com/vector-im/element-android/issues/7207))
+- [Device Manager] Extend user agent to include device information ([#7209](https://github.com/vector-im/element-android/issues/7209))
+
+Other changes
+-------------
+- Target API 12 and compile with Android SDK 32. ([#6929](https://github.com/vector-im/element-android/issues/6929))
+
 Changes in Matrix-SDK v1.5.1 (2022-09-28)
 =======================================
 
