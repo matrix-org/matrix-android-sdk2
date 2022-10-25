@@ -1,5 +1,27 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK v1.5.4 (2022-10-25)
+=======================================
+
+Imported from Element 1.5.4. (https://github.com/vector-im/element-android/releases/tag/v1.5.4)
+
+Target API 33.
+
+SDK API changes ⚠️
+------------------
+- Stop using `original_event` field from `/relations` endpoint ([#7282](https://github.com/vector-im/element-android/issues/7282))
+- Add `formattedText` or similar optional parameters in several methods:
+* RelationService:
+    * editTextMessage
+    * editReply
+    * replyToMessage
+* SendService:
+    * sendQuotedTextMessage
+      This allows us to send any HTML formatted text message without needing to rely on automatic Markdown > HTML translation. All these new parameters have a `null` value by default, so previous calls to these API methods remain compatible. ([#7288](https://github.com/vector-im/element-android/issues/7288))
+- Add support for `m.login.token` auth during QR code based sign in ([#7358](https://github.com/vector-im/element-android/issues/7358))
+- Allow getting the formatted or plain text body of a message for the fun `TimelineEvent.getTextEditableContent()`. ([#7359](https://github.com/vector-im/element-android/issues/7359))
+
+
 Changes in Matrix-SDK v1.5.2 (2022-10-05)
 =======================================
 
