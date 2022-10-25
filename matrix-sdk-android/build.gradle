@@ -45,6 +45,8 @@ dokkaHtml {
 }
 
 android {
+    namespace "org.matrix.android.sdk"
+
     testOptions.unitTests.includeAndroidResources = true
 
     compileSdk versions.compileSdk
