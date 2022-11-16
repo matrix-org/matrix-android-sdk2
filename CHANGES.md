@@ -1,5 +1,14 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK v1.5.7 (2022-11-16)
+=======================================
+
+Imported from Element 1.5.7. (https://github.com/vector-im/element-android/releases/tag/v1.5.7)
+
+SDK API changes ⚠️
+------------------
+- Add MetricPlugin interface to implement metrics in SDK clients. ([#7438](https://github.com/vector-im/element-android/issues/7438))
+
 Changes in Matrix-SDK v1.5.4 (2022-10-25)
 =======================================
 
