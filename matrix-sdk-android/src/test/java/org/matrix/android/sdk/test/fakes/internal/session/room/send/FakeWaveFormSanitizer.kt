@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Matrix.org Foundation C.I.C.
+ * Copyright (c) 2022 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.matrix.android.sdk.internal.crypto.model.rest
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+package org.matrix.android.sdk.test.fakes.internal.session.room.send
 
-/**
- * This class provides the parameter to delete a device.
- */
-@JsonClass(generateAdapter = true)
-internal data class DeleteDeviceParams(
-        /**
-         * Additional authentication information for the user-interactive authentication API.
-         */
-        @Json(name = "auth")
-        val auth: Map<String, *>? = null,
-)
+import io.mockk.mockk
+import org.matrix.android.sdk.internal.session.room.send.WaveFormSanitizer
+
+class FakeWaveFormSanitizer {
+    internal val instance = mockk<WaveFormSanitizer>()
+}

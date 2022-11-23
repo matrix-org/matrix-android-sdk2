@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Matrix.org Foundation C.I.C.
+ * Copyright (c) 2022 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,19 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.matrix.android.sdk.internal.crypto.model.rest
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+package org.matrix.android.sdk.api.metrics
 
 /**
- * This class provides the parameter to delete a device.
+ * A plugin that tracks span along with transactions.
  */
-@JsonClass(generateAdapter = true)
-internal data class DeleteDeviceParams(
-        /**
-         * Additional authentication information for the user-interactive authentication API.
-         */
-        @Json(name = "auth")
-        val auth: Map<String, *>? = null,
-)
+interface SpannableMetricPlugin : MetricPlugin {
+
+    /**
+     * Starts the span for a sub-task.
+     *
+     * @param operation Name of the new span.
+     * @param description Description of the new span.
+     */
+    fun startSpan(operation: String, description: String)
+
+    /**
+     * Finish the span when sub-task is completed.
+     */
+    fun finishSpan()
+}
