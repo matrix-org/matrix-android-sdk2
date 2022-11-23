@@ -1,5 +1,16 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK v1.5.8 (2022-11-23)
+=========================================
+
+Imported from Element 1.5.8. (https://github.com/vector-im/element-android/releases/tag/v1.5.8)
+
+SDK API changes ⚠️
+------------------
+- [Metrics] Add `SpannableMetricPlugin` to support spans within transactions. ([#7514](https://github.com/vector-im/element-android/issues/7514))
+- Fix a bug that caused messages with no formatted text to be quoted as "null". ([#7530](https://github.com/vector-im/element-android/issues/7530))
+- If message content has no `formattedBody`, default to `body` when editing. ([#7574](https://github.com/vector-im/element-android/issues/7574))
+
 Changes in Matrix-SDK v1.5.7 (2022-11-16)
 =======================================
 
