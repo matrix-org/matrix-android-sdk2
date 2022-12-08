@@ -2,6 +2,9 @@
 
 ### This script import SDK code from Element Android
 
+printf "Please run ./tools/releaseScript.sh now!\n"
+exit 1
+
 set -e
 
 elementAndroidPath="../element-android"

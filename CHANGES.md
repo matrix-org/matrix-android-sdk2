@@ -1,5 +1,16 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK v1.5.11 (2022-12-08)
+=========================================
+
+Imported from Element 1.5.11. (https://github.com/vector-im/element-android/releases/tag/v1.5.11)
+
+SDK API changes ⚠️
+------------------
+- Added support for read receipts in threads. Now user in a room can have multiple read receipts (one per thread + one in main thread + one without threadId) ([#6996](https://github.com/vector-im/element-android/issues/6996))
+- Sync Filter now taking in account homeserver capabilities to not pass unsupported parameters.
+  Sync Filter is now configured by providing SyncFilterBuilder class instance, instead of Filter to identify Filter changes related to homeserver capabilities ([#7626](https://github.com/vector-im/element-android/issues/7626))
+
 Changes in Matrix-SDK v1.5.8 (2022-11-23)
 =========================================
 
