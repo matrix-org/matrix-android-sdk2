@@ -1,5 +1,15 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK v1.5.18 (2023-01-10)
+=========================================
+
+Imported from Element 1.5.18. (https://github.com/vector-im/element-android/releases/tag/v1.5.18)
+
+SDK API changes ⚠️
+------------------
+- [Sync] Sync Filter params are moved to MatrixConfiguration and will not be stored in session realm to avoid bug when session cache is cleared ([#7843](https://github.com/vector-im/element-android/issues/7843))
+
+
 Changes in Matrix-SDK v1.5.11 (2022-12-08)
 =========================================
 
