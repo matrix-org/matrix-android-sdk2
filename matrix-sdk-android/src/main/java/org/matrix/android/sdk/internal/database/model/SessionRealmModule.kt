@@ -19,6 +19,7 @@ package org.matrix.android.sdk.internal.database.model
 import io.realm.annotations.RealmModule
 import org.matrix.android.sdk.internal.database.model.livelocation.LiveLocationShareAggregatedSummaryEntity
 import org.matrix.android.sdk.internal.database.model.presence.UserPresenceEntity
+import org.matrix.android.sdk.internal.database.model.threads.ThreadListPageEntity
 import org.matrix.android.sdk.internal.database.model.threads.ThreadSummaryEntity
 
 /**
@@ -71,7 +72,7 @@ import org.matrix.android.sdk.internal.database.model.threads.ThreadSummaryEntit
             SpaceParentSummaryEntity::class,
             UserPresenceEntity::class,
             ThreadSummaryEntity::class,
-            SyncFilterParamsEntity::class,
+            ThreadListPageEntity::class
         ]
 )
 internal class SessionRealmModule
