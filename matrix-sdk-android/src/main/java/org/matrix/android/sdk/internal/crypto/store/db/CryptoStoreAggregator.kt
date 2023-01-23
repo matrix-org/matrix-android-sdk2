@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 The Matrix.org Foundation C.I.C.
+ * Copyright (c) 2023 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.api.session.room.threads
+package org.matrix.android.sdk.internal.crypto.store.db
 
-sealed class FetchThreadsResult {
-    data class ShouldFetchMore(val nextBatch: String) : FetchThreadsResult()
-    object ReachedEnd : FetchThreadsResult()
+data class CryptoStoreAggregator(
+        val setShouldShareHistoryData: MutableMap<String, Boolean> = mutableMapOf(),
+        val setShouldEncryptForInvitedMembersData: MutableMap<String, Boolean> = mutableMapOf(),
+) {
+    fun isEmpty(): Boolean {
+        return setShouldShareHistoryData.isEmpty() &&
+                setShouldEncryptForInvitedMembersData.isEmpty()
+    }
 }
