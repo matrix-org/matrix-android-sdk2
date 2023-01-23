@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 The Matrix.org Foundation C.I.C.
+ * Copyright (c) 2022 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.api.session.room.threads
+package org.matrix.android.sdk.internal.session.room.timeline.decorator
 
-sealed class FetchThreadsResult {
-    data class ShouldFetchMore(val nextBatch: String) : FetchThreadsResult()
-    object ReachedEnd : FetchThreadsResult()
+import org.matrix.android.sdk.api.session.room.timeline.TimelineEvent
+import org.matrix.android.sdk.internal.session.room.timeline.UIEchoManager
+
+internal class UiEchoDecorator(private val uiEchoManager: UIEchoManager?) : TimelineEventDecorator {
+
+    override fun decorate(timelineEvent: TimelineEvent): TimelineEvent {
+        return uiEchoManager?.decorateEventWithReactionUiEcho(timelineEvent) ?: timelineEvent
+    }
 }

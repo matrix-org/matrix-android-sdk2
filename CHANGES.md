@@ -1,5 +1,11 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK v1.5.20 (2023-01-23)
+=========================================
+
+Imported from Element 1.5.20. (https://github.com/vector-im/element-android/releases/tag/v1.5.20)
+
+
 Changes in Matrix-SDK v1.5.18 (2023-01-10)
 =========================================
 
