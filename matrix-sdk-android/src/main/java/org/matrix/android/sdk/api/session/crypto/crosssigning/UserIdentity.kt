@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 The Matrix.org Foundation C.I.C.
+ * Copyright 2023 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.api.session.room.threads
+package org.matrix.android.sdk.api.session.crypto.crosssigning
 
-sealed class FetchThreadsResult {
-    data class ShouldFetchMore(val nextBatch: String) : FetchThreadsResult()
-    object ReachedEnd : FetchThreadsResult()
-}
+/**
+ * Container for the three cross signing keys: master, self signing and user signing.
+ */
+data class UserIdentity(
+        val masterKey: CryptoCrossSigningKey?,
+        val selfSigningKey: CryptoCrossSigningKey?,
+        val userSigningKey: CryptoCrossSigningKey?,
+)
