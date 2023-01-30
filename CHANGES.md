@@ -1,5 +1,14 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK v1.5.22 (2023-01-30)
+=========================================
+
+Imported from Element 1.5.22. (https://github.com/vector-im/element-android/releases/tag/v1.5.22)
+
+SDK API changes ⚠️
+------------------
+- Implement [MSC3912](https://github.com/matrix-org/matrix-spec-proposals/pull/3912): Relation-based redactions ([#7988](https://github.com/vector-im/element-android/issues/7988))
+
 Changes in Matrix-SDK v1.5.20 (2023-01-23)
 =========================================
 
