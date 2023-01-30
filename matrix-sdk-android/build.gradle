@@ -4,8 +4,6 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'realm-android'
 apply plugin: "org.jetbrains.dokka"
-// WARNING: always restore this line after importing code from Element Android (1/2)
-apply plugin: "com.vanniktech.maven.publish"
 
 if (project.hasProperty("coverage")) {
     apply plugin: 'jacoco'
@@ -64,8 +62,7 @@ android {
         // that the app's state is completely cleared between tests.
         testInstrumentationRunnerArguments clearPackageData: 'true'
 
-        // WARNING: always restore this line after importing code from Element Android (2/2)
-        buildConfigField "String", "SDK_VERSION", "\"${project.getProperties().getOrDefault("VERSION_NAME", "0.0.0")}\""
+        buildConfigField "String", "SDK_VERSION", "\"1.5.22\""
 
         buildConfigField "String", "GIT_SDK_REVISION", "\"${gitRevision()}\""
         buildConfigField "String", "GIT_SDK_REVISION_UNIX_DATE", "\"${gitRevisionUnixDate()}\""
@@ -84,7 +81,7 @@ android {
     buildTypes {
         debug {
             if (project.hasProperty("coverage")) {
-                testCoverageEnabled = coverage.enableTestCoverage
+                testCoverageEnabled = coverage == "true"
             }
             // Set to true to log privacy or sensible data, such as token
             buildConfigField "boolean", "LOG_PRIVATE_DATA", project.property("vector.debugPrivateData")
