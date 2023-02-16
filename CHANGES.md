@@ -1,5 +1,16 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK v1.5.25 (2023-02-16)
+=========================================
+
+Imported from Element 1.5.25. (https://github.com/vector-im/element-android/releases/tag/v1.5.25)
+
+SDK API changes ⚠️
+------------------
+- [Poll] Adding PollHistoryService ([#7864](https://github.com/vector-im/element-android/issues/7864))
+- [Push rules] Call /actions api before /enabled api ([#8005](https://github.com/vector-im/element-android/issues/8005))
+
+
 Changes in Matrix-SDK v1.5.22 (2023-01-30)
 =========================================
 
