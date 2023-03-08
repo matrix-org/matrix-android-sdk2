@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.api.rendezvous.model
+package org.matrix.android.sdk.api.auth
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
-
-@JsonClass(generateAdapter = false)
-enum class SecureRendezvousChannelAlgorithm(val value: String) {
-    @Json(name = "org.matrix.msc3903.rendezvous.v1.curve25519-aes-sha256")
-    ECDH_V1("org.matrix.msc3903.rendezvous.v1.curve25519-aes-sha256"),
-    @Json(name = "org.matrix.msc3903.rendezvous.v2.curve25519-aes-sha256")
-    ECDH_V2("org.matrix.msc3903.rendezvous.v2.curve25519-aes-sha256")
+/**
+ * See https://github.com/matrix-org/matrix-spec-proposals/pull/3824
+ */
+enum class SSOAction {
+    LOGIN,
+    REGISTER;
 }
