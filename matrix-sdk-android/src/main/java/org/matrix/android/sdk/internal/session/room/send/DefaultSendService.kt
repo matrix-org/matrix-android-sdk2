@@ -49,11 +49,12 @@ import org.matrix.android.sdk.api.util.CancelableBag
 import org.matrix.android.sdk.api.util.JsonDict
 import org.matrix.android.sdk.api.util.NoOpCancellable
 import org.matrix.android.sdk.api.util.TextContent
-import org.matrix.android.sdk.internal.crypto.store.IMXCryptoStore
+import org.matrix.android.sdk.internal.crypto.store.IMXCommonCryptoStore
 import org.matrix.android.sdk.internal.di.SessionId
 import org.matrix.android.sdk.internal.di.WorkManagerProvider
 import org.matrix.android.sdk.internal.session.content.UploadContentWorker
 import org.matrix.android.sdk.internal.session.room.send.queue.EventSenderProcessor
+import org.matrix.android.sdk.internal.session.workmanager.WorkManagerConfig
 import org.matrix.android.sdk.internal.task.TaskExecutor
 import org.matrix.android.sdk.internal.util.CancelableWork
 import org.matrix.android.sdk.internal.worker.WorkerParamsFactory
@@ -69,11 +70,12 @@ internal class DefaultSendService @AssistedInject constructor(
         private val workManagerProvider: WorkManagerProvider,
         @SessionId private val sessionId: String,
         private val localEchoEventFactory: LocalEchoEventFactory,
-        private val cryptoStore: IMXCryptoStore,
+        private val cryptoStore: IMXCommonCryptoStore,
         private val taskExecutor: TaskExecutor,
         private val localEchoRepository: LocalEchoRepository,
         private val eventSenderProcessor: EventSenderProcessor,
-        private val cancelSendTracker: CancelSendTracker
+        private val cancelSendTracker: CancelSendTracker,
+        private val workManagerConfig: WorkManagerConfig,
 ) : SendService {
 
     @AssistedFactory
@@ -140,11 +142,11 @@ internal class DefaultSendService @AssistedInject constructor(
                 .let { sendEvent(it) }
     }
 
-    override fun redactEvent(event: Event, reason: String?, withRelations: List<String>?, additionalContent: Content?): Cancelable {
+    override fun redactEvent(event: Event, reason: String?, withRelTypes: List<String>?, additionalContent: Content?): Cancelable {
         // TODO manage media/attachements?
-        val redactionEcho = localEchoEventFactory.createRedactEvent(roomId, event.eventId!!, reason, withRelations, additionalContent)
+        val redactionEcho = localEchoEventFactory.createRedactEvent(roomId, event.eventId!!, reason, withRelTypes, additionalContent)
                 .also { createLocalEcho(it) }
-        return eventSenderProcessor.postRedaction(redactionEcho, reason, withRelations)
+        return eventSenderProcessor.postRedaction(redactionEcho, reason, withRelTypes)
     }
 
     override fun resendTextMessage(localEcho: TimelineEvent): Cancelable {
@@ -373,7 +375,7 @@ internal class DefaultSendService @AssistedInject constructor(
         val uploadWorkData = WorkerParamsFactory.toData(uploadMediaWorkerParams)
 
         return workManagerProvider.matrixOneTimeWorkRequestBuilder<UploadContentWorker>()
-                .setConstraints(WorkManagerProvider.workConstraints)
+                .setConstraints(WorkManagerProvider.getWorkConstraints(workManagerConfig))
                 .startChain(true)
                 .setInputData(uploadWorkData)
                 .setBackoffCriteria(BackoffPolicy.LINEAR, WorkManagerProvider.BACKOFF_DELAY_MILLIS, TimeUnit.MILLISECONDS)

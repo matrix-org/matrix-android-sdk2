@@ -19,7 +19,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath "io.realm:realm-gradle-plugin:10.11.1"
+        classpath "io.realm:realm-gradle-plugin:10.16.0"
     }
 }
 
@@ -78,7 +78,7 @@ android {
 
     testOptions {
         // Comment to run on Android 12
-//        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+        execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
 
     buildTypes {
@@ -127,6 +127,7 @@ android {
             java.srcDirs += "src/sharedTest/java"
         }
     }
+
 }
 
 static def gitRevision() {
@@ -144,11 +145,22 @@ static def gitRevisionDate() {
     return cmd.execute().text.trim()
 }
 
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
 dependencies {
     implementation libs.jetbrains.coroutinesCore
     implementation libs.jetbrains.coroutinesAndroid
 
+
+//    implementation(name: 'crypto-android-release', ext: 'aar')
+    implementation 'net.java.dev.jna:jna:5.13.0@aar'
+
+ //   implementation libs.androidx.appCompat
     implementation libs.androidx.core
+
+    implementation libs.androidx.lifecycleLivedata
 
     // Lifecycle
     implementation libs.androidx.lifecycleCommon
@@ -163,7 +175,7 @@ dependencies {
     // - https://github.com/square/okhttp/issues/3278
     // - https://github.com/square/okhttp/issues/4455
     // - https://github.com/square/okhttp/issues/3146
-    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.10.0"))
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.11.0"))
     implementation 'com.squareup.okhttp3:okhttp'
     implementation 'com.squareup.okhttp3:logging-interceptor'
 
@@ -179,7 +191,7 @@ dependencies {
     // Database
     implementation 'com.github.Zhuinden:realm-monarchy:0.7.1'
 
-    kapt 'dk.ilios:realmfieldnameshelper:2.0.0'
+    kapt project(":library:external:realmfieldnameshelper")
 
     // Shared Preferences
     implementation libs.androidx.preferenceKtx
@@ -205,6 +217,9 @@ dependencies {
     implementation libs.apache.commonsImaging
 
     implementation libs.google.phonenumber
+
+    implementation("org.matrix.rustcomponents:crypto-android:0.3.16")
+//    api project(":library:rustCrypto")
 
     testImplementation libs.tests.junit
     // Note: version sticks to 1.9.2 due to https://github.com/mockk/mockk/issues/281
