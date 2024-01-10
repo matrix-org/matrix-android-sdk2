@@ -57,6 +57,7 @@ import org.matrix.android.sdk.internal.di.SessionDatabase
 import org.matrix.android.sdk.internal.di.SessionDownloadsDirectory
 import org.matrix.android.sdk.internal.di.SessionFilesDirectory
 import org.matrix.android.sdk.internal.di.SessionId
+import org.matrix.android.sdk.internal.di.SessionRustFilesDirectory
 import org.matrix.android.sdk.internal.di.Unauthenticated
 import org.matrix.android.sdk.internal.di.UnauthenticatedWithCertificate
 import org.matrix.android.sdk.internal.di.UnauthenticatedWithCertificateWithProgress
@@ -96,6 +97,8 @@ import org.matrix.android.sdk.internal.session.room.tombstone.RoomTombstoneEvent
 import org.matrix.android.sdk.internal.session.typing.DefaultTypingUsersTracker
 import org.matrix.android.sdk.internal.session.user.accountdata.DefaultSessionAccountDataService
 import org.matrix.android.sdk.internal.session.widgets.DefaultWidgetURLFormatter
+import org.matrix.android.sdk.internal.session.workmanager.DefaultWorkManagerConfig
+import org.matrix.android.sdk.internal.session.workmanager.WorkManagerConfig
 import retrofit2.Retrofit
 import java.io.File
 import javax.inject.Provider
@@ -140,7 +143,7 @@ internal abstract class SessionModule {
         @JvmStatic
         @DeviceId
         @Provides
-        fun providesDeviceId(credentials: Credentials): String? {
+        fun providesDeviceId(credentials: Credentials): String {
             return credentials.deviceId
         }
 
@@ -176,6 +179,16 @@ internal abstract class SessionModule {
             }
 
             return File(context.filesDir, sessionId)
+        }
+
+        @JvmStatic
+        @Provides
+        @SessionRustFilesDirectory
+        @SessionScope
+        fun providesRustCryptoFilesDir(
+                @SessionFilesDirectory parent: File,
+        ): File {
+            return File(parent, "rustFlavor")
         }
 
         @JvmStatic
@@ -279,8 +292,14 @@ internal abstract class SessionModule {
                 sessionParams: SessionParams,
                 retrofitFactory: RetrofitFactory
         ): Retrofit {
+            var uri = sessionParams.homeServerConnectionConfig.homeServerUriBase.toString()
+            if (uri == "http://localhost:8080") {
+                uri = "http://10.0.2.2:8080"
+            } else if (uri == "http://localhost:8081") {
+                uri = "http://10.0.2.2:8081"
+            }
             return retrofitFactory
-                    .create(okHttpClient, sessionParams.homeServerConnectionConfig.homeServerUriBase.toString())
+                    .create(okHttpClient, uri)
         }
 
         @JvmStatic
@@ -405,4 +424,7 @@ internal abstract class SessionModule {
 
     @Binds
     abstract fun bindPollAggregationProcessor(processor: DefaultPollAggregationProcessor): PollAggregationProcessor
+
+    @Binds
+    abstract fun bindWorkManaerConfig(config: DefaultWorkManagerConfig): WorkManagerConfig
 }
