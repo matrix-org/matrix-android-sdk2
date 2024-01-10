@@ -1,21 +1,21 @@
 ext.groups = [
-        jitpack     : [
+        jitpack       : [
                 regex: [
                 ],
                 group: [
                         'com.github.Armen101',
                         'com.github.chrisbanes',
+                        'com.github.element-hq',
                         'com.github.hyuwah',
                         'com.github.jetradarmobile',
                         'com.github.MatrixFrog',
                         'com.github.tapadoo',
                         'com.github.UnifiedPush',
-                        'com.github.vector-im',
                         'com.github.yalantis',
                         'com.github.Zhuinden',
                 ]
         ],
-        jitsi       : [
+        jitsi         : [
                 regex: [
                 ],
                 group: [
@@ -24,7 +24,7 @@ ext.groups = [
                         'org.webkit',
                 ]
         ],
-        google      : [
+        google        : [
                 regex: [
                         'androidx\\..*',
                         'com\\.android\\.tools\\..*',
@@ -42,6 +42,13 @@ ext.groups = [
                 regex: [
                 ],
                 group: [
+                ]
+        ],
+        mavenSnapshots: [
+                regex: [
+                ],
+                group: [
+                        'org.matrix.rustcomponents'
                 ]
         ],
         mavenCentral: [
@@ -108,6 +115,7 @@ ext.groups = [
                         'com.linkedin.dexmaker',
                         'com.mapbox.mapboxsdk',
                         'com.nulab-inc',
+                        'com.otaliastudios',
                         'com.otaliastudios.opengl',
                         'com.parse.bolts',
                         'com.pinterest',
@@ -182,6 +190,7 @@ ext.groups = [
                         'org.codehaus.groovy',
                         'org.codehaus.mojo',
                         'org.codehaus.woodstox',
+                        'org.conscrypt',
                         'org.eclipse.ee4j',
                         'org.ec4j.core',
                         'org.freemarker',
@@ -196,6 +205,7 @@ ext.groups = [
                         'org.jetbrains.kotlin',
                         'org.jetbrains.kotlinx',
                         'org.jetbrains.trove4j',
+                        'org.jitsi',
                         'org.json',
                         'org.jsoup',
                         'org.junit',
@@ -204,6 +214,7 @@ ext.groups = [
                         'org.jvnet.staxex',
                         'org.maplibre.gl',
                         'org.matrix.android',
+                        'org.matrix.rustcomponents',
                         'org.mockito',
                         'org.mongodb',
                         'org.objenesis',
@@ -212,6 +223,7 @@ ext.groups = [
                         'org.ow2.asm',
                         'org.ow2.asm',
                         'org.reactivestreams',
+                        'org.robolectric',
                         'org.slf4j',
                         'org.sonatype.oss',
                         'org.testng',
@@ -223,18 +235,4 @@ ext.groups = [
                         'xml-apis',
                 ]
         ],
-        jcenter     : [
-                regex: [
-                ],
-                group: [
-                        'com.amulyakhare',
-                        'com.otaliastudios',
-                        'com.yqritc',
-                        // https://github.com/cmelchior/realmfieldnameshelper/issues/42
-                        'dk.ilios',
-                        'im.dlg',
-                        'me.dm7.barcodescanner',
-                        'me.gujun.android',
-                ]
-        ]
 ]

@@ -22,12 +22,13 @@ import dagger.Provides
 import io.realm.RealmConfiguration
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
+import org.matrix.android.sdk.api.MatrixCoroutineDispatchers
 import org.matrix.android.sdk.api.session.crypto.CryptoService
 import org.matrix.android.sdk.api.session.crypto.crosssigning.CrossSigningService
+import org.matrix.android.sdk.api.session.crypto.keysbackup.KeysBackupService
+import org.matrix.android.sdk.api.session.crypto.verification.VerificationService
 import org.matrix.android.sdk.internal.crypto.api.CryptoApi
-import org.matrix.android.sdk.internal.crypto.crosssigning.ComputeTrustTask
-import org.matrix.android.sdk.internal.crypto.crosssigning.DefaultComputeTrustTask
-import org.matrix.android.sdk.internal.crypto.crosssigning.DefaultCrossSigningService
+import org.matrix.android.sdk.internal.crypto.keysbackup.RustKeyBackupService
 import org.matrix.android.sdk.internal.crypto.keysbackup.api.RoomKeysApi
 import org.matrix.android.sdk.internal.crypto.keysbackup.tasks.CreateKeysBackupVersionTask
 import org.matrix.android.sdk.internal.crypto.keysbackup.tasks.DefaultCreateKeysBackupVersionTask
@@ -57,8 +58,8 @@ import org.matrix.android.sdk.internal.crypto.keysbackup.tasks.StoreRoomSessionD
 import org.matrix.android.sdk.internal.crypto.keysbackup.tasks.StoreRoomSessionsDataTask
 import org.matrix.android.sdk.internal.crypto.keysbackup.tasks.StoreSessionsDataTask
 import org.matrix.android.sdk.internal.crypto.keysbackup.tasks.UpdateKeysBackupVersionTask
-import org.matrix.android.sdk.internal.crypto.store.IMXCryptoStore
-import org.matrix.android.sdk.internal.crypto.store.db.RealmCryptoStore
+import org.matrix.android.sdk.internal.crypto.store.IMXCommonCryptoStore
+import org.matrix.android.sdk.internal.crypto.store.RustCryptoStore
 import org.matrix.android.sdk.internal.crypto.store.db.RealmCryptoStoreMigration
 import org.matrix.android.sdk.internal.crypto.store.db.RealmCryptoStoreModule
 import org.matrix.android.sdk.internal.crypto.tasks.ClaimOneTimeKeysForUsersDeviceTask
@@ -68,7 +69,6 @@ import org.matrix.android.sdk.internal.crypto.tasks.DefaultDownloadKeysForUsers
 import org.matrix.android.sdk.internal.crypto.tasks.DefaultEncryptEventTask
 import org.matrix.android.sdk.internal.crypto.tasks.DefaultGetDeviceInfoTask
 import org.matrix.android.sdk.internal.crypto.tasks.DefaultGetDevicesTask
-import org.matrix.android.sdk.internal.crypto.tasks.DefaultInitializeCrossSigningTask
 import org.matrix.android.sdk.internal.crypto.tasks.DefaultSendEventTask
 import org.matrix.android.sdk.internal.crypto.tasks.DefaultSendToDeviceTask
 import org.matrix.android.sdk.internal.crypto.tasks.DefaultSendVerificationMessageTask
@@ -81,7 +81,6 @@ import org.matrix.android.sdk.internal.crypto.tasks.DownloadKeysForUsersTask
 import org.matrix.android.sdk.internal.crypto.tasks.EncryptEventTask
 import org.matrix.android.sdk.internal.crypto.tasks.GetDeviceInfoTask
 import org.matrix.android.sdk.internal.crypto.tasks.GetDevicesTask
-import org.matrix.android.sdk.internal.crypto.tasks.InitializeCrossSigningTask
 import org.matrix.android.sdk.internal.crypto.tasks.SendEventTask
 import org.matrix.android.sdk.internal.crypto.tasks.SendToDeviceTask
 import org.matrix.android.sdk.internal.crypto.tasks.SendVerificationMessageTask
@@ -89,6 +88,7 @@ import org.matrix.android.sdk.internal.crypto.tasks.SetDeviceNameTask
 import org.matrix.android.sdk.internal.crypto.tasks.UploadKeysTask
 import org.matrix.android.sdk.internal.crypto.tasks.UploadSignaturesTask
 import org.matrix.android.sdk.internal.crypto.tasks.UploadSigningKeysTask
+import org.matrix.android.sdk.internal.crypto.verification.RustVerificationService
 import org.matrix.android.sdk.internal.database.RealmKeysUtils
 import org.matrix.android.sdk.internal.di.CryptoDatabase
 import org.matrix.android.sdk.internal.di.SessionFilesDirectory
@@ -132,8 +132,8 @@ internal abstract class CryptoModule {
         @JvmStatic
         @Provides
         @SessionScope
-        fun providesCryptoCoroutineScope(): CoroutineScope {
-            return CoroutineScope(SupervisorJob())
+        fun providesCryptoCoroutineScope(coroutineDispatchers: MatrixCoroutineDispatchers): CoroutineScope {
+            return CoroutineScope(SupervisorJob() + coroutineDispatchers.crypto)
         }
 
         @JvmStatic
@@ -159,7 +159,7 @@ internal abstract class CryptoModule {
     }
 
     @Binds
-    abstract fun bindCryptoService(service: DefaultCryptoService): CryptoService
+    abstract fun bindCryptoService(service: RustCryptoService): CryptoService
 
     @Binds
     abstract fun bindDeleteDeviceTask(task: DefaultDeleteDeviceTask): DeleteDeviceTask
@@ -240,17 +240,17 @@ internal abstract class CryptoModule {
     abstract fun bindClaimOneTimeKeysForUsersDeviceTask(task: DefaultClaimOneTimeKeysForUsersDevice): ClaimOneTimeKeysForUsersDeviceTask
 
     @Binds
-    abstract fun bindCrossSigningService(service: DefaultCrossSigningService): CrossSigningService
+    abstract fun bindCrossSigningService(service: RustCrossSigningService): CrossSigningService
 
     @Binds
-    abstract fun bindCryptoStore(store: RealmCryptoStore): IMXCryptoStore
+    abstract fun bindVerificationService(service: RustVerificationService): VerificationService
 
     @Binds
-    abstract fun bindComputeShieldTrustTask(task: DefaultComputeTrustTask): ComputeTrustTask
-
-    @Binds
-    abstract fun bindInitializeCrossSigningTask(task: DefaultInitializeCrossSigningTask): InitializeCrossSigningTask
+    abstract fun bindCryptoStore(store: RustCryptoStore): IMXCommonCryptoStore
 
     @Binds
     abstract fun bindSendEventTask(task: DefaultSendEventTask): SendEventTask
+
+    @Binds
+    abstract fun bindKeysBackupService(service: RustKeyBackupService): KeysBackupService
 }
