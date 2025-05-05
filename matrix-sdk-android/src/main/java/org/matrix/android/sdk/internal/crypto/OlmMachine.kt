@@ -53,7 +53,6 @@ import org.matrix.android.sdk.api.util.toOptional
 import org.matrix.android.sdk.internal.coroutines.builder.safeInvokeOnClose
 import org.matrix.android.sdk.internal.crypto.keysbackup.model.rest.DefaultKeysAlgorithmAndData
 import org.matrix.android.sdk.internal.crypto.keysbackup.model.rest.KeysAlgorithmAndData
-import org.matrix.android.sdk.internal.crypto.model.MXInboundMegolmSessionWrapper
 import org.matrix.android.sdk.internal.crypto.network.RequestSender
 import org.matrix.android.sdk.internal.crypto.verification.SasVerification
 import org.matrix.android.sdk.internal.crypto.verification.VerificationRequest
@@ -75,7 +74,6 @@ import org.matrix.rustcomponents.sdk.crypto.DeviceLists
 import org.matrix.rustcomponents.sdk.crypto.EncryptionSettings
 import org.matrix.rustcomponents.sdk.crypto.KeyRequestPair
 import org.matrix.rustcomponents.sdk.crypto.KeysImportResult
-import org.matrix.rustcomponents.sdk.crypto.LocalTrust
 import org.matrix.rustcomponents.sdk.crypto.Logger
 import org.matrix.rustcomponents.sdk.crypto.MegolmV1BackupKey
 import org.matrix.rustcomponents.sdk.crypto.Request
@@ -86,6 +84,9 @@ import org.matrix.rustcomponents.sdk.crypto.ShieldState
 import org.matrix.rustcomponents.sdk.crypto.SignatureVerification
 import org.matrix.rustcomponents.sdk.crypto.setLogger
 import timber.log.Timber
+import uniffi.matrix_sdk_crypto.DecryptionSettings
+import uniffi.matrix_sdk_crypto.LocalTrust
+import uniffi.matrix_sdk_crypto.TrustRequirement
 import java.io.File
 import java.nio.charset.Charset
 import javax.inject.Inject
@@ -189,18 +190,21 @@ internal class OlmMachine @Inject constructor(
             is OwnUserIdentity -> ownIdentity.trustsOurOwnDevice()
             else -> false
         }
+        val ownDevice = inner.getDevice(userId(), deviceId, 0u)!!
+        val creationTime = ownDevice.firstTimeSeenTs.toLong()
 
         return CryptoDeviceInfo(
                 deviceId(),
                 userId(),
-                // TODO pass the algorithms here.
-                listOf(),
+                ownDevice.algorithms,
                 keys,
                 mapOf(),
-                UnsignedDeviceInfo(),
+                UnsignedDeviceInfo(
+                        deviceDisplayName = ownDevice.displayName
+                ),
                 DeviceTrustLevel(crossSigningVerified, locallyVerified = true),
                 false,
-                null
+                creationTime
         )
     }
 
@@ -291,7 +295,7 @@ internal class OlmMachine @Inject constructor(
             // checking the returned to devices to check for room keys.
             // XXX Anyhow there is now proper signaling we should soon stop parsing them manually
             receiveSyncChanges.toDeviceEvents.map {
-                        outAdapter.fromJson(it) ?: Event()
+                outAdapter.fromJson(it) ?: Event()
             }
         }
 
@@ -313,22 +317,6 @@ internal class OlmMachine @Inject constructor(
                 .adapter(Event::class.java)
         val serializedEvent = adapter.toJson(event)
         inner.receiveVerificationEvent(serializedEvent, roomId)
-    }
-
-    /**
-     * Used for lazy migration of inboundGroupSession from EA to ER.
-     */
-    suspend fun importRoomKey(inbound: MXInboundMegolmSessionWrapper): Result<Unit> {
-        Timber.v("Migration:: Tentative lazy migration")
-        return withContext(coroutineDispatchers.io) {
-            val export = inbound.exportKeys()
-                    ?: return@withContext Result.failure(Exception("Failed to export key"))
-            val result = importDecryptedKeys(listOf(export), null).also {
-                Timber.v("Migration:: Tentative lazy migration result: ${it.totalNumberOfKeys}")
-            }
-            if (result.totalNumberOfKeys == 1) return@withContext Result.success(Unit)
-            return@withContext Result.failure(Exception("Import failed"))
-        }
     }
 
     /**
@@ -464,7 +452,12 @@ internal class OlmMachine @Inject constructor(
                     }
 
                     val serializedEvent = adapter.toJson(event)
-                    val decrypted = inner.decryptRoomEvent(serializedEvent, event.roomId, false, false)
+                    val decrypted = inner.decryptRoomEvent(
+                            serializedEvent, event.roomId,
+                            handleVerificationEvents = false,
+                            strictShields = false,
+                            decryptionSettings = DecryptionSettings(TrustRequirement.UNTRUSTED)
+                    )
 
                     val deserializationAdapter =
                             moshi.adapter<JsonDict>(Map::class.java)
@@ -825,8 +818,14 @@ internal class OlmMachine @Inject constructor(
         val requests = withContext(coroutineDispatchers.io) {
             inner.bootstrapCrossSigning()
         }
+        (requests.uploadKeysRequest)?.let {
+            when (it) {
+                is Request.KeysUpload -> requestSender.uploadKeys(it)
+                else -> {}
+            }
+        }
         requestSender.uploadCrossSigningKeys(requests.uploadSigningKeysRequest, uiaInterceptor)
-        requestSender.sendSignatureUpload(requests.signatureRequest)
+        requestSender.sendSignatureUpload(requests.uploadSignatureRequest)
     }
 
     /**
@@ -882,6 +881,7 @@ internal class OlmMachine @Inject constructor(
             inner.queryMissingSecretsFromOtherSessions()
         }
     }
+
     @Throws(CryptoStoreException::class)
     suspend fun enableBackupV1(key: String, version: String) {
         return withContext(coroutineDispatchers.computation) {

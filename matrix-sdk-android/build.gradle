@@ -19,7 +19,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath "io.realm:realm-gradle-plugin:10.16.0"
+        classpath "io.realm:realm-gradle-plugin:10.18.0"
     }
 }
 
@@ -84,7 +84,7 @@ android {
     buildTypes {
         debug {
             if (project.hasProperty("coverage")) {
-                testCoverageEnabled = coverage == "true"
+                testCoverageEnabled = project.properties["coverage"] == "true"
             }
             // Set to true to log privacy or sensible data, such as token
             buildConfigField "boolean", "LOG_PRIVATE_DATA", project.property("vector.debugPrivateData")
@@ -109,7 +109,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = versions.jvmTarget
         freeCompilerArgs += [
                 // Disabled for now, there are too many errors. Could be handled in another dedicated PR
                 // '-Xexplicit-api=strict', // or warning
@@ -128,6 +128,15 @@ android {
         }
     }
 
+    buildFeatures {
+        buildConfig true
+    }
+
+    packaging {
+        pickFirsts.add("META-INF/LICENSE.md")
+        pickFirsts.add("META-INF/LICENSE-notice.md")
+        pickFirsts.add("MANIFEST.MF")
+    }
 }
 
 static def gitRevision() {
@@ -199,9 +208,6 @@ dependencies {
     // Work
     implementation libs.androidx.work
 
-    // olm lib is now hosted in MavenCentral
-    implementation 'org.matrix.android:olm-sdk:3.2.12'
-
     // DI
     implementation libs.dagger.dagger
     kapt libs.dagger.daggerCompiler
@@ -218,7 +224,7 @@ dependencies {
 
     implementation libs.google.phonenumber
 
-    implementation("org.matrix.rustcomponents:crypto-android:0.3.16")
+    implementation("org.matrix.rustcomponents:crypto-android:0.6.0")
 //    api project(":library:rustCrypto")
 
     testImplementation libs.tests.junit
@@ -230,6 +236,7 @@ dependencies {
     testImplementation 'net.lachlanmckee:timber-junit-rule:1.0.1'
     // Transitively required for mocking realm as monarchy doesn't expose Rx
     testImplementation libs.rx.rxKotlin
+    testImplementation libs.tests.robolectric
 
     kaptAndroidTest libs.dagger.daggerCompiler
     androidTestImplementation libs.androidx.testCore
