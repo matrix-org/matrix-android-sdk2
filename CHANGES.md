@@ -1,3 +1,12 @@
+Changes in Matrix-SDK v1.6.36 (2025-05-05)
+=========================================
+
+Imported from Element 1.6.36. (https://github.com/vector-im/element-android/releases/tag/v1.6.36)
+
+SDK API changes ⚠️
+------------------
+- Supports Authenticated media apis ([#8868](https://github.com/element-hq/element-android/pull/8868)
+
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
 Changes in Matrix-SDK v1.6.10 (2024-01-10)
