@@ -219,10 +219,16 @@ data class Event(
     }
 
     /**
-     * @return the event content
+     * @return the event content.
+     * If the content is encrypted, it will return the decrypted content, or null if the content is not
+     * decrypted.
      */
     fun getClearContent(): Content? {
-        return getDecryptedContent() ?: content
+        return if (isEncrypted()) {
+            getDecryptedContent()
+        } else {
+            content
+        }
     }
 
     /**
@@ -493,7 +499,11 @@ fun Event.getPollContent(): MessagePollContent? {
 }
 
 fun Event.supportsNotification() =
-        this.getClearType() in EventType.MESSAGE + EventType.POLL_START.values + EventType.POLL_END.values + EventType.STATE_ROOM_BEACON_INFO.values
+        this.getClearType() in EventType.MESSAGE +
+                EventType.POLL_START.values +
+                EventType.POLL_END.values +
+                EventType.STATE_ROOM_BEACON_INFO.values +
+                EventType.ELEMENT_CALL_NOTIFY.values
 
 fun Event.isContentReportable() =
         this.getClearType() in EventType.MESSAGE + EventType.STATE_ROOM_BEACON_INFO.values
