@@ -1,3 +1,5 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
@@ -49,4 +51,18 @@ allprojects {
         // Ignore on the SDK for the moment
         kotlinOptions.allWarningsAsErrors = false
     }
+
+
+    plugins.withId("com.vanniktech.maven.publish") {
+        // Publish on s01.oss.sonatype.org
+        //https://github.com/vanniktech/gradle-maven-publish-plugin#where-to-upload-to
+        mavenPublishing {
+            publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+
 }

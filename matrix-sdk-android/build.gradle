@@ -1,5 +1,3 @@
-import com.vanniktech.maven.publish.SonatypeHost
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
@@ -158,10 +156,6 @@ static def gitRevisionDate() {
 
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-}
-
-mavenPublishing {
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 }
 
 dependencies {
