@@ -1,3 +1,8 @@
+Changes in Matrix-SDK v1.6.40 (2025-06-04)
+=========================================
+
+Imported from Element 1.6.40. (https://github.com/vector-im/element-android/releases/tag/v1.6.40)
+
 Changes in Matrix-SDK v1.6.36 (2025-05-05)
 =========================================
 
