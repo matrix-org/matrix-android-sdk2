@@ -14,7 +14,7 @@ buildscript {
     dependencies {
         classpath libs.gradle.gradlePlugin
         classpath libs.gradle.kotlinPlugin
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.18.0'
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.32.0'
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:1.8.10"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -49,16 +49,4 @@ allprojects {
         // Ignore on the SDK for the moment
         kotlinOptions.allWarningsAsErrors = false
     }
-
-    plugins.withId("com.vanniktech.maven.publish") {
-        // Publish on s01.oss.sonatype.org
-        //https://github.com/vanniktech/gradle-maven-publish-plugin#where-to-upload-to
-        mavenPublish {
-            sonatypeHost = "S01"
-        }
-    }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
