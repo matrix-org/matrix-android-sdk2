@@ -176,7 +176,6 @@ git checkout main
 printf "\n================================================================================\n"
 printf "Building and releasing the library...\n"
 ./gradlew clean publish --no-daemon --no-parallel
-./gradlew closeAndReleaseRepository
 
 printf "\n================================================================================\n"
 printf "Downloading the aar from MavenCentral (from https://repo1.maven.org/maven2/org/matrix/android/matrix-android-sdk2/)...\n"
