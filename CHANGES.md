@@ -1,3 +1,10 @@
+Changes in Matrix-SDK v1.6.50 (2026-02-04)
+=========================================
+
+Imported from Element 1.6.50. (https://github.com/vector-im/element-android/releases/tag/v1.6.50)
+
+Support 16 KB memory page size ([#9086](https://github.com/element-hq/element-android/issues/9086))
+
 Changes in Matrix-SDK v1.6.40 (2025-06-04)
 =========================================
 
