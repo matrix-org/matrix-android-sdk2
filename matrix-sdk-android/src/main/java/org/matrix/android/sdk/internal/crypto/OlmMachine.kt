@@ -95,7 +95,7 @@ import org.matrix.rustcomponents.sdk.crypto.ProgressListener as RustProgressList
 
 class CryptoLogger : Logger {
     override fun log(logLine: String) {
-        Timber.d(logLine)
+        Timber.d(logLine.trimEnd())
     }
 }
 
@@ -287,7 +287,14 @@ internal class OlmMachine @Inject constructor(
             val events = adapter.toJson(toDevice ?: ToDeviceSyncResponse())
 
             // field pass in the list of unused fallback keys here
-            val receiveSyncChanges = inner.receiveSyncChanges(events, devices, counts, deviceUnusedFallbackKeyTypes, nextBatch ?: "")
+            val receiveSyncChanges = inner.receiveSyncChanges(
+                    events = events,
+                    deviceChanges = devices,
+                    keyCounts = counts,
+                    unusedFallbackKeys = deviceUnusedFallbackKeyTypes,
+                    nextBatchToken = nextBatch ?: "",
+                    decryptionSettings = DecryptionSettings(TrustRequirement.UNTRUSTED),
+            )
 
             val outAdapter = moshi.adapter(Event::class.java)
 
