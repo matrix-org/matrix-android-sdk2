@@ -57,7 +57,9 @@ allprojects {
         // Publish on s01.oss.sonatype.org
         //https://github.com/vanniktech/gradle-maven-publish-plugin#where-to-upload-to
         mavenPublishing {
-            publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+            publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, true)
+
+            signAllPublications()
         }
     }
 }
