@@ -1,3 +1,14 @@
+Changes in Matrix-SDK v1.6.62 (2026-07-21)
+=========================================
+
+Imported from Element 1.6.62. (https://github.com/vector-im/element-android/releases/tag/v1.6.62)
+
+Security ⚠️
+----------
+This release contains a security fix:
+
+- Improve sanitization of file storage location ([GHSA-fr74-76wm-x6pp](https://github.com/matrix-org/matrix-android-sdk2/security/advisories/GHSA-fr74-76wm-x6pp)).
+
 Changes in Matrix-SDK v1.6.50 (2026-02-04)
 =========================================
 
